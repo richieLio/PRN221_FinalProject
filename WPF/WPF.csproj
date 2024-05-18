@@ -20,6 +20,13 @@
 
   <ItemGroup>
     <Folder Include="Images\" />
+    <Folder Include="WindowReponsive\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Images\houseIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

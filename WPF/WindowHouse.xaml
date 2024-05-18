@@ -9,18 +9,17 @@
              Height="450" Width="800">
     <Grid>
         <Label>House Management</Label>
-        <ListView Margin="0, 30"  x:Name="lvHouses" ItemsSource="{Binding Houses}">
+        <ListView Margin="0,30,0,0" x:Name="lvHouses" ItemsSource="{Binding Houses}">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal"/>
+                    <UniformGrid Columns="5"/>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderBrush="Black"  Margin="5">
+                    <Border BorderBrush="Black" Margin="5">
                         <StackPanel Orientation="Vertical">
-                            <!-- Replace materialDesign:PackIcon with Image -->
-                            <Image Source="D:\SU24\PRN221\PRN221_FinalProject\WPF\Images\houseIcon.png" Width="50" Height="50" />
+                            <Image Source="D:\SU24\PRN221\PRN221_FinalProject\WPF\Images\houseIcon.png" Width="60" Height="60"/>
                             <TextBlock Text="{Binding Name}" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Border>

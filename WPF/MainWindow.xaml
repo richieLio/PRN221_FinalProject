@@ -6,15 +6,14 @@
         xmlns:local="clr-namespace:WPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="650" Width="1100"
-         WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0" Orientation="Vertical" Grid.ColumnSpan="2" Margin="0,0,967,0">
-
+        <StackPanel Grid.Column="0" Orientation="Vertical" Margin="5">
             <RadioButton Content="Houses" GroupName="Views" Checked="RadioButton_Checked" Tag="houseWindow" Margin="5,20,10,0"/>
             <RadioButton Content="Customers" GroupName="Views" Checked="RadioButton_Checked" Tag="customerWindow" Margin="5,20,10,0"/>
             <RadioButton Content="Staffs" GroupName="Views" Checked="RadioButton_Checked" Tag="staffWindow" Margin="5,20,10,0"/>
@@ -24,6 +23,6 @@
             <RadioButton Content="Bills" GroupName="Views" Checked="RadioButton_Checked" Tag="billWindow" Margin="5,20,10,0"/>
         </StackPanel>
 
-        <ContentControl Grid.Column="1" x:Name="MainContentControl" Margin="212,29,23,30"/>
+        <ContentControl Grid.Column="1" x:Name="MainContentControl" Margin="10"/>
     </Grid>
 </Window>
