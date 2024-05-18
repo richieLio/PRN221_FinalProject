@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,14 +17,41 @@ namespace WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private readonly IServiceProvider _serviceProvider;
+
+        public MainWindow(IServiceProvider serviceProvider)
         {
             InitializeComponent();
+            _serviceProvider = serviceProvider;
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
-
+            var radioButton = sender as RadioButton;
+            if (radioButton != null)
+            {
+                switch (radioButton.Tag.ToString())
+                {
+                    case "houseWindow":
+                        MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
+                        break;
+                    case "Staffs":
+                        MainContentControl.Content = _serviceProvider.GetService<WindowStaff>();
+                        break;
+                    case "serviceWindow":
+                        MainContentControl.Content = _serviceProvider.GetService<WindowService>();
+                        break;
+                    case "contractWindow":
+                        MainContentControl.Content = _serviceProvider.GetService<WindowContract>();
+                        break;
+                    case "notificationWindow":
+                        MainContentControl.Content = _serviceProvider.GetService<WindowNotification>();
+                        break;
+                    case "billWindow":
+                        MainContentControl.Content = _serviceProvider.GetService<WindowBill>();
+                        break;
+                }
+            }
         }
     }
 }

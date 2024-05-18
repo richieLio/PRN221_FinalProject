@@ -6,24 +6,31 @@
         xmlns:local="clr-namespace:WPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="650" Width="1100"
-         WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="5"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0" Orientation="Vertical">
-
-            <RadioButton Content="Houses" GroupName="Views" Checked="RadioButton_Checked" Tag="houseWindow" Margin="5,10,10,0"/>
-            <RadioButton Content="Customers" GroupName="Views" Checked="RadioButton_Checked" Tag="customerWindow" Margin="5,20,10,0"/>
-            <RadioButton Content="Staffs" GroupName="Views" Checked="RadioButton_Checked" Tag="staffWindow" Margin="5,20,10,0"/>
-            <RadioButton Content="Services" GroupName="Views" Checked="RadioButton_Checked" Tag="serviceWindow" Margin="5,20,10,0"/>
-            <RadioButton Content="Contracts" GroupName="Views" Checked="RadioButton_Checked" Tag="contractWindow" Margin="5,20,10,0"/>
-            <RadioButton Content="Notifications" GroupName="Views" Checked="RadioButton_Checked" Tag="notificationWindow" Margin="5,20,10,0"/>
-            <RadioButton Content="Bills" GroupName="Views" Checked="RadioButton_Checked" Tag="billWindow" Margin="5,20,10,0"/>
+        <StackPanel Grid.Column="0" Orientation="Vertical" Margin="10">
+            <TextBlock Text="Menu" FontWeight="Bold" FontSize="16" Margin="5"/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Orientation="Vertical">
+                    <RadioButton Content="Houses" GroupName="Views" Checked="RadioButton_Checked" Tag="houseWindow" Margin="5,10,5,0"/>
+                    <RadioButton Content="Customers" GroupName="Views" Checked="RadioButton_Checked" Tag="customerWindow" Margin="5,10,5,0"/>
+                    <RadioButton Content="Staffs" GroupName="Views" Checked="RadioButton_Checked" Tag="staffWindow" Margin="5,10,5,0"/>
+                    <RadioButton Content="Services" GroupName="Views" Checked="RadioButton_Checked" Tag="serviceWindow" Margin="5,10,5,0"/>
+                    <RadioButton Content="Contracts" GroupName="Views" Checked="RadioButton_Checked" Tag="contractWindow" Margin="5,10,5,0"/>
+                    <RadioButton Content="Notifications" GroupName="Views" Checked="RadioButton_Checked" Tag="notificationWindow" Margin="5,10,5,0"/>
+                    <RadioButton Content="Bills" GroupName="Views" Checked="RadioButton_Checked" Tag="billWindow" Margin="5,10,5,0"/>
+                </StackPanel>
+            </ScrollViewer>
         </StackPanel>
 
-        <ContentControl Grid.Column="1" x:Name="MainContentControl" Margin="10,0,10,10"/>
+        <GridSplitter Grid.Column="1" Width="5" Background="Gray" HorizontalAlignment="Stretch"/>
+
+        <ContentControl Grid.Column="2" x:Name="MainContentControl" Margin="10"/>
     </Grid>
 </Window>

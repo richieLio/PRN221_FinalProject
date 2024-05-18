@@ -15,6 +15,7 @@ using DataAccess.Enums;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Model.EmailModel;
 using DataAccess.Model.OperationResultModel;
+using DataAccess.Model.VerifyModel;
 
 namespace DataAccess.DAO
 {
@@ -137,11 +138,11 @@ namespace DataAccess.DAO
                     context.Update(user);
                     await context.SaveChangesAsync();
 
-                    return new ResultModel { IsSuccess = true, Message = "Login IsSuccessful", Data = user };
+                    return new ResultModel { IsSuccess = true, Message = "Login Successful", Data = user };
                 }
                 else
                 {
-                    return new ResultModel {IsSuccess = false, Message = "Incorrect password" };
+                    return new ResultModel { IsSuccess = false, Message = "Incorrect password" };
                 }
             }
             catch (Exception e)
@@ -164,7 +165,7 @@ namespace DataAccess.DAO
                 {
 
                     user.Status = UserStatus.ACTIVE;
-                    user.Otp = null; 
+                    user.Otp = null;
                     user.Otpexpiration = null;
                     context.Update(user);
                     context.SaveChanges();
@@ -192,7 +193,7 @@ namespace DataAccess.DAO
             }
         }
 
-       
+
         public async Task<ResultModel> ResetPassword(UserResetPasswordReqModel resetPasswordReqModel)
         {
             using var context = new RmsContext();
@@ -212,7 +213,7 @@ namespace DataAccess.DAO
                 User.Password = HashedPasswordModel.HashedPassword;
                 User.Salt = HashedPasswordModel.Salt;
                 User.Status = UserStatus.ACTIVE;
-                 context.Update(User);
+                context.Update(User);
                 context.SaveChanges();
 
                 return new ResultModel { IsSuccess = true, Message = "Reset password IsSuccessfully!" };
@@ -225,6 +226,114 @@ namespace DataAccess.DAO
                     Message = e.InnerException != null ? e.InnerException.Message + "\n" + e.StackTrace : e.Message + "\n" + e.StackTrace
                 };
             }
+        }
+
+        public async Task<ResultModel> VerifyOTPCode(string email, string otpCode)
+        {
+            using var context = new RmsContext();
+            try
+            {
+                var user = await GetUserByEmail(email);
+                if (user == null)
+                {
+                    return new ResultModel { IsSuccess = false, Message = "User not found." };
+                }
+
+                var otp = await GetOTPByUserId(user.Id);
+                if (otp == null || otp.IsUsed || (DateTime.Now - otp.CreatedAt).TotalMinutes > 10)
+                {
+                    if (otp == null)
+                    {
+                        return new ResultModel { IsSuccess = false, Message = "OTP not found." };
+                    }
+                    else if (otp.IsUsed)
+                    {
+                        return new ResultModel { IsSuccess = false, Message = "OTP has already been used." };
+                    }
+                    else
+                    {
+                        return new ResultModel { IsSuccess = false, Message = "OTP has expired." };
+                    }
+                }
+
+                if (otp.OtpCode != otpCode)
+                {
+                    return new ResultModel { IsSuccess = false, Message = "Incorrect OTP." };
+                }
+
+                otp.IsUsed = true;
+                context.Update(otp);
+                user.Status = UserStatus.RESETPASSWORD;
+                context.Update(user);
+                context.SaveChanges();
+
+                return new ResultModel { IsSuccess = true, Message = "Account verified successfully." };
+            }
+            catch (Exception e)
+            {
+                return new ResultModel
+                {
+                    IsSuccess = false,
+                    Message = $"{e.GetType().Name}: {e.Message}\n{e.StackTrace}"
+                };
+            }
+        }
+
+        public async Task<ResultModel> SendOTPEmailRequest(SendOTPReqModel sendOTPReqModel)
+        {
+            using var context = new RmsContext();
+            try
+            {
+                var User = await GetUserByEmail(sendOTPReqModel.Email);
+                if (User == null)
+                {
+                    return new ResultModel { IsSuccess = false, Message = "The User with this email is invalid" };
+
+                }
+                var GetOTP = await GetOTPByUserId(User.Id);
+                if (GetOTP != null)
+                {
+                    if ((DateTime.Now - GetOTP.CreatedAt).TotalMinutes < 2)
+                    {
+                        return new ResultModel { IsSuccess = false, Message = "Can not send OTP right now, try after 2 minutes" };
+
+                    }
+                }
+
+                string OTPCode = GenerateOTP();
+                string FilePath = "/SU24/PRN221/PRN221_FinalProject/DataAccess/TemplateEmail/ResetPassword.html";
+                string Html = File.ReadAllText(FilePath);
+                Html = Html.Replace("{{OTPCode}}", OTPCode);
+                Html = Html.Replace("{{toEmail}}", sendOTPReqModel.Email);
+                bool check = await EmailUltilities.SendEmail(sendOTPReqModel.Email, "Reset Password", Html);
+                if (!check)
+                {
+                    return new ResultModel { IsSuccess = false, Message = "Email send failed, try again!" };
+
+                }
+                Otpverify Otp = new()
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = User.Id,
+                    OtpCode = OTPCode,
+                    CreatedAt = DateTime.Now,
+                    ExpiredAt = DateTime.Now.AddMinutes(10),
+                    IsUsed = false
+                };
+                context.Add(Otp);
+                context.SaveChanges();
+                return new ResultModel { IsSuccess = true, Message = "An OTP has been send to your email" };
+
+            }
+            catch (Exception e)
+            {
+                return new ResultModel { IsSuccess = false, Message = e.InnerException != null ? e.InnerException.Message + "\n" + e.StackTrace : e.Message + "\n" + e.StackTrace };
+            };
+        }
+        public async Task<Otpverify> GetOTPByUserId(Guid UserId)
+        {
+            using var context = new RmsContext();
+            return await context.Otpverifies.Where(x => x.UserId.Equals(UserId)).OrderByDescending(x => x.CreatedAt).FirstOrDefaultAsync();
         }
         public async Task<User> GetUserByEmail(string Email)
         {
@@ -249,6 +358,8 @@ namespace DataAccess.DAO
             using var context = new RmsContext();
             return await context.Users.FirstOrDefaultAsync(u => u.Otp == otp);
         }
+
+
 
     }
 }

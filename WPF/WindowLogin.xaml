@@ -22,12 +22,12 @@
 
         <!-- Username TextBox with Material Design styling -->
         <TextBox Name="txtUsername" Grid.Row="0" Margin="0,20,0,10" Width="300"
-                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                 Text="lhuyhoang18903@gmail.com" Style="{StaticResource MaterialDesignOutlinedTextBox}"
                  materialDesign:HintAssist.Hint="Username" />
 
         <!-- PasswordBox with Material Design styling -->
         <PasswordBox Name="txtPassword" Grid.Row="1" Margin="0,10,0,20" Width="300"
-                     Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
+                     Password="123456" Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
                      materialDesign:HintAssist.Hint="Password" />
 
         <!-- Login Button -->
