@@ -61,10 +61,12 @@ namespace WPF
                     }
                     return;
                 }
+                var userLogin = await _userRepository.GetUserByEmail(userLoginReqModel.Email);
                 var loginResult = await _userRepository.Login(userLoginReqModel);
 
                 if (loginResult.IsSuccess)
                 {
+                    App.LoggedInUserId = userLogin.Id;
                     var homeWindow = _serviceProvider.GetService<MainWindow>();
                     homeWindow.Show();
                     Close();

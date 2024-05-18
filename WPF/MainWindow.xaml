@@ -13,9 +13,9 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0" Orientation="Vertical">
+        <StackPanel Grid.Column="0" Orientation="Vertical" Grid.ColumnSpan="2" Margin="0,0,967,0">
 
-            <RadioButton Content="Houses" GroupName="Views" Checked="RadioButton_Checked" Tag="houseWindow" Margin="5,10,10,0"/>
+            <RadioButton Content="Houses" GroupName="Views" Checked="RadioButton_Checked" Tag="houseWindow" Margin="5,20,10,0"/>
             <RadioButton Content="Customers" GroupName="Views" Checked="RadioButton_Checked" Tag="customerWindow" Margin="5,20,10,0"/>
             <RadioButton Content="Staffs" GroupName="Views" Checked="RadioButton_Checked" Tag="staffWindow" Margin="5,20,10,0"/>
             <RadioButton Content="Services" GroupName="Views" Checked="RadioButton_Checked" Tag="serviceWindow" Margin="5,20,10,0"/>
@@ -24,6 +24,6 @@
             <RadioButton Content="Bills" GroupName="Views" Checked="RadioButton_Checked" Tag="billWindow" Margin="5,20,10,0"/>
         </StackPanel>
 
-        <ContentControl Grid.Column="1" x:Name="MainContentControl" Margin="10,0,10,10"/>
+        <ContentControl Grid.Column="1" x:Name="MainContentControl" Margin="212,29,23,30"/>
     </Grid>
 </Window>

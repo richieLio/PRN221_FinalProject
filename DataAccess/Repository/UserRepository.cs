@@ -4,6 +4,7 @@ using DataAccess.DAO;
 using DataAccess.Model.EmailModel;
 using DataAccess.Model.OperationResultModel;
 using DataAccess.Model.UserModel;
+using DataAccess.Model.VerifyModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,10 @@ namespace DataAccess.Repository
 
         public Task ResetPassword(UserResetPasswordReqModel ResetPasswordReqModel) => UserDAO.Instance.ResetPassword(ResetPasswordReqModel);
 
+        public Task<ResultModel> SendOTPEmailRequest(SendOTPReqModel sendOTPReqModel) => UserDAO.Instance.SendOTPEmailRequest(sendOTPReqModel);
+
         public Task VerifyEmail(EmailVerificationReqModel verificationModel) => UserDAO.Instance.VerifyEmail(verificationModel);
+
+        public Task<ResultModel> VerifyOTPCode(string email, string otpCode) =>UserDAO.Instance.VerifyOTPCode(email, otpCode);
     }
 }

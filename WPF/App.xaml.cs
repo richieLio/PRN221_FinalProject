@@ -12,24 +12,39 @@ namespace WPF
     public partial class App : Application
     {
         private ServiceProvider serviceProvider;
+        public static Guid LoggedInUserId { get; set; }
         public App()
         {
             ServiceCollection services = new ServiceCollection();
             ConfigureServices(services);
             serviceProvider = services.BuildServiceProvider();
+            LoggedInUserId = Guid.Empty;
         }
         private void ConfigureServices(ServiceCollection services)
         {
             services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IHouseRepository, HouseRepository>();
 
             services.AddSingleton<MainWindow>();
             services.AddSingleton<WindowLogin>();
             services.AddSingleton<WindowRegister>();
-            services.AddSingleton<ResetPasswordWindow>();
+            services.AddSingleton<WindowHouse>();
+            services.AddSingleton<WindowContract>();
+            services.AddSingleton<WindowBill>();
+            services.AddSingleton<WindowStaff>();
+            services.AddSingleton<WindowService>();
+
+
+
+
             services.AddTransient<WindowLogin>();
             services.AddTransient<WindowRegister>();
             services.AddTransient<ResetPasswordWindow>();
-            services.AddTransient<MainWindow>();
+            services.AddTransient<MainWindow>(); 
+            services.AddTransient<WindowHouse>();
+            services.AddTransient<WindowContract>();
+            services.AddTransient<WindowBill>();
+            services.AddTransient<WindowService>();
 
         }
         private void OnStartup(object sender, StartupEventArgs e)

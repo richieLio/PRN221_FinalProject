@@ -2,6 +2,7 @@
 using DataAccess.Model.EmailModel;
 using DataAccess.Model.OperationResultModel;
 using DataAccess.Model.UserModel;
+using DataAccess.Model.VerifyModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +19,7 @@ namespace DataAccess.Repository
         Task VerifyEmail(EmailVerificationReqModel verificationModel);
         Task<User> GetUserByVerificationToken(string otp);
         Task ResetPassword(UserResetPasswordReqModel ResetPasswordReqModel);
+        Task<ResultModel> VerifyOTPCode(string email, string otpCode);
+        Task<ResultModel> SendOTPEmailRequest(SendOTPReqModel sendOTPReqModel);
     }
 }
