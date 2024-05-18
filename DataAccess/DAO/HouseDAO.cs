@@ -33,5 +33,12 @@ namespace DataAccess.DAO
             List<House> userHouses = context.Houses.Where(h => h.OwnerId == userId).ToList();
             return userHouses;
         }
+
+        public async Task<House> GetHouse(Guid houseId) {
+            using var context = new RmsContext();
+            return context.Houses.FirstOrDefault(h => h.Id == houseId);
+              
+        }
+
     }
 }

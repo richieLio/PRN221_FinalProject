@@ -24,6 +24,15 @@ namespace WPF
         {
             services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<IHouseRepository, HouseRepository>();
+            services.AddSingleton<IRoomRepository, RoomRepository>();
+
+
+
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IHouseRepository, HouseRepository>();
+            services.AddTransient<IRoomRepository, RoomRepository>();
+
+
 
             services.AddSingleton<MainWindow>();
             services.AddSingleton<WindowLogin>();
@@ -33,6 +42,7 @@ namespace WPF
             services.AddSingleton<WindowBill>();
             services.AddSingleton<WindowStaff>();
             services.AddSingleton<WindowService>();
+            services.AddSingleton<WindowHouseDetails>();
 
 
 
@@ -45,6 +55,8 @@ namespace WPF
             services.AddTransient<WindowContract>();
             services.AddTransient<WindowBill>();
             services.AddTransient<WindowService>();
+            services.AddTransient<WindowHouseDetails>();
+
 
         }
         private void OnStartup(object sender, StartupEventArgs e)
