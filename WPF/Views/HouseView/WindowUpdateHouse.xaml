@@ -1,0 +1,34 @@
+﻿<Window x:Class="WPF.Views.HouseView.WindowUpdateHouse"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF.Views.HouseView"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="WindowUpdateHouse" Height="450" Width="400"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="20">
+        <TextBlock Text="Update house" FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
+
+        <!-- House Name TextBox -->
+        <TextBox Name="HouseNameTextBox" Margin="0,50,0,0" VerticalAlignment="Top"
+              Style="{StaticResource MaterialDesignOutlinedTextBox}"
+              materialDesign:HintAssist.Hint="Enter House Name" />
+
+        <!-- Address TextBox -->
+        <TextBox Name="AddressTextBox" Margin="0,130,0,0" VerticalAlignment="Top"
+              Style="{StaticResource MaterialDesignOutlinedTextBox}"
+              materialDesign:HintAssist.Hint="Enter Address" />
+
+        <!-- Create Button -->
+        <Button Margin="0,220,0,0" VerticalAlignment="Top"
+             Style="{StaticResource MaterialDesignRaisedButton}"
+             Content="Update" Width="120" Height="40" Click="btnUpdateHouse_Click"
+             HorizontalAlignment="Center"
+             materialDesign:ButtonProgressAssist.IsIndeterminate="True"
+             materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
+             materialDesign:ButtonProgressAssist.Value="-1"
+             IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
+    </Grid>
+</Window>

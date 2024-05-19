@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using System.Data;
 using System.Windows;
+using WPF.Views.HouseView;
 
 namespace WPF
 {
@@ -43,6 +44,7 @@ namespace WPF
             services.AddSingleton<WindowStaff>();
             services.AddSingleton<WindowService>();
             services.AddSingleton<WindowHouseDetails>();
+            services.AddSingleton<WindowAddHouse>();
 
 
 

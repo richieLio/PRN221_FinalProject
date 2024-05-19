@@ -23,6 +23,8 @@ public partial class Contract
 
     public string? Status { get; set; }
 
+    public DateTime CreatedAt { get; set; }
+
     public virtual User? Customer { get; set; }
 
     public virtual User? Owner { get; set; }

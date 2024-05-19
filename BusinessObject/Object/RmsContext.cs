@@ -48,6 +48,7 @@ public partial class RmsContext : DbContext
             entity.ToTable("Bill");
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.CreatedAt).HasPrecision(6);
             entity.Property(e => e.Month).HasPrecision(6);
             entity.Property(e => e.PaymentDate).HasPrecision(6);
             entity.Property(e => e.TotalPrice).HasColumnType("decimal(19, 4)");
@@ -87,6 +88,7 @@ public partial class RmsContext : DbContext
             entity.ToTable("Contract");
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.CreatedAt).HasPrecision(6);
             entity.Property(e => e.EndDate).HasPrecision(6);
             entity.Property(e => e.FileUrl)
                 .HasMaxLength(250)
@@ -118,6 +120,7 @@ public partial class RmsContext : DbContext
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.Address).HasMaxLength(50);
+            entity.Property(e => e.CreatedAt).HasPrecision(6);
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Status).HasMaxLength(50);
 
@@ -133,6 +136,7 @@ public partial class RmsContext : DbContext
             entity.ToTable("Notification");
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.CreatedAt).HasPrecision(6);
 
             entity.HasOne(d => d.House).WithMany(p => p.Notifications)
                 .HasForeignKey(d => d.HouseId)
@@ -180,6 +184,7 @@ public partial class RmsContext : DbContext
             entity.ToTable("Room");
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.CreatedAt).HasPrecision(6);
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Status).HasMaxLength(50);
 
@@ -195,6 +200,7 @@ public partial class RmsContext : DbContext
             entity.ToTable("Service");
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.CreatedAt).HasPrecision(6);
             entity.Property(e => e.Name).HasMaxLength(150);
             entity.Property(e => e.Price).HasColumnType("decimal(19, 4)");
 

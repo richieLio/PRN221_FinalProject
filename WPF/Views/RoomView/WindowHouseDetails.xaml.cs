@@ -3,6 +3,7 @@ using DataAccess.Repository;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace WPF
@@ -13,15 +14,26 @@ namespace WPF
         private readonly IRoomRepository _roomRepository;
         private readonly IServiceProvider _serviceProvider;
         private string _houseName;
+        private string _address;
+        private int? _roomQuantity;
+        private int? _availableRoom;
+       
 
-        public WindowHouseDetails(IHouseRepository houseRepository, IRoomRepository roomRepository, IServiceProvider serviceProvider, string houseName)
+        public WindowHouseDetails(IHouseRepository houseRepository, IRoomRepository roomRepository, IServiceProvider serviceProvider,
+            string houseName, string address, int? roomQuantity, int? availableRoom)
         {
             InitializeComponent();
             _houseRepository = houseRepository;
             _roomRepository = roomRepository;
             _serviceProvider = serviceProvider;
             _houseName = houseName;
+            _address = address;
+            _roomQuantity = roomQuantity;
+            _availableRoom = availableRoom;
             HouseNameTextBlock.Text = _houseName;
+            AddressTextBlock.Text = _address;
+            RoomQuantityTextBlock.Text = _roomQuantity.ToString();
+            AvailableRoomTextBlock.Text = _availableRoom.ToString();
         }
 
         public async void LoadRooms(Guid houseId)
@@ -46,8 +58,20 @@ namespace WPF
         }
         private void Border_Click(object sender, MouseButtonEventArgs e)
         {
-           
+
         }
+        private void EditDetails_Click(object sender, RoutedEventArgs e)
+        {
+            AddressTextBlock.Visibility = Visibility.Collapsed;
+            AddressTextBlock.Visibility = Visibility.Visible;
+
+            RoomQuantityTextBlock.Visibility = Visibility.Collapsed;
+            RoomQuantityTextBlock.Visibility = Visibility.Visible;
+
+            AvailableRoomTextBlock.Visibility = Visibility.Collapsed;
+            AvailableRoomTextBlock.Visibility = Visibility.Visible;
+        }
+
     }
 }
 

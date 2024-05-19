@@ -1,5 +1,7 @@
 ﻿using BusinessObject.Object;
 using DataAccess.DAO;
+using DataAccess.Model.HouseModel;
+using DataAccess.Model.OperationResultModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +15,7 @@ namespace DataAccess.Repository
         public Task<IEnumerable<House>> GetHouses(Guid userId) => HouseDAO.Instance.GetHouses(userId);
 
         public Task<House> GetHouse(Guid houseId) => HouseDAO.Instance.GetHouse(houseId);
+
+        public Task<ResultModel> AddHouse(Guid ownerId, HouseCreateReqModel formData) => HouseDAO.Instance.AddHouse(ownerId, formData);
     }
 }

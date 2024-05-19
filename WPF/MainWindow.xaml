@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF"
         mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="MainWindow" Height="650" Width="1100"
         WindowStartupLocation="CenterScreen">
     <Grid>
@@ -27,10 +28,18 @@
                     <RadioButton Content="Bills" GroupName="Views" Checked="RadioButton_Checked" Tag="billWindow" Margin="5,10,5,0"/>
                 </StackPanel>
             </ScrollViewer>
+            <Button Grid.Row="2" Margin="0,20,0,0"
+         Style="{StaticResource MaterialDesignRaisedButton}"
+         Content="Log out" Width="130" Height="40" Click="btnLogout_Click"
+         HorizontalAlignment="Center"
+         materialDesign:ButtonProgressAssist.IsIndeterminate="True"
+         materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
+         materialDesign:ButtonProgressAssist.Value="-1"
+         IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
         </StackPanel>
 
         <GridSplitter Grid.Column="1" Width="5" Background="Gray" HorizontalAlignment="Stretch"/>
 
-        <ContentControl Grid.Column="1" x:Name="MainContentControl" Margin="5,0,0,0" Grid.ColumnSpan="2"/>
+        <ContentControl Grid.Column="1" x:Name="MainContentControl" Margin="0,0,0,0" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>

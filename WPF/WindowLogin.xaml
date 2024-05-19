@@ -19,6 +19,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <TextBlock Text="Login" FontSize="24" FontWeight="Bold" Margin="0,-105,0,115" HorizontalAlignment="Center"/>
 
         <!-- Username TextBox with Material Design styling -->
         <TextBox Name="txtUsername" Grid.Row="0" Margin="0,20,0,10" Width="300"

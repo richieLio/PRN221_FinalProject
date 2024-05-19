@@ -53,5 +53,12 @@ namespace WPF
                 }
             }
         }
+
+        private void btnLogout_Click(object sender, RoutedEventArgs e)
+        {
+            var windowLogin = _serviceProvider.GetService<WindowLogin>();
+            windowLogin.Show();
+            Close();
+        }
     }
 }

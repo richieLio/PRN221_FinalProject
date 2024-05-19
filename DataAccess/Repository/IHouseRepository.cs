@@ -1,4 +1,6 @@
 ﻿using BusinessObject.Object;
+using DataAccess.Model.HouseModel;
+using DataAccess.Model.OperationResultModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +13,7 @@ namespace DataAccess.Repository
     {
         Task<IEnumerable<House>> GetHouses(Guid userId);
         Task<House> GetHouse(Guid houseId);
+        public Task<ResultModel> AddHouse(Guid ownerId, HouseCreateReqModel formData);
+
     }
 }

@@ -1,9 +1,11 @@
 ﻿using BusinessObject.Object;
 using DataAccess.Repository;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using WPF.Views.HouseView;
 
 namespace WPF
 {
@@ -32,7 +34,8 @@ namespace WPF
             var selectedHouse = (sender as Border)?.DataContext as House;
             if (selectedHouse != null)
             {
-                WindowHouseDetails detailsWindow = new WindowHouseDetails(_houseRepository, _roomRepository, _serviceProvider, selectedHouse.Name);
+                WindowHouseDetails detailsWindow = new WindowHouseDetails(_houseRepository, _roomRepository, _serviceProvider, selectedHouse.Name, selectedHouse.Address
+                    , selectedHouse.RoomQuantity, selectedHouse.AvailableRoom);
                 detailsWindow.LoadRooms(selectedHouse.Id);
 
                 MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
@@ -66,6 +69,17 @@ namespace WPF
             HouseDetailsPopup.IsOpen = false;
         }
 
+        private void AddNewHouse_Click(object sender, RoutedEventArgs e)
+        {
+            var addNewHouseWindow = new WindowAddHouse(_serviceProvider.GetService<IHouseRepository>());
+            addNewHouseWindow.HouseAdded += (s, args) =>
+            {
+                // HouseAdded event handler, you might want to refresh the list of houses or take other actions
+                LoadHouses();
+            };
+            addNewHouseWindow.Show();
+        }
+      
 
 
     }

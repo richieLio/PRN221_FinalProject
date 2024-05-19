@@ -32,8 +32,13 @@ namespace DataAccess.DAO
         public async Task<IEnumerable<Room>> GetRooms(Guid houseId)
         {
             using var context = new RmsContext();
-            List<Room> rooms = context.Rooms.Where(r => r.HouseId== houseId).ToList();
+            List<Room> rooms = context.Rooms
+                                    .Where(r => r.HouseId == houseId)
+                                    .OrderBy(r => r.CreatedAt) 
+                                    .ToList();
+
             return rooms;
         }
+
     }
 }
