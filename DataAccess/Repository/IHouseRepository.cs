@@ -10,5 +10,6 @@ namespace DataAccess.Repository
     public interface IHouseRepository
     {
         Task<IEnumerable<House>> GetHouses(Guid userId);
+        Task<House> GetHouse(Guid houseId);
     }
 }

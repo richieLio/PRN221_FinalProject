@@ -10,6 +10,8 @@ namespace DataAccess.Repository
 {
     public class HouseRepository : IHouseRepository
     {
-        public Task<IEnumerable<House>> GetHouses(Guid userId) => HouseDAO.Instance.GetHouses(userId);   
+        public Task<IEnumerable<House>> GetHouses(Guid userId) => HouseDAO.Instance.GetHouses(userId);
+
+        public Task<House> GetHouse(Guid houseId) => HouseDAO.Instance.GetHouse(houseId);
     }
 }

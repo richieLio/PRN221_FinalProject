@@ -14,7 +14,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0" Orientation="Vertical" Margin="10">
+        <StackPanel Background="#c2c2c4" Grid.Column="0" Orientation="Vertical" Margin="10">
             <TextBlock Text="Menu" FontWeight="Bold" FontSize="16" Margin="5"/>
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel Orientation="Vertical">
@@ -31,6 +31,6 @@
 
         <GridSplitter Grid.Column="1" Width="5" Background="Gray" HorizontalAlignment="Stretch"/>
 
-        <ContentControl Grid.Column="2" x:Name="MainContentControl" Margin="10"/>
+        <ContentControl Grid.Column="1" x:Name="MainContentControl" Margin="5,0,0,0" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>
