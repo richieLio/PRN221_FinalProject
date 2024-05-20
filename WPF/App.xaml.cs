@@ -45,6 +45,8 @@ namespace WPF
             services.AddSingleton<WindowService>();
             services.AddSingleton<WindowHouseDetails>();
             services.AddSingleton<WindowAddHouse>();
+            services.AddSingleton<WindowUpdateHouse>();
+            services.AddSingleton<ConfirmDeleteHouse>();
 
 
 
@@ -58,6 +60,8 @@ namespace WPF
             services.AddTransient<WindowBill>();
             services.AddTransient<WindowService>();
             services.AddTransient<WindowHouseDetails>();
+            services.AddTransient<WindowUpdateHouse>();
+            services.AddTransient<ConfirmDeleteHouse>();
 
 
         }

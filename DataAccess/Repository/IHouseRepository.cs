@@ -14,6 +14,7 @@ namespace DataAccess.Repository
         Task<IEnumerable<House>> GetHouses(Guid userId);
         Task<House> GetHouse(Guid houseId);
         public Task<ResultModel> AddHouse(Guid ownerId, HouseCreateReqModel formData);
-
+        Task<ResultModel> UpdateHouse(Guid OwnerId, HouseUpdateReqModel houseUpdateReqModel);
+        Task<ResultModel> DeleteHouse(Guid OwnerId, Guid houseId);
     }
 }

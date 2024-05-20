@@ -17,5 +17,9 @@ namespace DataAccess.Repository
         public Task<House> GetHouse(Guid houseId) => HouseDAO.Instance.GetHouse(houseId);
 
         public Task<ResultModel> AddHouse(Guid ownerId, HouseCreateReqModel formData) => HouseDAO.Instance.AddHouse(ownerId, formData);
+
+        public Task<ResultModel> UpdateHouse(Guid OwnerId, HouseUpdateReqModel houseUpdateReqModel) => HouseDAO.Instance.UpdateHouse(OwnerId, houseUpdateReqModel);
+
+        public Task<ResultModel> DeleteHouse(Guid OwnerId, Guid houseId) => HouseDAO.Instance.DeleteHouse(OwnerId, houseId);
     }
 }

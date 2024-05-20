@@ -79,8 +79,52 @@ namespace WPF
             };
             addNewHouseWindow.Show();
         }
-      
 
-
+        private void UpdateHouse_Click(object sender, RoutedEventArgs e)
+        {
+            // Code to update the selected house
+            MenuItem menuItem = sender as MenuItem;
+            if (menuItem != null)
+            {
+                Border border = ((ContextMenu)menuItem.Parent).PlacementTarget as Border;
+                if (border != null)
+                {
+                    // Assuming DataContext of the Border is the house item
+                    var house = border.DataContext as House; // Replace House with your actual data type
+                    if (house != null)
+                    {
+                        var updateHouseWindow = new WindowUpdateHouse(_serviceProvider.GetService<IHouseRepository>(), house);
+                        updateHouseWindow.HouseUpdated += (s, args) =>
+                        {
+                            LoadHouses();
+                        };
+                        updateHouseWindow.Show();
+                    }
+                }
+            }
+        }
+        private async void DeleteHouse_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            if (menuItem != null)
+            {
+                Border border = ((ContextMenu)menuItem.Parent).PlacementTarget as Border;
+                if (border != null)
+                {
+                    var house = border.DataContext as House;
+                    if (house != null)
+                    {
+                        ConfirmDeleteHouse confirmDialog = new ConfirmDeleteHouse(house.Name);
+                        confirmDialog.HouseDeleted += async (s, args) =>
+                        {
+                            await _houseRepository.DeleteHouse(App.LoggedInUserId, house.Id);
+                            MessageBox.Show("House deleted successfully.");
+                            LoadHouses();
+                        };
+                        confirmDialog.ShowDialog();
+                    }
+                }
+            }
+        }
     }
 }

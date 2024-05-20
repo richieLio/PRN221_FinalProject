@@ -147,5 +147,30 @@ namespace DataAccess.DAO
             using var context = new RmsContext();
             return await context.Houses.FirstOrDefaultAsync(h => h.Id == id);
         }
+
+        public async Task<ResultModel> DeleteHouse(Guid ownerId, Guid houseId)
+        {
+            using var context = new RmsContext();
+            var house = await context.Houses
+                .FirstOrDefaultAsync(h => h.OwnerId == ownerId && h.Id == houseId);
+
+            if (house == null)
+            {
+                return new ResultModel
+                {
+                    IsSuccess = false,
+                    Message = "House not found."
+                };
+            }
+
+            context.Houses.Remove(house);
+            await context.SaveChangesAsync();
+
+            return new ResultModel
+            {
+                IsSuccess = true,
+                Message = "House deleted successfully."
+            };
+        }
     }
 }

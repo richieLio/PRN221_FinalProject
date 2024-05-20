@@ -1,4 +1,7 @@
-﻿using System;
+﻿using BusinessObject.Object;
+using DataAccess.Model.HouseModel;
+using DataAccess.Repository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,14 +22,32 @@ namespace WPF.Views.HouseView
     /// </summary>
     public partial class WindowUpdateHouse : Window
     {
-        public WindowUpdateHouse()
+        public event EventHandler HouseUpdated;
+        private readonly House _house;
+
+
+        private readonly IHouseRepository _houseRepository;
+        public WindowUpdateHouse(IHouseRepository houseRepository, House house)
         {
             InitializeComponent();
+            _houseRepository = houseRepository;
+            _house = house;
+            DataContext = house;
+
         }
 
         private void btnUpdateHouse_Click(object sender, RoutedEventArgs e)
         {
-
+            var houseUpdate = new HouseUpdateReqModel
+            {
+                Id = _house.Id,
+                Name = HouseNameTextBox.Text,
+                Address = AddressTextBox.Text,
+            };
+            _houseRepository.UpdateHouse(App.LoggedInUserId, houseUpdate);
+            MessageBox.Show("House updated successfully");
+            HouseUpdated?.Invoke(this, EventArgs.Empty);
+            Close();
         }
     }
 }
