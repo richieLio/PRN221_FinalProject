@@ -13,6 +13,8 @@ public partial class Service
 
     public Guid? CreatedBy { get; set; }
 
+    public DateTime CreatedAt { get; set; }
+
     public virtual ICollection<BillService> BillServices { get; set; } = new List<BillService>();
 
     public virtual User? CreatedByNavigation { get; set; }

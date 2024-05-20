@@ -19,6 +19,8 @@ public partial class Bill
 
     public Guid? RoomId { get; set; }
 
+    public DateTime CreatedAt { get; set; }
+
     public virtual ICollection<BillService> BillServices { get; set; } = new List<BillService>();
 
     public virtual User? CreateByNavigation { get; set; }

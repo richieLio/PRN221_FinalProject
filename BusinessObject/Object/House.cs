@@ -19,6 +19,8 @@ public partial class House
 
     public string? Status { get; set; }
 
+    public DateTime CreatedAt { get; set; }
+
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
     public virtual User? Owner { get; set; }

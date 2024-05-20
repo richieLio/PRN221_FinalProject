@@ -13,6 +13,8 @@ public partial class Room
 
     public string? Status { get; set; }
 
+    public DateTime CreatedAt { get; set; }
+
     public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
 
     public virtual ICollection<Contract> Contracts { get; set; } = new List<Contract>();

@@ -359,7 +359,10 @@ namespace DataAccess.DAO
             return await context.Users.FirstOrDefaultAsync(u => u.Otp == otp);
         }
 
-
-
+        public async Task<User> GetUserById(Guid id)
+        {
+            using var context = new RmsContext();
+            return await context.Users.FirstOrDefaultAsync(x => x.Id == id);
+        }
     }
 }

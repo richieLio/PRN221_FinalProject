@@ -11,5 +11,7 @@ public partial class Notification
 
     public Guid? HouseId { get; set; }
 
+    public DateTime CreatedAt { get; set; }
+
     public virtual House? House { get; set; }
 }
