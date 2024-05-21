@@ -186,10 +186,12 @@ public partial class RmsContext : DbContext
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.CreatedAt).HasPrecision(6);
             entity.Property(e => e.Name).HasMaxLength(50);
+            entity.Property(e => e.Price).HasColumnType("decimal(19, 4)");
             entity.Property(e => e.Status).HasMaxLength(50);
 
             entity.HasOne(d => d.House).WithMany(p => p.Rooms)
                 .HasForeignKey(d => d.HouseId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Room_House");
         });
 

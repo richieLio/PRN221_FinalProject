@@ -10,4 +10,10 @@
     <ProjectReference Include="..\BusinessObject\BusinessObject.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TemplateEmail\FirstInformation.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
