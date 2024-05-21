@@ -23,6 +23,7 @@ namespace WPF
         {
             InitializeComponent();
             _serviceProvider = serviceProvider;
+            MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)

@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Windows;
 using WPF.Views.HouseView;
+using WPF.Views.RoomView;
 
 namespace WPF
 {
@@ -26,12 +27,14 @@ namespace WPF
             services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<IHouseRepository, HouseRepository>();
             services.AddSingleton<IRoomRepository, RoomRepository>();
+            services.AddSingleton<ICustomerRepository, CustomerRepository>();
 
 
 
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IHouseRepository, HouseRepository>();
             services.AddTransient<IRoomRepository, RoomRepository>();
+            services.AddTransient<ICustomerRepository, CustomerRepository>();
 
 
 
@@ -47,6 +50,8 @@ namespace WPF
             services.AddSingleton<WindowAddHouse>();
             services.AddSingleton<WindowUpdateHouse>();
             services.AddSingleton<ConfirmDeleteHouse>();
+            services.AddSingleton<WindowAddRoom>();
+            services.AddSingleton<WindowCustomersInRoom>();
 
 
 
@@ -62,6 +67,8 @@ namespace WPF
             services.AddTransient<WindowHouseDetails>();
             services.AddTransient<WindowUpdateHouse>();
             services.AddTransient<ConfirmDeleteHouse>();
+            services.AddTransient<WindowAddRoom>();
+            services.AddTransient<WindowCustomersInRoom>();
 
 
         }
