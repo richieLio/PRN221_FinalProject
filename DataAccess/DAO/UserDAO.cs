@@ -65,8 +65,9 @@ namespace DataAccess.DAO
                     {
                         RegisterForm.Password = Encoder.GenerateRandomPassword();
                     }
-                    string FilePath = "/SU24/PRN221/PRN221_FinalProject/DataAccess/TemplateEmail/FirstInformation.html";
-                    string Html = await File.ReadAllTextAsync(FilePath);
+                    string FilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataAccess", "TemplateEmail", "FirstInformation.html");
+                    string newPath = FilePath.Replace("WPF\\bin\\Debug\\net8.0-windows\\", "");
+                    string Html = await File.ReadAllTextAsync(newPath);
                     Html = Html.Replace("{{Email}}", RegisterForm.Email);
                     Html = Html.Replace("{{OTP}}", $"{OTP}");
 
@@ -301,8 +302,9 @@ namespace DataAccess.DAO
                 }
 
                 string OTPCode = GenerateOTP();
-                string FilePath = "/SU24/PRN221/PRN221_FinalProject/DataAccess/TemplateEmail/ResetPassword.html";
-                string Html = File.ReadAllText(FilePath);
+                string FilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataAccess", "TemplateEmail", "ResetPassword.html");
+                string newPath = FilePath.Replace("WPF\\bin\\Debug\\net8.0-windows\\", "");
+                string Html = await File.ReadAllTextAsync(newPath);
                 Html = Html.Replace("{{OTPCode}}", OTPCode);
                 Html = Html.Replace("{{toEmail}}", sendOTPReqModel.Email);
                 bool check = await EmailUltilities.SendEmail(sendOTPReqModel.Email, "Reset Password", Html);
