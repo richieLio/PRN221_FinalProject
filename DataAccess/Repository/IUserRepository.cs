@@ -22,5 +22,6 @@ namespace DataAccess.Repository
         Task<ResultModel> VerifyOTPCode(string email, string otpCode);
         Task<ResultModel> SendOTPEmailRequest(SendOTPReqModel sendOTPReqModel);
         Task<User> GetUserById(Guid id);
+        Task<User> CheckIfCustomerIsExisted(Guid roomId, string Email, string phoneNumber, string CitizenIdNumber, string LicensePlates);
     }
 }

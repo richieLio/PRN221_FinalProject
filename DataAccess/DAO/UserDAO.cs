@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using DataAccess.Model.EmailModel;
 using DataAccess.Model.OperationResultModel;
 using DataAccess.Model.VerifyModel;
+using DataAccess.Utilities;
 
 namespace DataAccess.DAO
 {
@@ -365,6 +366,18 @@ namespace DataAccess.DAO
         {
             using var context = new RmsContext();
             return await context.Users.FirstOrDefaultAsync(x => x.Id == id);
+        }
+        public async Task<User> CheckIfCustomerIsExisted(Guid roomId, string email, string phoneNumber, string citizenIdNumber, string licensePlates)
+        {
+            using var context = new RmsContext();
+            return await context.Users
+                .Include(u => u.Rooms)
+                .Where(u => u.Rooms.Any(r => r.Id == roomId) &&
+                            (u.Email == email ||
+                             u.PhoneNumber == phoneNumber ||
+                             u.CitizenIdNumber == citizenIdNumber ||
+                             u.LicensePlates == licensePlates))
+                .FirstOrDefaultAsync();
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using WPF.Views.CustomerView;
 using WPF.Views.HouseView;
 using WPF.Views.RoomView;
 
@@ -67,7 +68,7 @@ namespace WPF
             var selectedRoom = (sender as Border)?.DataContext as Room;
             if (selectedRoom != null)
             {
-                WindowCustomersInRoom customersWindow = new WindowCustomersInRoom(selectedRoom.Id);
+                WindowCustomersInRoom customersWindow = new WindowCustomersInRoom( selectedRoom.Id, _serviceProvider, _houseId);
                 customersWindow.LoadCustomers(selectedRoom.Id);
 
                 MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
@@ -147,7 +148,7 @@ namespace WPF
                         WindowDeleteRoom confirmDialog = new WindowDeleteRoom(room.Name);
                         confirmDialog.RoomDeleted += async (s, args) =>
                         {
-                            await _roomRepository.DeleteRoom(room.Id);
+                            await _roomRepository.DeleteRoom(_houseId, room.Id);
                             MessageBox.Show("Room deleted successfully.");
                             LoadRooms(_houseId);
                         };

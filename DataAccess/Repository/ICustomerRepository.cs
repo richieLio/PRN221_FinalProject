@@ -14,6 +14,7 @@ namespace DataAccess.Repository
         Task<ResultModel> UpdateUserProfile(CustomerUpdateModel customerUpdateModel);
         Task<ResultModel> GetCustomerProfile(Guid customerId);
         Task<ResultModel> GetCustomerByRoomId(Guid roomId);
+        Task<ResultModel> AddCustomerToRoom(Guid userId, AddCustomerToRoomReqModel addCustomerToRoomReqModel);
 
     }
 }

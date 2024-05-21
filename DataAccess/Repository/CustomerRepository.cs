@@ -12,6 +12,8 @@ namespace DataAccess.Repository
 {
     public class CustomerRepository : ICustomerRepository
     {
+        public Task<ResultModel> AddCustomerToRoom(Guid userId, AddCustomerToRoomReqModel addCustomerToRoomReqModel) => CustomerDAO.Instance.AddCustomerToRoom(userId, addCustomerToRoomReqModel);
+
         public Task<ResultModel> GetCustomerByRoomId(Guid roomId) => CustomerDAO.Instance.GetCustomerByRoomId(roomId);
        
 

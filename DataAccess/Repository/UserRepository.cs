@@ -17,6 +17,9 @@ namespace DataAccess.Repository
 {
     public class UserRepository : IUserRepository
     {
+        public Task<User> CheckIfCustomerIsExisted(Guid roomId, string Email, string phoneNumber, string CitizenIdNumber, string LicensePlates)
+        => UserDAO.Instance.CheckIfCustomerIsExisted(roomId, Email, phoneNumber, CitizenIdNumber, LicensePlates);
+
         public Task CreateAccount(UserReqModel RegisterForm) => UserDAO.Instance.CreateAccount(RegisterForm);
 
         public Task<User> GetUserByEmail(string Email) => UserDAO.Instance.GetUserByEmail(Email);

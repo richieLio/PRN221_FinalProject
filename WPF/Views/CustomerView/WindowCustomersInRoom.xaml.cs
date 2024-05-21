@@ -1,24 +1,32 @@
 ﻿using BusinessObject.Object;
 using DataAccess.Model.CustomerModel;
 using DataAccess.Repository;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using WPF.Views.HouseView;
 
-namespace WPF.Views.RoomView
+namespace WPF.Views.CustomerView
 {
     /// <summary>
     /// Interaction logic for WindowCustomersInRoom.xaml
     /// </summary>
     public partial class WindowCustomersInRoom : UserControl
     {
-        public WindowCustomersInRoom(Guid roomId)
+        private readonly IServiceProvider _serviceProvider;
+        private readonly Guid _roomId;
+        private readonly Guid _houseId;
+        public WindowCustomersInRoom(Guid roomId, IServiceProvider serviceProvider, Guid houseId)
         {
             InitializeComponent();
             LoadCustomers(roomId);
+            _roomId = roomId;
+            _serviceProvider = serviceProvider;
+            _houseId = houseId;
         }
 
         public async void LoadCustomers(Guid roomId)
@@ -58,6 +66,13 @@ namespace WPF.Views.RoomView
 
         private void AddCustomer_Click(object sender, RoutedEventArgs e)
         {
+            var addCustomerWindow = new WindowAddCustomer(_serviceProvider.GetService<ICustomerRepository>(), _serviceProvider.GetService<IHouseRepository>(), _houseId, _roomId);
+            addCustomerWindow.CustomerAdded += (s, args) =>
+            {
+                // HouseAdded event handler, you might want to refresh the list of houses or take other actions
+                LoadCustomers(_roomId);
+            };
+            addCustomerWindow.Show();
 
         }
         private void EditCustomer_Click(object sender, RoutedEventArgs e)

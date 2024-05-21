@@ -1,8 +1,11 @@
 ﻿using BusinessObject.Object;
+using Data.Enums;
+using DataAccess.Enums;
 using DataAccess.Model.CustomerModel;
 using DataAccess.Model.OperationResultModel;
 using DataAccess.Repository;
 using Microsoft.EntityFrameworkCore;
+using EmailUltilities = DataAccess.Utilities.Email;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -174,6 +177,139 @@ namespace DataAccess.DAO
             return await context.Users
                .Where(u => u.Rooms.Any(r => r.Id == roomId))
                .ToListAsync();
+        }
+
+        public async Task<ResultModel> AddCustomerToRoom(Guid userId, AddCustomerToRoomReqModel addCustomerToRoomReqModel)
+        {
+            using var context = new RmsContext();
+            IUserRepository _userRepository = new UserRepository();
+            IRoomRepository _roomRepository = new RoomRepository();
+            IHouseRepository _houseRepository = new HouseRepository();
+            ResultModel result = new();
+            try
+            {
+                var customerCreateReqModel = addCustomerToRoomReqModel.customerCreateReqModel;
+                var houseUpdateAvaiableRoom = addCustomerToRoomReqModel.houseUpdateAvaiableRoom;
+                var room = await _roomRepository.GetRoom(customerCreateReqModel.RoomId);
+
+                var user = await _userRepository.GetUserById(userId);
+                var house = await _houseRepository.GetHouse(houseUpdateAvaiableRoom.HouseId);
+                int? availableRoom = await _houseRepository.GetAvailableRoomByHouseId(houseUpdateAvaiableRoom.HouseId);
+
+                if (user == null)
+                {
+                    result.IsSuccess = false;
+                    result.Code = 404;
+                    result.Message = "User not found.";
+                    return result;
+                }
+                if (house == null)
+                {
+                    result.IsSuccess = false;
+                    result.Code = 404;
+                    result.Message = "House not found.";
+                    return result;
+                }
+               /* var check = await _userRepository.CheckIfCustomerIsExisted(customerCreateReqModel.RoomId, customerCreateReqModel.Email, customerCreateReqModel.PhoneNumber,
+                    customerCreateReqModel.CitizenIdNumber, customerCreateReqModel.LicensePlates);
+                if (check != null)
+                {
+                    result.IsSuccess = false;
+                    result.Code = 400;
+                    result.Message = "User is existed";
+                    return result;
+                }*/
+                
+                    // thêm thông tin khách
+
+                    var newUser = new User
+                    {
+                        Id = Guid.NewGuid(),
+                        Email = customerCreateReqModel.Email,
+                        PhoneNumber = customerCreateReqModel.PhoneNumber,
+                        Address = customerCreateReqModel.Address,
+                        Gender = customerCreateReqModel.Gender,
+                        Dob = customerCreateReqModel.Dob,
+                        FullName = customerCreateReqModel.FullName,
+                        LicensePlates = customerCreateReqModel.LicensePlates,
+                        Status = GeneralStatus.ACTIVE,
+                        CreatedAt = DateTime.Now,
+                        Role = UserEnum.CUSTOMER,
+                        CitizenIdNumber = customerCreateReqModel.CitizenIdNumber
+                    };
+
+
+                    context.Add(newUser);
+                    context.SaveChanges();
+                    
+                    // thêm khách vào phòng
+                    var isAddedToRoom = await _roomRepository.AddUserToRoom(newUser.Id, customerCreateReqModel.RoomId);
+                    if (!isAddedToRoom)
+                    {
+                        result.IsSuccess = false;
+                        result.Code = 404;
+                        result.Message = "Failed to add customer to room. Room not found or user already exists in the room.";
+                        return result;
+                    }
+
+                    // thêm hợp đồng
+                    var contract = new Contract
+                    {
+                        Id = Guid.NewGuid(),
+                        OwnerId = userId,
+                        CustomerId = newUser.Id,
+                        RoomId = customerCreateReqModel.RoomId,
+                        StartDate = DateTime.Now,
+                        EndDate = customerCreateReqModel.EndDate,
+                        Status = GeneralStatus.ACTIVE,
+                    };
+                     context.Add(contract);
+                    context.SaveChanges();
+
+                    // sửa số phòng còn trống
+                    if (room.Status == RoomStatus.EMPTY)
+                    {
+                        house.AvailableRoom = availableRoom - 1;
+                        context.Update(house);
+                        context.SaveChanges();
+                    }
+
+                    //gửi mail mật khẩu cấp 2 cho khách
+
+
+                    string FilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataAccess", "TemplateEmail", "Welcome.html");
+                    string newPath = FilePath.Replace("WPF\\bin\\Debug\\net8.0-windows\\", "");
+                    string Html = await File.ReadAllTextAsync(newPath);
+
+                    Html = Html.Replace("{{RoomName}}", $"{room.Name}");
+                    bool emailSent = await EmailUltilities.SendEmail(customerCreateReqModel.Email, "Email Notification", Html);
+
+                    if (!emailSent)
+                    {
+                        // Xử lý trường hợp gửi email không thành công
+                        result.IsSuccess = false;
+                        result.Code = 500;
+                        result.Message = "Email cannot be send.";
+                        return result;
+                    }
+                    //update status
+                    room.Status = RoomStatus.ENTIRE;
+                    context.Update(room);
+                    context.SaveChanges();
+
+                    result.IsSuccess = true;
+                    result.Code = 200;
+                    result.Message = "Customer added to room successfully.";
+                    
+                
+            }
+            catch (Exception e)
+            {
+                result.IsSuccess = false;
+                result.Code = 500;
+                result.Message = e.InnerException != null ? e.InnerException.Message + "\n" + e.StackTrace : e.Message + "\n" + e.StackTrace;
+            }
+            return result;
         }
     }
 }
