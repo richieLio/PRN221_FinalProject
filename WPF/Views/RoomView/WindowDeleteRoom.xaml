@@ -1,0 +1,19 @@
+﻿<Window x:Class="WPF.Views.RoomView.WindowDeleteRoom"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF.Views.RoomView"
+        mc:Ignorable="d"
+        Title="WindowDeleteRoom" Height="300" Width="450"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="20">
+
+        <TextBlock Text="Delete room will also delete all customer information of the house to make sure you do this, Please enter the name of the house to confirm deletion:" TextWrapping="Wrap" FontSize="16" Margin="0,0,0,10"/>
+        <TextBox Name="RoomNameTextBox" Margin="0,100,0,76"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,70,0,0">
+            <Button Content="Cancel" Width="75" Margin="0,90,10,0" Click="Cancel_Click"/>
+            <Button Content="Delete" Width="75" Margin="0,90,10,0" Click="Delete_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

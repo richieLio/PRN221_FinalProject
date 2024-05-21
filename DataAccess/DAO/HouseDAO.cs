@@ -172,5 +172,12 @@ namespace DataAccess.DAO
                 Message = "House deleted successfully."
             };
         }
+
+        public async Task<int?> GetRoomQuantityByHouseId(Guid houseId)
+        {
+            using var context = new RmsContext();
+            var house = await context.Houses.FindAsync(houseId);
+            return house?.RoomQuantity;
+        }
     }
 }

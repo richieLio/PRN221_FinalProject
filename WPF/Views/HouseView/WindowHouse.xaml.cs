@@ -13,7 +13,7 @@ namespace WPF
     {
         private readonly IHouseRepository _houseRepository;
         private readonly IRoomRepository _roomRepository;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceProvider _serviceProvider; 
 
         public WindowHouse(IHouseRepository houseRepository, IRoomRepository roomRepository, IServiceProvider serviceProvider)
         {
@@ -35,7 +35,7 @@ namespace WPF
             if (selectedHouse != null)
             {
                 WindowHouseDetails detailsWindow = new WindowHouseDetails(_houseRepository, _roomRepository, _serviceProvider, selectedHouse.Name, selectedHouse.Address
-                    , selectedHouse.RoomQuantity, selectedHouse.AvailableRoom);
+                    , selectedHouse.RoomQuantity, selectedHouse.AvailableRoom,  selectedHouse.Id);
                 detailsWindow.LoadRooms(selectedHouse.Id);
 
                 MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
