@@ -6,51 +6,76 @@
         xmlns:local="clr-namespace:WPF.Views.CustomerView"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="WindowUpdateCustomer" Height="950" Width="400"
+        Title="WindowUpdateCustomer" Height="700" Width="800"
         WindowStartupLocation="CenterScreen">
     <Grid Margin="20">
-        <TextBlock Text="Update customer profile" FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-        <TextBox Name="FullNameTextBox" Text="{Binding FullName}" Margin="0,130,0,0" VerticalAlignment="Top"
-               Style="{StaticResource MaterialDesignOutlinedTextBox}"
-               materialDesign:HintAssist.Hint="Enter FullName" />
-        
-        <TextBox Name="EmailTextBox" Text="{Binding Email}" Margin="0,130,0,0" VerticalAlignment="Top"
-              Style="{StaticResource MaterialDesignOutlinedTextBox}"
-              materialDesign:HintAssist.Hint="Enter Email" />
+        <TextBlock Text="Update Customer" FontSize="24" FontWeight="Bold" 
+                   Margin="0,0,0,20" HorizontalAlignment="Center"/>
 
-        <TextBox Name="PhoneNumberTextBox" Text="{Binding PhoneNumber}" Margin="0,130,0,0" VerticalAlignment="Top"
-              Style="{StaticResource MaterialDesignOutlinedTextBox}"
-              materialDesign:HintAssist.Hint="Enter PhoneNumber" />
+        <StackPanel Grid.Row="1" Margin="0,0,0,20">
+            <UniformGrid Rows="5" Columns="2" Margin="0,0,0,10">
+                <!-- Email -->
+                <TextBox x:Name="txtEmail" Margin="0,0,10,10" Padding="10"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         materialDesign:HintAssist.Hint="Email"
+                         Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <TextBox Name="AddressTextBox" Text="{Binding Address}" Margin="0,130,0,0" VerticalAlignment="Top"
-              Style="{StaticResource MaterialDesignOutlinedTextBox}"
-              materialDesign:HintAssist.Hint="Enter Address" />
+                <!-- Phone Number -->
+                <TextBox x:Name="txtPhoneNumber" Margin="0,0,0,10" Padding="10"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         materialDesign:HintAssist.Hint="Phone Number"
+                         Text="{Binding PhoneNumber, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <TextBox Name="GenderTextBox" Text="{Binding Gender}" Margin="0,130,0,0" VerticalAlignment="Top"
-              Style="{StaticResource MaterialDesignOutlinedTextBox}"
-              materialDesign:HintAssist.Hint="Enter Gender" />
+                <!-- Address -->
+                <TextBox x:Name="txtAddress" Margin="0,0,10,10" Padding="10"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         materialDesign:HintAssist.Hint="Address"
+                         Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <TextBox Name="DobTextBox" Text="{Binding Email}" Margin="0,130,0,0" VerticalAlignment="Top"
-              Style="{StaticResource MaterialDesignOutlinedTextBox}"
-              materialDesign:HintAssist.Hint="Enter Dob" />
-        
-        <TextBox Name="LicensePlatesTextBox" Text="{Binding LicensePlates}" Margin="0,130,0,0" VerticalAlignment="Top"
-              Style="{StaticResource MaterialDesignOutlinedTextBox}"
-              materialDesign:HintAssist.Hint="Enter LicensePlates" />
-        <TextBox Name="CitizenIdNumberTextBox" Text="{Binding CitizenIdNumber}" Margin="0,130,0,0" VerticalAlignment="Top"
-              Style="{StaticResource MaterialDesignOutlinedTextBox}"
-              materialDesign:HintAssist.Hint="Enter CitizenIdNumber" />
+                <!-- Gender -->
+                <TextBox x:Name="txtGender" Margin="0,0,0,10" Padding="10"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         materialDesign:HintAssist.Hint="Gender"
+                         Text="{Binding Gender, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <!-- Create Button -->
-        <Button Margin="0,220,0,0" VerticalAlignment="Top"
-             Style="{StaticResource MaterialDesignRaisedButton}"
-             Content="Update" Width="120" Height="40" Click="btnUpdateCustomer_Click"
-             HorizontalAlignment="Center"
-             materialDesign:ButtonProgressAssist.IsIndeterminate="True"
-             materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
-             materialDesign:ButtonProgressAssist.Value="-1"
-             IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
+                <!-- Date of Birth -->
+                <DatePicker Name="DobDatePicker" Margin="0,0,10,10" Padding="10"
+                            materialDesign:HintAssist.Hint="Date of Birth"
+                            Style="{StaticResource MaterialDesignOutlinedDatePicker}"
+                            SelectedDate="{Binding Dob, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <!-- Full Name -->
+                <TextBox x:Name="txtFullName" Margin="0,0,0,10" Padding="10"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         materialDesign:HintAssist.Hint="Full Name"
+                         Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <!-- License Plates -->
+                <TextBox x:Name="txtLicensePlates" Margin="0,0,10,10" Padding="10"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         materialDesign:HintAssist.Hint="License Plates"
+                         Text="{Binding LicensePlates, UpdateSourceTrigger=PropertyChanged}"/>
+
+               
+
+                <!-- Citizen ID Number -->
+                <TextBox x:Name="txtCitizenID" Margin="0,0,10,10" Padding="10"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         materialDesign:HintAssist.Hint="Citizen ID Number"
+                         Text="{Binding CitizenIdNumber, UpdateSourceTrigger=PropertyChanged}"/>
+            </UniformGrid>
+        </StackPanel>
+
+        <!-- Button to save -->
+        <Button Grid.Row="2" Margin="0,20,0,0"
+                Content="Update" Style="{StaticResource MaterialDesignRaisedButton}"
+                HorizontalAlignment="Center" Click="btnUpdateCustomer_Click"/>
     </Grid>
 </Window>
 

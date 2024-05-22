@@ -105,6 +105,7 @@ namespace DataAccess.DAO
                 userToUpdate.Dob = customerUpdateModel.Dob;
                 userToUpdate.FullName = customerUpdateModel.FullName;
                 userToUpdate.LicensePlates = customerUpdateModel.LicensePlates;
+                userToUpdate.CitizenIdNumber = customerUpdateModel.CitizenIdNumber;
                 userToUpdate.Status = customerUpdateModel.Status;
 
                 context.Update(userToUpdate);
@@ -185,6 +186,7 @@ namespace DataAccess.DAO
             IUserRepository _userRepository = new UserRepository();
             IRoomRepository _roomRepository = new RoomRepository();
             IHouseRepository _houseRepository = new HouseRepository();
+            ICustomerRepository _customerRepository = new CustomerRepository();
             ResultModel result = new();
             try
             {
@@ -210,19 +212,19 @@ namespace DataAccess.DAO
                     result.Message = "House not found.";
                     return result;
                 }
-               /* var check = await _userRepository.CheckIfCustomerIsExisted(customerCreateReqModel.RoomId, customerCreateReqModel.Email, customerCreateReqModel.PhoneNumber,
+                var check = await _customerRepository.IsUserInRoom(customerCreateReqModel.RoomId, customerCreateReqModel.Email, customerCreateReqModel.PhoneNumber,
                     customerCreateReqModel.CitizenIdNumber, customerCreateReqModel.LicensePlates);
-                if (check != null)
+                if (check)
                 {
                     result.IsSuccess = false;
                     result.Code = 400;
                     result.Message = "User is existed";
                     return result;
-                }*/
-                
-                    // thêm thông tin khách
+                }
 
-                    var newUser = new User
+                // thêm thông tin khách
+
+                var newUser = new User
                     {
                         Id = Guid.NewGuid(),
                         Email = customerCreateReqModel.Email,
@@ -310,6 +312,16 @@ namespace DataAccess.DAO
                 result.Message = e.InnerException != null ? e.InnerException.Message + "\n" + e.StackTrace : e.Message + "\n" + e.StackTrace;
             }
             return result;
+        }
+
+        public async Task<bool> IsUserInRoom(Guid roomId, string email, string phoneNumber, string licensePlates, string citizenIdNumber)
+        {
+            using var context = new RmsContext();
+            return await context.Rooms
+                                 .AnyAsync(r => r.Id == roomId && r.Users.Any(u => u.Email == email ||
+                                                                                   u.PhoneNumber == phoneNumber ||
+                                                                                   u.LicensePlates == licensePlates ||
+                                                                                   u.CitizenIdNumber == citizenIdNumber));
         }
     }
 }

@@ -6,84 +6,79 @@
         xmlns:local="clr-namespace:WPF.Views.CustomerView"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="WindowAddCustomer" Height="700" Width="1200">
+        Title="Add Customer" Height="700" Width="800"
+        WindowStartupLocation="CenterScreen">
     <Grid Margin="20">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Email -->
-        <TextBox x:Name="txtEmail" Grid.Row="0" Grid.Column="0" Margin="0,0,10,10" Padding="10"
-                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                 materialDesign:HintAssist.Hint="Email"
-                 Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Text="Add New Customer" FontSize="24" FontWeight="Bold" 
+                   Margin="0,0,0,20" HorizontalAlignment="Center"/>
 
-        <!-- Phone Number -->
-        <TextBox x:Name="txtPhoneNumber" Grid.Row="0" Grid.Column="1" Margin="0,0,0,10" Padding="10"
-                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                 materialDesign:HintAssist.Hint="Phone Number"
-                 Text="{Binding PhoneNumber, UpdateSourceTrigger=PropertyChanged}"/>
+        <StackPanel Grid.Row="1" Margin="0,0,0,20">
+            <UniformGrid Rows="5" Columns="2" Margin="0,0,0,10">
+                <!-- Email -->
+                <TextBox x:Name="txtEmail" Margin="0,0,10,10" Padding="10"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         materialDesign:HintAssist.Hint="Email"
+                         Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <!-- Address -->
-        <TextBox x:Name="txtAddress" Grid.Row="1" Grid.Column="0" Margin="0,0,10,10" Padding="10"
-                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                 materialDesign:HintAssist.Hint="Address"
-                 Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"/>
+                <!-- Phone Number -->
+                <TextBox x:Name="txtPhoneNumber" Margin="0,0,0,10" Padding="10"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         materialDesign:HintAssist.Hint="Phone Number"
+                         Text="{Binding PhoneNumber, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <!-- Gender -->
-        <TextBox x:Name="txtGender" Grid.Row="1" Grid.Column="1" Margin="0,0,0,10" Padding="10"
-                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                 materialDesign:HintAssist.Hint="Gender"
-                 Text="{Binding Gender, UpdateSourceTrigger=PropertyChanged}"/>
+                <!-- Address -->
+                <TextBox x:Name="txtAddress" Margin="0,0,10,10" Padding="10"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         materialDesign:HintAssist.Hint="Address"
+                         Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <!-- Date of Birth -->
-        <DatePicker Name="DobDatePicker" Grid.Row="2" Grid.Column="0" Margin="0,0,10,10" Padding="10"
-                     materialDesign:HintAssist.Hint="Date of Birth"
-                    SelectedDate="{Binding Dob, UpdateSourceTrigger=PropertyChanged}"/>
+                <!-- Gender -->
+                <TextBox x:Name="txtGender" Margin="0,0,0,10" Padding="10"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         materialDesign:HintAssist.Hint="Gender"
+                         Text="{Binding Gender, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <!-- Full Name -->
-        <TextBox x:Name="txtFullName" Grid.Row="2" Grid.Column="1" Margin="0,0,0,10" Padding="10"
-                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                 materialDesign:HintAssist.Hint="Full Name"
-                 Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"/>
+                <!-- Date of Birth -->
+                <DatePicker Name="DobDatePicker" Margin="0,0,10,10" Padding="10"
+                            materialDesign:HintAssist.Hint="Date of Birth"
+                            Style="{StaticResource MaterialDesignOutlinedDatePicker}"
+                            SelectedDate="{Binding Dob, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <!-- License Plates -->
-        <TextBox x:Name="txtLicensePlates" Grid.Row="3" Grid.Column="0" Margin="0,0,10,10" Padding="10"
-                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                 materialDesign:HintAssist.Hint="License Plates"
-                 Text="{Binding LicensePlates, UpdateSourceTrigger=PropertyChanged}"/>
+                <!-- Full Name -->
+                <TextBox x:Name="txtFullName" Margin="0,0,0,10" Padding="10"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         materialDesign:HintAssist.Hint="Full Name"
+                         Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <!-- End Date -->
-        <DatePicker Name="EndDateDatePicker" Grid.Row="4" Grid.Column="1"  Margin="0,0,0,10" Padding="10"
-                    materialDesign:HintAssist.Hint=" End Date"
-                    SelectedDate="{Binding EndDate, UpdateSourceTrigger=PropertyChanged}"/>
-        
-        <!-- Citizen ID Number -->
-        <TextBox x:Name="txtCitizenID" Grid.Row="4" Grid.Column="0" Margin="0,0,10,10" Padding="10"
-                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                 materialDesign:HintAssist.Hint="Citizen ID Number"
-                 Text="{Binding CitizenIdNumber, UpdateSourceTrigger=PropertyChanged}"/>
+                <!-- License Plates -->
+                <TextBox x:Name="txtLicensePlates" Margin="0,0,10,10" Padding="10"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         materialDesign:HintAssist.Hint="License Plates"
+                         Text="{Binding LicensePlates, UpdateSourceTrigger=PropertyChanged}"/>
 
-        
+                <!-- End Date -->
+                <DatePicker Name="EndDateDatePicker" Margin="0,0,0,10" Padding="10"
+                            materialDesign:HintAssist.Hint="End Date"
+                            Style="{StaticResource MaterialDesignOutlinedDatePicker}"
+                            SelectedDate="{Binding EndDate, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <!-- Citizen ID Number -->
+                <TextBox x:Name="txtCitizenID" Margin="0,0,10,10" Padding="10"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         materialDesign:HintAssist.Hint="Citizen ID Number"
+                         Text="{Binding CitizenIdNumber, UpdateSourceTrigger=PropertyChanged}"/>
+            </UniformGrid>
+        </StackPanel>
 
         <!-- Button to save -->
-        <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Margin="550,40,0,332" Padding="15"
-                Content="Create" HorizontalAlignment="Left" Click="btnCreateCustomer_Click"/>
+        <Button Grid.Row="2" Margin="0,20,0,0"
+                Content="Create" Style="{StaticResource MaterialDesignRaisedButton}"
+                HorizontalAlignment="Center" Click="btnCreateCustomer_Click"/>
     </Grid>
 </Window>

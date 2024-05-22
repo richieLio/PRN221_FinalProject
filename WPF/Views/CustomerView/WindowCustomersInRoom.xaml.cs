@@ -59,8 +59,22 @@ namespace WPF.Views.CustomerView
             }
         }
 
-        private void BackToRoomManagement_Click(object sender, RoutedEventArgs e)
+        private async void BackToRoomManagement_Click(object sender, RoutedEventArgs e)
         {
+            IHouseRepository _houseRepository = new HouseRepository();
+            IRoomRepository _roomRepository = new RoomRepository();
+            var house = await _houseRepository.GetHouse(_houseId);
+            // Get the main window
+            MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
+            if (mainWindow != null)
+            {
+                // Create a new instance of WindowHouse
+                WindowHouseDetails houseWindowDetails = new WindowHouseDetails(_houseRepository, _roomRepository, _serviceProvider,
+                    house.Name, house.Address, house.RoomQuantity, house.AvailableRoom, _houseId);
+                houseWindowDetails.LoadRooms(_houseId);
+                // Set the MainContentControl content to the new WindowHouse instance
+                mainWindow.MainContentControl.Content = houseWindowDetails;
+            }
 
         }
 
@@ -77,27 +91,52 @@ namespace WPF.Views.CustomerView
         }
         private void EditCustomer_Click(object sender, RoutedEventArgs e)
         {
-
-            ICustomerRepository customerRepository = new CustomerRepository();
-            if (lvCustomers.SelectedItem is User selectedCustomer)
+            try
             {
-                var userToUpdate = new CustomerUpdateModel
+                MenuItem menuItem = sender as MenuItem;
+                if (menuItem != null)
                 {
-                    Email = selectedCustomer.Email,
-                    PhoneNumber = selectedCustomer.PhoneNumber,
-                    Address = selectedCustomer.Address,
-                    Gender = selectedCustomer.Gender,
-                    Dob = selectedCustomer.Dob,
-                    FullName = selectedCustomer.FullName,
-                    LicensePlates = selectedCustomer.LicensePlates,
-                    Status = selectedCustomer.Status,
-                    CitizenIdNumber = selectedCustomer.CitizenIdNumber,
-                };
-
-                customerRepository.UpdateUserProfile(userToUpdate);
-                MessageBox.Show($"Edit customer: {selectedCustomer.FullName}");
+                    ContextMenu contextMenu = menuItem.Parent as ContextMenu;
+                    if (contextMenu != null)
+                    {
+                        ListView listView = contextMenu.PlacementTarget as ListView;
+                        if (listView != null)
+                        {
+                            if (listView.SelectedItem is User selectedUser)
+                            {
+                                var updateCustomerWindow = new WindowUpdateCustomer(_serviceProvider.GetService<ICustomerRepository>(), selectedUser);
+                                updateCustomerWindow.CustomerUpdated += (s, args) =>
+                                {
+                                    LoadCustomers(_roomId);
+                                };
+                                updateCustomerWindow.ShowDialog(); 
+                            }
+                            else
+                            {
+                                MessageBox.Show("No user selected.");
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("ListView is null.");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("ContextMenu is null.");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("MenuItem is null.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}");
             }
         }
+
 
         private void DeleteCustomer_Click(object sender, RoutedEventArgs e)
         {

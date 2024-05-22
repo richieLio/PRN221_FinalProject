@@ -53,6 +53,7 @@ namespace WPF
             services.AddSingleton<ConfirmDeleteHouse>();
             services.AddSingleton<WindowAddRoom>();
             services.AddSingleton<WindowCustomersInRoom>();
+            services.AddSingleton<WindowUpdateCustomer>();
 
 
 
@@ -70,6 +71,7 @@ namespace WPF
             services.AddTransient<ConfirmDeleteHouse>();
             services.AddTransient<WindowAddRoom>();
             services.AddTransient<WindowCustomersInRoom>();
+            services.AddTransient<WindowUpdateCustomer>();
 
 
         }

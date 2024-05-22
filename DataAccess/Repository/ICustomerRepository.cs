@@ -15,6 +15,7 @@ namespace DataAccess.Repository
         Task<ResultModel> GetCustomerProfile(Guid customerId);
         Task<ResultModel> GetCustomerByRoomId(Guid roomId);
         Task<ResultModel> AddCustomerToRoom(Guid userId, AddCustomerToRoomReqModel addCustomerToRoomReqModel);
+        Task<bool> IsUserInRoom(Guid roomId, string email, string phoneNumber, string licensePlates, string citizenIdNumber); // New method
 
     }
 }
