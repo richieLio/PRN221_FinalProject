@@ -1,10 +1,6 @@
-﻿using BusinessObject.Object;
-using DataAccess.Helper;
-using DataAccess.Model.EmailModel;
+﻿using DataAccess.Helper;
 using DataAccess.Model.UserModel;
 using DataAccess.Repository;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Identity.Client.NativeInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,26 +15,25 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace WPF
+namespace WPF.Views.StaffView
 {
     /// <summary>
-    /// Interaction logic for WindowRegister.xaml
+    /// Interaction logic for WindowAddNewStaff.xaml
     /// </summary>
-    public partial class WindowRegister : Window
+    public partial class WindowAddNewStaff : Window
     {
-        private readonly IServiceProvider _serviceProvider;
         private readonly IUserRepository _userRepository;
-        public WindowRegister(IServiceProvider serviceProvider, IUserRepository userRepository)
+        private readonly IStaffRepository _staffRepository;
+        public event EventHandler StaffAdded;
+
+        public WindowAddNewStaff(IUserRepository userRepository, IStaffRepository staffRepository)
         {
             InitializeComponent();
             _userRepository = userRepository;
-            _serviceProvider = serviceProvider;
-            // Ẩn các thành phần OTP khi cửa sổ được tạo ra
-            OTPTextBox.Visibility = Visibility.Collapsed;
-            ConfirmOTP.Visibility = Visibility.Collapsed;
+            _staffRepository = staffRepository;
         }
 
-        private async void RegisterButton_Click(object sender, RoutedEventArgs e)
+        private async void CreateButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -81,56 +76,17 @@ namespace WPF
                     return;
                 }
 
-                await _userRepository.CreateAccount(account);
+                await _staffRepository.AddStaff(App.LoggedInUserId, account);
+                MessageBox.Show("Staff created successfully");
 
-                MessageBox.Show("An otp has been seen to your email!");
-                OTPTextBox.Visibility = Visibility.Visible;
-                ConfirmOTP.Visibility = Visibility.Visible;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("An error occurred during registration: " + ex.Message);
-            }
-        }
-
-        private async void ConfirmOTP_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                var OTPtext = OTPTextBox.Text;
-                var email = EmailTextBox.Text;
-                var user = new EmailVerificationReqModel
-                {
-                    OTP = OTPtext,
-                };
-                var userToVerify = await _userRepository.GetUserByVerificationToken(OTPtext);
-                if (userToVerify != null)
-                {
-                    await _userRepository.VerifyEmail(user);
-                    MessageBox.Show("Email verified");
-                }
-                else
-                {
-                    MessageBox.Show("Wrong otp");
-                }
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("An error occurred during registration: " + ex.Message);
-            }
-        }
-        private void Login_Click(object sender, RoutedEventArgs e)
-        {
-            var loginWindow = _serviceProvider.GetService<WindowLogin>();
-            if (loginWindow != null)
-            {
-                loginWindow.Show();
+                StaffAdded?.Invoke(this, EventArgs.Empty);
                 Close();
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred during registration: " + ex.Message);
             }
         }
-
     }
-
 }
-

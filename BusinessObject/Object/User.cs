@@ -49,10 +49,6 @@ public partial class User
 
     public virtual ICollection<Contract> ContractOwners { get; set; } = new List<Contract>();
 
-    public virtual ICollection<House> HouseOwners { get; set; } = new List<House>();
-
-    public virtual ICollection<House> HouseStaffs { get; set; } = new List<House>();
-
     public virtual ICollection<Otpverify> Otpverifies { get; set; } = new List<Otpverify>();
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();

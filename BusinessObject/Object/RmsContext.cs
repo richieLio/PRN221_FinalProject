@@ -23,6 +23,8 @@ public partial class RmsContext : DbContext
 
     public virtual DbSet<House> Houses { get; set; }
 
+    public virtual DbSet<HouseStaff> HouseStaffs { get; set; }
+
     public virtual DbSet<Notification> Notifications { get; set; }
 
     public virtual DbSet<Otpverify> Otpverifies { get; set; }
@@ -124,14 +126,23 @@ public partial class RmsContext : DbContext
             entity.Property(e => e.CreatedAt).HasPrecision(6);
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Status).HasMaxLength(50);
+        });
 
-            entity.HasOne(d => d.Owner).WithMany(p => p.HouseOwners)
-                .HasForeignKey(d => d.OwnerId)
-                .HasConstraintName("FK_House_User");
+        modelBuilder.Entity<HouseStaff>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("HouseStaff");
 
-            entity.HasOne(d => d.Staff).WithMany(p => p.HouseStaffs)
+            entity.HasOne(d => d.House).WithMany()
+                .HasForeignKey(d => d.HouseId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_HouseStaff_House");
+
+            entity.HasOne(d => d.Staff).WithMany()
                 .HasForeignKey(d => d.StaffId)
-                .HasConstraintName("FK_House_User1");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_HouseStaff_User");
         });
 
         modelBuilder.Entity<Notification>(entity =>

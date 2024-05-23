@@ -9,8 +9,6 @@ public partial class House
 
     public Guid? OwnerId { get; set; }
 
-    public Guid? StaffId { get; set; }
-
     public string? Name { get; set; }
 
     public string? Address { get; set; }
@@ -25,9 +23,5 @@ public partial class House
 
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
-    public virtual User? Owner { get; set; }
-
     public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
-
-    public virtual User? Staff { get; set; }
 }
