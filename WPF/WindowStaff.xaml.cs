@@ -17,7 +17,7 @@ namespace WPF
     /// <summary>
     /// Interaction logic for WindowStaff.xaml
     /// </summary>
-    public partial class WindowStaff : Window
+    public partial class WindowStaff : UserControl
     {
         public WindowStaff()
         {

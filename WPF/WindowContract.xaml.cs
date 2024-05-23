@@ -17,7 +17,7 @@ namespace WPF
     /// <summary>
     /// Interaction logic for WindowContract.xaml
     /// </summary>
-    public partial class WindowContract : Window
+    public partial class WindowContract : UserControl
     {
         public WindowContract()
         {

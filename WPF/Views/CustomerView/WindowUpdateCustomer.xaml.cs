@@ -45,7 +45,7 @@ namespace WPF.Views.CustomerView
                 Email = txtEmail.Text,
                 PhoneNumber = txtPhoneNumber.Text,
                 Address = txtAddress.Text,
-                Gender = txtGender.Text,
+                Gender = cmbGender.Text,
                 Dob = DobDatePicker.SelectedDate ?? DateTime.MinValue,
                 FullName = txtFullName.Text,
                 LicensePlates = txtLicensePlates.Text,
@@ -57,6 +57,11 @@ namespace WPF.Views.CustomerView
             MessageBox.Show($"Customer {customerUpdate.FullName} updated successfully");
             CustomerUpdated?.Invoke(this, EventArgs.Empty);
             Close();
+        }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

@@ -323,5 +323,40 @@ namespace DataAccess.DAO
                                                                                    u.LicensePlates == licensePlates ||
                                                                                    u.CitizenIdNumber == citizenIdNumber));
         }
+
+        public async Task<ResultModel> DeleteCustomer(Guid customerId)
+        {
+            using var context = new RmsContext();
+            IUserRepository userRepository = new UserRepository();
+            ResultModel result = new();
+
+            try
+            {
+                var customer = await userRepository.GetUserById(customerId);
+
+                if (customer == null)
+                {
+                    result.IsSuccess = false;
+                    result.Code = 404;
+                    result.Message = "Customer not found";
+                    return result;
+                }
+
+                context.Users.Remove(customer);
+                await context.SaveChangesAsync();
+
+                result.IsSuccess = true;
+                result.Code = 200;
+                result.Message = "Customer deleted successfully";
+            }
+            catch (Exception ex)
+            {
+                result.IsSuccess = false;
+                result.Code = 500;
+                result.Message = ex.InnerException != null ? ex.InnerException.Message + "\n" + ex.StackTrace : ex.Message + "\n" + ex.StackTrace;
+            }
+
+            return result;
+        }
     }
 }

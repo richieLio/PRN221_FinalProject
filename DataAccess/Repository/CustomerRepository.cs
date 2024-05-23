@@ -25,5 +25,6 @@ namespace DataAccess.Repository
         public Task<bool> IsUserInRoom(Guid roomId, string email, string phoneNumber, string licensePlates, string citizenIdNumber)
             => CustomerDAO.Instance.IsUserInRoom(roomId, email, phoneNumber, licensePlates, citizenIdNumber);
 
+        public Task<ResultModel> DeleteCustomer(Guid customerId) => CustomerDAO.Instance.DeleteCustomer(customerId);
     }
 }

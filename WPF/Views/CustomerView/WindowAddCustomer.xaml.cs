@@ -42,6 +42,8 @@ namespace WPF.Views.CustomerView
                     {
                         FullName = txtFullName.Text.Trim(),
                         Address = txtAddress.Text.Trim(),
+                        PhoneNumber = txtPhoneNumber.Text.Trim(),
+                        Gender = txtGender.Text.Trim(),
                         Email = txtEmail.Text.Trim(),
                         EndDate = EndDateDatePicker.SelectedDate ?? DateTime.MinValue,
                         CreatedAt = DateTime.Now,

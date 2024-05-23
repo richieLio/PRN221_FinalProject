@@ -140,11 +140,18 @@ namespace WPF.Views.CustomerView
 
         private void DeleteCustomer_Click(object sender, RoutedEventArgs e)
         {
+            ICustomerRepository customerRepository = new CustomerRepository();
             if (lvCustomers.SelectedItem is User selectedCustomer)
             {
-                // Your logic to delete the selected customer
-                MessageBox.Show($"Delete customer: {selectedCustomer.FullName}");
+                MessageBoxResult result = MessageBox.Show($"Are you sure to delete {selectedCustomer.FullName}?", "Warning", MessageBoxButton.OKCancel);
+
+                if (result == MessageBoxResult.OK)
+                {
+                    customerRepository.DeleteCustomer(selectedCustomer.Id);
+                    LoadCustomers(_roomId);
+                }
             }
         }
+
     }
 }

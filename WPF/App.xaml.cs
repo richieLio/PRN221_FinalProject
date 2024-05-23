@@ -29,6 +29,7 @@ namespace WPF
             services.AddSingleton<IHouseRepository, HouseRepository>();
             services.AddSingleton<IRoomRepository, RoomRepository>();
             services.AddSingleton<ICustomerRepository, CustomerRepository>();
+            services.AddSingleton<IStaffRepository, StaffRepository>();
 
 
 
@@ -36,6 +37,7 @@ namespace WPF
             services.AddTransient<IHouseRepository, HouseRepository>();
             services.AddTransient<IRoomRepository, RoomRepository>();
             services.AddTransient<ICustomerRepository, CustomerRepository>();
+            services.AddTransient<IStaffRepository, StaffRepository>();
 
 
 

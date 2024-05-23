@@ -29,7 +29,7 @@ namespace DataAccess.Model.UserModel
         [Required(ErrorMessage = "Full name is required")]
         public string? FullName { get; set; }
 
-        public string? Role { get; set; } = "OWNER";
+        public string? Role { get; set; } 
 
         public DateTime? CreatedAt { get; set; }
     }
