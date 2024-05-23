@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WPF.StaffView;
 
 namespace WPF
 {
@@ -36,7 +37,7 @@ namespace WPF
                     case "houseWindow":
                         MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
                         break;
-                    case "Staffs":
+                    case "staffWindow":
                         MainContentControl.Content = _serviceProvider.GetService<WindowStaff>();
                         break;
                     case "serviceWindow":

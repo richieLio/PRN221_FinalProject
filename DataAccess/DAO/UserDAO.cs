@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using DataAccess.Model.EmailModel;
 using DataAccess.Model.OperationResultModel;
 using DataAccess.Model.VerifyModel;
+using DataAccess.Utilities;
 
 namespace DataAccess.DAO
 {
@@ -366,5 +367,6 @@ namespace DataAccess.DAO
             using var context = new RmsContext();
             return await context.Users.FirstOrDefaultAsync(x => x.Id == id);
         }
+       
     }
 }

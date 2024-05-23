@@ -35,19 +35,23 @@ namespace WPF.Views.RoomView
         }
 
         private void btnAddNewRoom_Click(object sender, RoutedEventArgs e)
-        {
-            var room = new RoomCreateReqModel
+        { try
             {
-                RoomId = Guid.NewGuid(),
-                HouseId = _houseId,
-                Name = RoomNameTextBox.Text,
-                Price = decimal.Parse(RoomPriceTextBox.Text),
-            };
-
-            _roomRepository.AddRoom(App.LoggedInUserId, room);
-            MessageBox.Show("Room created successfully");
-            RoomAdded?.Invoke(this, EventArgs.Empty); 
-            Close();
+                var room = new RoomCreateReqModel
+                {
+                    RoomId = Guid.NewGuid(),
+                    HouseId = _houseId,
+                    Name = RoomNameTextBox.Text,
+                    Price = decimal.Parse(RoomPriceTextBox.Text),
+                };
+                _roomRepository.AddRoom(App.LoggedInUserId, room);
+                MessageBox.Show("Room created successfully");
+                RoomAdded?.Invoke(this, EventArgs.Empty);
+                Close();
+            } catch {
+                MessageBox.Show("Pls fill all fields");
+            }
+            
         }
     }
 }

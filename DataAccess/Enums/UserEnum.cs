@@ -6,6 +6,8 @@
         public static readonly string FEMALE = "FEMALE";
         public static readonly string OWNER = "OWNER";
         public static readonly string CUSTOMER = "CUSTOMER";
+        public static readonly string STAFF = "STAFF";
+
     }
 
     public class UserStatus

@@ -23,7 +23,7 @@ public partial class House
 
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
-    public virtual User? Owner { get; set; }
-
     public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
+
+    public virtual ICollection<User> Staff { get; set; } = new List<User>();
 }

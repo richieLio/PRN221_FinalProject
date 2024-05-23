@@ -17,7 +17,7 @@ namespace WPF
     /// <summary>
     /// Interaction logic for WindowBill.xaml
     /// </summary>
-    public partial class WindowBill : Window
+    public partial class WindowBill : UserControl
     {
         public WindowBill()
         {

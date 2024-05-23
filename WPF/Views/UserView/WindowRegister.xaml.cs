@@ -60,7 +60,6 @@ namespace WPF
                     Gender = gender,
                     Dob = dob,
                     FullName = fullName,
-                    Role = "OWNER",
                     CreatedAt = createdAt
                 };
                 var existingUser = await _userRepository.GetUserByEmail(email);

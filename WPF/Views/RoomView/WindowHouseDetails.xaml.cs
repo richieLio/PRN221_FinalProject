@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Object;
+using DataAccess.DAO;
 using DataAccess.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -6,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using WPF.Views.CustomerView;
 using WPF.Views.HouseView;
 using WPF.Views.RoomView;
 
@@ -16,6 +18,7 @@ namespace WPF
         private readonly IHouseRepository _houseRepository;
         private readonly IRoomRepository _roomRepository;
         private readonly IServiceProvider _serviceProvider;
+        private readonly IStaffRepository _staffRepository;
         private string _houseName;
         private string _address;
         private int? _roomQuantity;
@@ -25,7 +28,7 @@ namespace WPF
        
 
         public WindowHouseDetails(IHouseRepository houseRepository, IRoomRepository roomRepository, IServiceProvider serviceProvider,
-            string houseName, string address, int? roomQuantity, int? availableRoom, Guid houseId)
+            string houseName, string address, int? roomQuantity, int? availableRoom, Guid houseId, IStaffRepository staffRepository)
         {
             InitializeComponent();
             _houseRepository = houseRepository;
@@ -40,6 +43,8 @@ namespace WPF
             RoomQuantityTextBlock.Text = _roomQuantity.ToString();
             AvailableRoomTextBlock.Text = _availableRoom.ToString();
             _houseId = houseId;
+            _staffRepository = staffRepository;
+            Initialize();
         }
 
         public async void LoadRooms(Guid houseId)
@@ -67,7 +72,7 @@ namespace WPF
             var selectedRoom = (sender as Border)?.DataContext as Room;
             if (selectedRoom != null)
             {
-                WindowCustomersInRoom customersWindow = new WindowCustomersInRoom(selectedRoom.Id);
+                WindowCustomersInRoom customersWindow = new WindowCustomersInRoom( selectedRoom.Id, _serviceProvider, _houseId);
                 customersWindow.LoadCustomers(selectedRoom.Id);
 
                 MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
@@ -147,7 +152,7 @@ namespace WPF
                         WindowDeleteRoom confirmDialog = new WindowDeleteRoom(room.Name);
                         confirmDialog.RoomDeleted += async (s, args) =>
                         {
-                            await _roomRepository.DeleteRoom(room.Id);
+                            await _roomRepository.DeleteRoom(_houseId, room.Id);
                             MessageBox.Show("Room deleted successfully.");
                             LoadRooms(_houseId);
                         };
@@ -156,6 +161,51 @@ namespace WPF
                 }
             }
         }
+        private async void AssignStaff_Click(object sender, RoutedEventArgs e)
+        {
+            if (cmbStaffList.SelectedItem != null)
+            {
+                var selectedStaff = cmbStaffList.SelectedItem as User; // Assuming User is your staff model
+                var result = await _staffRepository.AddStaffToHouse(selectedStaff.Id, _houseId);
+                if (result)
+                {
+                    MessageBox.Show("Staff assign successfully", "Success");
+                   
+                }
+                else
+                {
+                    MessageBox.Show("bu cu", "vc");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select a staff member to assign.", "Error");
+            }
+        }
+        private async void Initialize()
+        {
+            var staffResult = await _staffRepository.GetAllStaffByOwnerId(App.LoggedInUserId);
+            if (staffResult.IsSuccess)
+            {
+                var staffList = staffResult.Data as List<User>; // Assuming staffResult.Data is a List<User>
+                if (staffList != null)
+                {
+                    cmbStaffList.ItemsSource = staffList;
+                    cmbStaffList.DisplayMemberPath = "FullName"; // Assuming there's a property named FullName in your User model
+                }
+                else
+                {
+                    MessageBox.Show("Invalid data type for staff list.", "Error");
+                }
+            }
+            else
+            {
+                MessageBox.Show(staffResult.Message, "Error");
+            }
+        }
+
+
+
     }
 }
 
