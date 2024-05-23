@@ -41,13 +41,17 @@ public partial class User
 
     public DateTime? Otpexpiration { get; set; }
 
+    public Guid? OwnerId { get; set; }
+
     public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
 
     public virtual ICollection<Contract> ContractCustomers { get; set; } = new List<Contract>();
 
     public virtual ICollection<Contract> ContractOwners { get; set; } = new List<Contract>();
 
-    public virtual ICollection<House> Houses { get; set; } = new List<House>();
+    public virtual ICollection<House> HouseOwners { get; set; } = new List<House>();
+
+    public virtual ICollection<House> HouseStaffs { get; set; } = new List<House>();
 
     public virtual ICollection<Otpverify> Otpverifies { get; set; } = new List<Otpverify>();
 

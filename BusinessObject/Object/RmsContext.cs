@@ -109,6 +109,7 @@ public partial class RmsContext : DbContext
 
             entity.HasOne(d => d.Room).WithMany(p => p.Contracts)
                 .HasForeignKey(d => d.RoomId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Contract_Room");
         });
 
@@ -124,9 +125,13 @@ public partial class RmsContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Status).HasMaxLength(50);
 
-            entity.HasOne(d => d.Owner).WithMany(p => p.Houses)
+            entity.HasOne(d => d.Owner).WithMany(p => p.HouseOwners)
                 .HasForeignKey(d => d.OwnerId)
                 .HasConstraintName("FK_House_User");
+
+            entity.HasOne(d => d.Staff).WithMany(p => p.HouseStaffs)
+                .HasForeignKey(d => d.StaffId)
+                .HasConstraintName("FK_House_User1");
         });
 
         modelBuilder.Entity<Notification>(entity =>
@@ -247,11 +252,9 @@ public partial class RmsContext : DbContext
                     "UserRoom",
                     r => r.HasOne<Room>().WithMany()
                         .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("FK_UserRoom_Room"),
                     l => l.HasOne<User>().WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("FK_UserRoom_User"),
                     j =>
                     {

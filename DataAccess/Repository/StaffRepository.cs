@@ -14,14 +14,12 @@ namespace DataAccess.Repository
     {
         public Task<ResultModel> AddStaff(Guid ownerId, UserReqModel user) => StaffDAO.Instance.AddStaff(ownerId, user);
 
-        public Task<IEnumerable<User>> GetAllStaffByOwnerId(Guid ownerId)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<ResultModel> GetAllStaffByOwnerId(Guid ownerId) => StaffDAO.Instance.GetAllStaffByOwnerId(ownerId);
 
-        public Task<User> GetStaffById(Guid id)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<ResultModel> GetStaffById(Guid id) => StaffDAO.Instance.GetStaffById(id);
+
+        
+
+        
     }
 }

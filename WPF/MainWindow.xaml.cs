@@ -36,7 +36,7 @@ namespace WPF
                     case "houseWindow":
                         MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
                         break;
-                    case "Staffs":
+                    case "staffWindow":
                         MainContentControl.Content = _serviceProvider.GetService<WindowStaff>();
                         break;
                     case "serviceWindow":

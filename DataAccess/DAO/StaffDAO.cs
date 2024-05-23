@@ -1,5 +1,7 @@
-﻿using DataAccess.Model.OperationResultModel;
+﻿using BusinessObject.Object;
+using DataAccess.Model.OperationResultModel;
 using DataAccess.Model.UserModel;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +30,26 @@ namespace DataAccess.DAO
             }
         }
 
-        internal async Task<ResultModel> AddStaff(Guid ownerId, UserReqModel user)
+        public async Task<ResultModel> AddStaff(Guid ownerId, UserReqModel user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<ResultModel> GetAllStaffByOwnerId(Guid ownerUserId)
+        {
+            using var context = new RmsContext();
+           
+            var staffUsers = await context.Users
+                                           .Where(user => user.Role == "Staff" && user.OwnerId == ownerUserId)
+                                           .ToListAsync();
+            return new ResultModel
+            {
+                IsSuccess = true,
+                Data = staffUsers
+            };
+        }
+
+        public async Task<ResultModel> GetStaffById(Guid id)
         {
             throw new NotImplementedException();
         }
