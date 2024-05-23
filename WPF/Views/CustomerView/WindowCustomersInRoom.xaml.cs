@@ -63,6 +63,7 @@ namespace WPF.Views.CustomerView
         {
             IHouseRepository _houseRepository = new HouseRepository();
             IRoomRepository _roomRepository = new RoomRepository();
+            IStaffRepository _staffRepository = new StaffRepository();  
             var house = await _houseRepository.GetHouse(_houseId);
             // Get the main window
             MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
@@ -70,7 +71,7 @@ namespace WPF.Views.CustomerView
             {
                 // Create a new instance of WindowHouse
                 WindowHouseDetails houseWindowDetails = new WindowHouseDetails(_houseRepository, _roomRepository, _serviceProvider,
-                    house.Name, house.Address, house.RoomQuantity, house.AvailableRoom, _houseId);
+                    house.Name, house.Address, house.RoomQuantity, house.AvailableRoom, _houseId, _staffRepository);
                 houseWindowDetails.LoadRooms(_houseId);
                 // Set the MainContentControl content to the new WindowHouse instance
                 mainWindow.MainContentControl.Content = houseWindowDetails;

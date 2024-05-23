@@ -55,5 +55,7 @@ public partial class User
 
     public virtual ICollection<Service> Services { get; set; } = new List<Service>();
 
+    public virtual ICollection<House> Houses { get; set; } = new List<House>();
+
     public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
 }

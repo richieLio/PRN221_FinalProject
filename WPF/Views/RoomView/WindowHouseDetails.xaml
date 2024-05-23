@@ -18,6 +18,12 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10" Width="780">
             <Button Content="Back" Click="BackToHouseManagement_Click" Margin="0,10,10,0" RenderTransformOrigin="0.269,1.091" Style="{StaticResource MaterialDesignFlatButton}"/>
             <Button Content="Add new room" Click="AddNewRoom_Click" Margin="0,10,0,0" RenderTransformOrigin="0,0" Style="{StaticResource MaterialDesignFlatButton}"/>
+            <!-- Combo Box to select unassigned staff -->
+            <ComboBox x:Name="cmbStaffList" Width="200" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+            <!-- Assign Button -->
+            <Button Content="Assign Staff" Click="AssignStaff_Click" Width="120" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
         </StackPanel>
 
         <!-- House Name -->

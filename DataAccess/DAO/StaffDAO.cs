@@ -101,10 +101,37 @@ namespace DataAccess.DAO
                 Data = staffUsers
             };
         }
+        
 
         public async Task<ResultModel> GetStaffById(Guid id)
         {
             throw new NotImplementedException();
         }
+
+        public async Task<bool> AddStaffToHouse(Guid staffId, Guid houseId)
+        {
+            IHouseRepository houseRepository = new HouseRepository();
+            using var context = new RmsContext();
+
+            var house = await houseRepository.GetHouse(houseId);
+            if (house == null)
+            {
+                return false;
+            }
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Id == staffId); 
+            if (user == null)
+            {
+                return false;
+            }
+
+            if (house.Staff.Any(u => u.Id == staffId))
+                return false;
+            house.Staff.Add(user);
+            context.Update(house);
+            context.SaveChanges();
+
+            return true;
+        }
+
     }
 }

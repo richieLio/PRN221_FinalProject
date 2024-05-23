@@ -31,11 +31,12 @@ namespace WPF
 
         private void Border_Click(object sender, MouseButtonEventArgs e)
         {
+            IStaffRepository staffRepository = new StaffRepository();
             var selectedHouse = (sender as Border)?.DataContext as House;
             if (selectedHouse != null)
             {
                 WindowHouseDetails detailsWindow = new WindowHouseDetails(_houseRepository, _roomRepository, _serviceProvider, selectedHouse.Name, selectedHouse.Address
-                    , selectedHouse.RoomQuantity, selectedHouse.AvailableRoom,  selectedHouse.Id);
+                    , selectedHouse.RoomQuantity, selectedHouse.AvailableRoom,  selectedHouse.Id, staffRepository);
                 detailsWindow.LoadRooms(selectedHouse.Id);
 
                 MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
