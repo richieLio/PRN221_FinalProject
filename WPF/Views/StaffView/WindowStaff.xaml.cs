@@ -35,14 +35,14 @@ namespace WPF.StaffView
             _serviceProvider = serviceProvider;
             _userRepository = userRepository;
             _staffRepository = staffRepository;
-            LoadStaffs();
+            LoadStaffs(App.LoggedInUserId);
         }
 
-        public async void LoadStaffs()
+        public async void LoadStaffs(Guid ownerId)
         {
             try
             {
-                var result = await _staffRepository.GetAllStaffByOwnerId(App.LoggedInUserId);
+                var result = await _staffRepository.GetAllStaffByOwnerId(ownerId);
 
                 if (result.IsSuccess)
                 {
@@ -71,19 +71,88 @@ namespace WPF.StaffView
             var addStaffWindow = new WindowAddNewStaff(_userRepository, _staffRepository);
             addStaffWindow.StaffAdded += (s, args) =>
             {
-                LoadStaffs();
+                LoadStaffs(App.LoggedInUserId);
             };
             addStaffWindow.Show();
         }
 
         private void EditStaff_Click(object sender, RoutedEventArgs e)
         {
-            // Implement edit functionality
+            try
+            {
+                MenuItem menuItem = sender as MenuItem;
+                if (menuItem != null)
+                {
+                    ContextMenu contextMenu = menuItem.Parent as ContextMenu;
+                    if (contextMenu != null)
+                    {
+                        ListView listView = contextMenu.PlacementTarget as ListView;
+                        if (listView != null)
+                        {
+                            if (listView.SelectedItem is User selectedUser)
+                            {
+                                var updateStaffWindow = new WindowUpdateStaff(_serviceProvider.GetService<ICustomerRepository>(), selectedUser);
+                                updateStaffWindow.staffUpdated += (s, args) =>
+                                {
+                                    LoadStaffs(App.LoggedInUserId);
+                                };
+                                updateStaffWindow.ShowDialog();
+                            }
+                            else
+                            {
+                                MessageBox.Show("No user selected.");
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("ListView is null.");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("ContextMenu is null.");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("MenuItem is null.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}");
+            }
         }
 
-        private void DeleteStaff_Click(object sender, RoutedEventArgs e)
+        private async void DeleteStaff_Click(object sender, RoutedEventArgs e)
         {
-            // Implement delete functionality
+            ICustomerRepository customerRepository = new CustomerRepository();
+            if (lvStaffs.SelectedItem is User selectedStaff)
+            {
+                MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete {selectedStaff.FullName}?", "Warning", MessageBoxButton.OKCancel);
+
+                if (result == MessageBoxResult.OK)
+                {
+                    try
+                    {
+                        var deleteResult = await customerRepository.DeleteCustomer(selectedStaff.Id);
+                        if (deleteResult.IsSuccess)
+                        {
+                            MessageBox.Show("Staff deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                            LoadStaffs(App.LoggedInUserId);
+                        }
+                        else
+                        {
+                            MessageBox.Show(deleteResult.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"An error occurred while deleting staff: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
         }
+
     }
 }
