@@ -88,18 +88,15 @@ namespace DataAccess.DAO
             }
         }
 
-        public async Task<ResultModel> GetAllStaffByOwnerId(Guid ownerUserId)
+        public async Task<IEnumerable<User>> GetAllStaffByOwnerId(Guid ownerUserId)
         {
             using var context = new RmsContext();
 
             var staffUsers = await context.Users
                                            .Where(user => user.Role == UserEnum.STAFF && user.OwnerId == ownerUserId)
                                            .ToListAsync();
-            return new ResultModel
-            {
-                IsSuccess = true,
-                Data = staffUsers
-            };
+            return staffUsers;
+            
         }
 
 

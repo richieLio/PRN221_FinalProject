@@ -29,6 +29,8 @@ namespace WPF
             InitializeComponent();
             _serviceProvider = serviceProvider;
             UpdateStaffButtonVisibility();
+            var staffWindow = _serviceProvider.GetService<WindowStaff>();
+            staffWindow.LoadStaffs();
             MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
         }
 

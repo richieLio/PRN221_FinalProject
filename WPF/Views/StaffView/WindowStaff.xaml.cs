@@ -33,30 +33,15 @@ namespace WPF.StaffView
             _repository = repository;
             InitializeComponent();
             _serviceProvider = serviceProvider;
-            LoadStaffs(App.LoggedInUserId);
+            LoadStaffs();
         }
+       
 
-        public async void LoadStaffs(Guid ownerId)
+        public async void LoadStaffs()
         {
             try
             {
-                var result = await _repository.GetAllStaffByOwnerId(ownerId);
-
-                if (result.IsSuccess)
-                {
-                    if (result.Data is IEnumerable<User> users)
-                    {
-                        lvStaffs.ItemsSource = users;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Invalid data type returned from repository.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(result.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                lvStaffs.ItemsSource = await _repository.GetAllStaffByOwnerId(App.LoggedInUserId);
             }
             catch (Exception ex)
             {
@@ -69,7 +54,7 @@ namespace WPF.StaffView
             var addStaffWindow = new WindowAddNewStaff(_repository);
             addStaffWindow.StaffAdded += (s, args) =>
             {
-                LoadStaffs(App.LoggedInUserId);
+                LoadStaffs();
             };
             addStaffWindow.Show();
         }
@@ -92,7 +77,7 @@ namespace WPF.StaffView
                                 var updateStaffWindow = new WindowUpdateStaff(_serviceProvider.GetService<ICombineRepository>(), selectedUser);
                                 updateStaffWindow.staffUpdated += (s, args) =>
                                 {
-                                    LoadStaffs(App.LoggedInUserId);
+                                    LoadStaffs();
                                 };
                                 updateStaffWindow.ShowDialog();
                             }
@@ -124,7 +109,7 @@ namespace WPF.StaffView
 
         private async void DeleteStaff_Click(object sender, RoutedEventArgs e)
         {
-          
+
             if (lvStaffs.SelectedItem is User selectedStaff)
             {
                 MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete {selectedStaff.FullName}?", "Warning", MessageBoxButton.OKCancel);
@@ -137,7 +122,7 @@ namespace WPF.StaffView
                         if (deleteResult.IsSuccess)
                         {
                             MessageBox.Show("Staff deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                            LoadStaffs(App.LoggedInUserId);
+                            LoadStaffs();
                         }
                         else
                         {
@@ -151,6 +136,7 @@ namespace WPF.StaffView
                 }
             }
         }
+               
 
     }
 }
