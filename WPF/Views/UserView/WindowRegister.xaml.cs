@@ -27,11 +27,11 @@ namespace WPF
     public partial class WindowRegister : Window
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly IUserRepository _userRepository;
-        public WindowRegister(IServiceProvider serviceProvider, IUserRepository userRepository)
+        private readonly ICombineRepository _repository;
+        public WindowRegister(IServiceProvider serviceProvider, ICombineRepository repository)
         {
+            _repository = repository;
             InitializeComponent();
-            _userRepository = userRepository;
             _serviceProvider = serviceProvider;
             // Ẩn các thành phần OTP khi cửa sổ được tạo ra
             OTPTextBox.Visibility = Visibility.Collapsed;
@@ -62,7 +62,7 @@ namespace WPF
                     FullName = fullName,
                     CreatedAt = createdAt
                 };
-                var existingUser = await _userRepository.GetUserByEmail(email);
+                var existingUser = await _repository.GetUserByEmail(email);
 
                 if (existingUser != null)
                 {
@@ -81,7 +81,7 @@ namespace WPF
                     return;
                 }
 
-                await _userRepository.CreateAccount(account);
+                await _repository.CreateAccount(account);
 
                 MessageBox.Show("An otp has been seen to your email!");
                 OTPTextBox.Visibility = Visibility.Visible;
@@ -103,10 +103,10 @@ namespace WPF
                 {
                     OTP = OTPtext,
                 };
-                var userToVerify = await _userRepository.GetUserByVerificationToken(OTPtext);
+                var userToVerify = await _repository.GetUserByVerificationToken(OTPtext);
                 if (userToVerify != null)
                 {
-                    await _userRepository.VerifyEmail(user);
+                    await _repository.VerifyEmail(user);
                     MessageBox.Show("Email verified");
                 }
                 else

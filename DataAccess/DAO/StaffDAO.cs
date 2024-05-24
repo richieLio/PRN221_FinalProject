@@ -93,7 +93,7 @@ namespace DataAccess.DAO
             using var context = new RmsContext();
 
             var staffUsers = await context.Users
-                                           .Where(user => user.Role == "Staff" && user.OwnerId == ownerUserId)
+                                           .Where(user => user.Role == UserEnum.STAFF && user.OwnerId == ownerUserId)
                                            .ToListAsync();
             return new ResultModel
             {
@@ -101,7 +101,7 @@ namespace DataAccess.DAO
                 Data = staffUsers
             };
         }
-        
+
 
         public async Task<ResultModel> GetStaffById(Guid id)
         {
@@ -118,7 +118,7 @@ namespace DataAccess.DAO
             {
                 return false;
             }
-            var user = await context.Users.FirstOrDefaultAsync(u => u.Id == staffId); 
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Id == staffId);
             if (user == null)
             {
                 return false;
@@ -132,6 +132,47 @@ namespace DataAccess.DAO
 
             return true;
         }
+        public async Task<ResultModel> GetAssignedStaffByHouseId(Guid houseId)
+        {
+            using var context = new RmsContext();
+            try
+            {
+                var house = await context.Houses
+                                         .Include(h => h.Staff)
+                                         .FirstOrDefaultAsync(h => h.Id == houseId);
 
+                if (house == null || !house.Staff.Any())
+                {
+                    return new ResultModel { IsSuccess = false, Message = "No staff assigned to this house." };
+                }
+
+                var staff = house.Staff.First();
+
+                return new ResultModel
+                {
+                    IsSuccess = true,
+                    Data = staff
+                };
+            }
+            catch (Exception e)
+            {
+                return new ResultModel
+                {
+                    IsSuccess = false,
+                    Message = e.InnerException != null ? e.InnerException.Message + "\n" + e.StackTrace : e.Message + "\n" + e.StackTrace
+                };
+            }
+        }
+
+        public async Task<IEnumerable<House>> GetAllHouseByStaffId(Guid staffId)
+        {
+            using var context = new RmsContext();
+
+            var houses = await context.Houses
+                                      .Where(h => h.Staff.Any(s => s.Id == staffId))
+                                      .ToListAsync();
+            return houses;
+
+        }
     }
 }

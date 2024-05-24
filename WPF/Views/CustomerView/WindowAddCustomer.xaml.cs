@@ -10,17 +10,15 @@ namespace WPF.Views.CustomerView
 {
     public partial class WindowAddCustomer : Window
     {
-        private readonly ICustomerRepository _customerRepository;
-        private readonly IHouseRepository _houseRepository;
+        private readonly ICombineRepository _repository;
         public event EventHandler CustomerAdded;
         private readonly Guid _houseId;
         private readonly Guid _roomId;
 
-        public WindowAddCustomer(ICustomerRepository customerRepository, IHouseRepository houseRepository, Guid houseId, Guid roomId)
+        public WindowAddCustomer(ICombineRepository repository, Guid houseId, Guid roomId)
         {
+            _repository = repository;
             InitializeComponent();
-            _customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
-            _houseRepository = houseRepository ?? throw new ArgumentNullException(nameof(houseRepository));
             _houseId = houseId;
             _roomId = roomId;
         }
@@ -29,7 +27,7 @@ namespace WPF.Views.CustomerView
         {
             try
             {
-                int? availableRoom = await _houseRepository.GetRoomQuantityByHouseId(_houseId);
+                int? availableRoom = await _repository.GetRoomQuantityByHouseId(_houseId);
                 if (availableRoom == null)
                 {
                     MessageBox.Show("House not found.");
@@ -58,7 +56,7 @@ namespace WPF.Views.CustomerView
                     }
                 };
 
-                var result = await _customerRepository.AddCustomerToRoom(App.LoggedInUserId, customer);
+                var result = await _repository.AddCustomerToRoom(App.LoggedInUserId, customer);
 
                 if (result.IsSuccess)
                 {

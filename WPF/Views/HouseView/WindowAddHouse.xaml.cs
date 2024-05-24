@@ -23,11 +23,11 @@ namespace WPF.Views.HouseView
     {
         public event EventHandler HouseAdded;
 
-        private readonly IHouseRepository _houseRepository;
-        public WindowAddHouse(IHouseRepository houseRepository)
+        private readonly ICombineRepository _repository;
+        public WindowAddHouse(ICombineRepository repository)
         {
+            _repository = repository;
             InitializeComponent();
-            _houseRepository = houseRepository;
         }
 
         private void btnAddNewHouse_Click(object sender, RoutedEventArgs e)
@@ -38,9 +38,9 @@ namespace WPF.Views.HouseView
                 Address = AddressTextBox.Text,
             };
 
-            _houseRepository.AddHouse(App.LoggedInUserId, house);
+            _repository.AddHouse(App.LoggedInUserId, house);
             MessageBox.Show("House created successfully");
-            HouseAdded?.Invoke(this, EventArgs.Empty); // Raise the event
+            HouseAdded?.Invoke(this, EventArgs.Empty); 
             Close();
         }
 

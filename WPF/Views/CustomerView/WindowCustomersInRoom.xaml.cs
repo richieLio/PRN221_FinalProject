@@ -18,10 +18,12 @@ namespace WPF.Views.CustomerView
     public partial class WindowCustomersInRoom : UserControl
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly ICombineRepository _repository;
         private readonly Guid _roomId;
         private readonly Guid _houseId;
-        public WindowCustomersInRoom(Guid roomId, IServiceProvider serviceProvider, Guid houseId)
+        public WindowCustomersInRoom( IServiceProvider serviceProvider,ICombineRepository repository, Guid houseId, Guid roomId)
         {
+            _repository = repository;
             InitializeComponent();
             LoadCustomers(roomId);
             _roomId = roomId;
@@ -33,8 +35,7 @@ namespace WPF.Views.CustomerView
         {
             try
             {
-                ICustomerRepository customerRepository = new CustomerRepository();
-                var result = await customerRepository.GetCustomerByRoomId(roomId);
+                var result = await _repository.GetCustomerByRoomId(roomId);
 
                 if (result.IsSuccess)
                 {
@@ -61,17 +62,15 @@ namespace WPF.Views.CustomerView
 
         private async void BackToRoomManagement_Click(object sender, RoutedEventArgs e)
         {
-            IHouseRepository _houseRepository = new HouseRepository();
-            IRoomRepository _roomRepository = new RoomRepository();
-            IStaffRepository _staffRepository = new StaffRepository();  
-            var house = await _houseRepository.GetHouse(_houseId);
+             
+            var house = await _repository.GetHouse(_houseId);
             // Get the main window
             MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
             if (mainWindow != null)
             {
                 // Create a new instance of WindowHouse
-                WindowHouseDetails houseWindowDetails = new WindowHouseDetails(_houseRepository, _roomRepository, _serviceProvider,
-                    house.Name, house.Address, house.RoomQuantity, house.AvailableRoom, _houseId, _staffRepository);
+                WindowHouseDetails houseWindowDetails = new WindowHouseDetails(_serviceProvider, _repository,
+                    house.Name, house.Address, house.RoomQuantity, house.AvailableRoom, _houseId);
                 houseWindowDetails.LoadRooms(_houseId);
                 // Set the MainContentControl content to the new WindowHouse instance
                 mainWindow.MainContentControl.Content = houseWindowDetails;
@@ -81,7 +80,7 @@ namespace WPF.Views.CustomerView
 
         private void AddCustomer_Click(object sender, RoutedEventArgs e)
         {
-            var addCustomerWindow = new WindowAddCustomer(_serviceProvider.GetService<ICustomerRepository>(), _serviceProvider.GetService<IHouseRepository>(), _houseId, _roomId);
+            var addCustomerWindow = new WindowAddCustomer(_serviceProvider.GetService<ICombineRepository>(), _houseId, _roomId);
             addCustomerWindow.CustomerAdded += (s, args) =>
             {
                 // HouseAdded event handler, you might want to refresh the list of houses or take other actions
@@ -105,7 +104,7 @@ namespace WPF.Views.CustomerView
                         {
                             if (listView.SelectedItem is User selectedUser)
                             {
-                                var updateCustomerWindow = new WindowUpdateCustomer(_serviceProvider.GetService<ICustomerRepository>(), selectedUser);
+                                var updateCustomerWindow = new WindowUpdateCustomer(_serviceProvider.GetService<ICombineRepository>(), selectedUser);
                                 updateCustomerWindow.CustomerUpdated += (s, args) =>
                                 {
                                     LoadCustomers(_roomId);
@@ -141,14 +140,13 @@ namespace WPF.Views.CustomerView
 
         private void DeleteCustomer_Click(object sender, RoutedEventArgs e)
         {
-            ICustomerRepository customerRepository = new CustomerRepository();
             if (lvCustomers.SelectedItem is User selectedCustomer)
             {
                 MessageBoxResult result = MessageBox.Show($"Are you sure to delete {selectedCustomer.FullName}?", "Warning", MessageBoxButton.OKCancel);
 
                 if (result == MessageBoxResult.OK)
                 {
-                    customerRepository.DeleteCustomer(selectedCustomer.Id);
+                    _repository.DeleteCustomer(selectedCustomer.Id);
                     LoadCustomers(_roomId);
                 }
             }

@@ -17,5 +17,8 @@ namespace DataAccess.Repository
         Task <ResultModel> AddStaff(Guid ownerId, UserReqModel user);
 
         Task<bool> AddStaffToHouse(Guid staffId, Guid houseId);
+        Task<ResultModel> GetAssignedStaffByHouseId(Guid houseId);
+
+        Task<IEnumerable<House>> GetAllHouseByStaffId(Guid staffId);
     }
 }
