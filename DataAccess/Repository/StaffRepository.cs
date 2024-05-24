@@ -18,6 +18,7 @@ namespace DataAccess.Repository
 
         public Task<ResultModel> GetAllStaffByOwnerId(Guid ownerId) => StaffDAO.Instance.GetAllStaffByOwnerId(ownerId);
 
+        public Task<ResultModel> GetAssignedStaffByHouseId(Guid houseId) => StaffDAO.Instance.GetAssignedStaffByHouseId(houseId);
 
         public Task<ResultModel> GetStaffById(Guid id) => StaffDAO.Instance.GetStaffById(id);
 
