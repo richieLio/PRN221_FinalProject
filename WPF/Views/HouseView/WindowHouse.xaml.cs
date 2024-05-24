@@ -18,15 +18,15 @@ namespace WPF
 
         public WindowHouse(IServiceProvider serviceProvider, ICombineRepository repository)
         {
-            InitializeComponent();
             _repository = repository;
+            InitializeComponent();
             _serviceProvider = serviceProvider;
             LoadHouses();
         }
 
         private async void LoadHouses()
         {
-           
+
             var user = await _repository.GetUserById(App.LoggedInUserId);
             if (user.Role == UserEnum.STAFF)
             {

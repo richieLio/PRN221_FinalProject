@@ -11,7 +11,7 @@ namespace DataAccess.Repository
 {
     public interface IStaffRepository
     {
-        Task<ResultModel> GetAllStaffByOwnerId(Guid ownerId);
+        Task<IEnumerable<User>> GetAllStaffByOwnerId(Guid ownerId);
 
         Task<ResultModel> GetStaffById(Guid id);
         Task <ResultModel> AddStaff(Guid ownerId, UserReqModel user);

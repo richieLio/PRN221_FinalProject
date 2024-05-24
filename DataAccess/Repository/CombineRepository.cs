@@ -65,7 +65,7 @@ namespace DataAccess.Repository
         public Task<IEnumerable<House>> GetAllHouseByStaffId(Guid staffId)
  => _staffRepository.GetAllHouseByStaffId(staffId);
 
-        public Task<ResultModel> GetAllStaffByOwnerId(Guid ownerId)
+        public Task<IEnumerable<User>> GetAllStaffByOwnerId(Guid ownerId)
  => _staffRepository.GetAllStaffByOwnerId(ownerId);
 
         public Task<ResultModel> GetAssignedStaffByHouseId(Guid houseId)
