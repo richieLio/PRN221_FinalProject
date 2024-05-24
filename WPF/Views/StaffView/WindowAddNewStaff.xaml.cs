@@ -22,15 +22,13 @@ namespace WPF.Views.StaffView
     /// </summary>
     public partial class WindowAddNewStaff : Window
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IStaffRepository _staffRepository;
+        private readonly ICombineRepository _repository;
         public event EventHandler StaffAdded;
 
-        public WindowAddNewStaff(IUserRepository userRepository, IStaffRepository staffRepository)
+        public WindowAddNewStaff(ICombineRepository repository)
         {
+            _repository = repository;
             InitializeComponent();
-            _userRepository = userRepository;
-            _staffRepository = staffRepository;
         }
 
         private async void CreateButton_Click(object sender, RoutedEventArgs e)
@@ -57,7 +55,7 @@ namespace WPF.Views.StaffView
                     FullName = fullName,
                     CreatedAt = createdAt
                 };
-                var existingUser = await _userRepository.GetUserByEmail(email);
+                var existingUser = await _repository.GetUserByEmail(email);
 
                 if (existingUser != null)
                 {
@@ -76,7 +74,7 @@ namespace WPF.Views.StaffView
                     return;
                 }
 
-                await _staffRepository.AddStaff(App.LoggedInUserId, account);
+                await _repository.AddStaff(App.LoggedInUserId, account);
                 MessageBox.Show("Staff created successfully");
 
                 StaffAdded?.Invoke(this, EventArgs.Empty);

@@ -26,15 +26,13 @@ namespace WPF.StaffView
     public partial class WindowStaff : UserControl
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly IUserRepository _userRepository;
-        private readonly IStaffRepository _staffRepository;
+        private readonly ICombineRepository _repository;
 
-        public WindowStaff(IServiceProvider serviceProvider, IUserRepository userRepository, IStaffRepository staffRepository)
+        public WindowStaff(IServiceProvider serviceProvider, ICombineRepository repository)
         {
+            _repository = repository;
             InitializeComponent();
             _serviceProvider = serviceProvider;
-            _userRepository = userRepository;
-            _staffRepository = staffRepository;
             LoadStaffs(App.LoggedInUserId);
         }
 
@@ -42,7 +40,7 @@ namespace WPF.StaffView
         {
             try
             {
-                var result = await _staffRepository.GetAllStaffByOwnerId(ownerId);
+                var result = await _repository.GetAllStaffByOwnerId(ownerId);
 
                 if (result.IsSuccess)
                 {
@@ -68,7 +66,7 @@ namespace WPF.StaffView
 
         private void AddStaff_Click(object sender, RoutedEventArgs e)
         {
-            var addStaffWindow = new WindowAddNewStaff(_userRepository, _staffRepository);
+            var addStaffWindow = new WindowAddNewStaff(_repository);
             addStaffWindow.StaffAdded += (s, args) =>
             {
                 LoadStaffs(App.LoggedInUserId);
@@ -91,7 +89,7 @@ namespace WPF.StaffView
                         {
                             if (listView.SelectedItem is User selectedUser)
                             {
-                                var updateStaffWindow = new WindowUpdateStaff(_serviceProvider.GetService<ICustomerRepository>(), selectedUser);
+                                var updateStaffWindow = new WindowUpdateStaff(_serviceProvider.GetService<ICombineRepository>(), selectedUser);
                                 updateStaffWindow.staffUpdated += (s, args) =>
                                 {
                                     LoadStaffs(App.LoggedInUserId);
@@ -126,7 +124,7 @@ namespace WPF.StaffView
 
         private async void DeleteStaff_Click(object sender, RoutedEventArgs e)
         {
-            ICustomerRepository customerRepository = new CustomerRepository();
+          
             if (lvStaffs.SelectedItem is User selectedStaff)
             {
                 MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete {selectedStaff.FullName}?", "Warning", MessageBoxButton.OKCancel);
@@ -135,7 +133,7 @@ namespace WPF.StaffView
                 {
                     try
                     {
-                        var deleteResult = await customerRepository.DeleteCustomer(selectedStaff.Id);
+                        var deleteResult = await _repository.DeleteCustomer(selectedStaff.Id);
                         if (deleteResult.IsSuccess)
                         {
                             MessageBox.Show("Staff deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);

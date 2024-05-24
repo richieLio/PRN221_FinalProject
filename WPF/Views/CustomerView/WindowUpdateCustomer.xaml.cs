@@ -27,12 +27,12 @@ namespace WPF.Views.CustomerView
         public event EventHandler CustomerUpdated;
         private readonly User _customer;
 
-        private readonly ICustomerRepository _customerRepository;
+        private readonly ICombineRepository _repository;
 
-        public WindowUpdateCustomer(ICustomerRepository customerRepository, User customer)
+        public WindowUpdateCustomer(ICombineRepository repository, User customer)
         {
+            _repository = repository;
             InitializeComponent();
-            _customerRepository = customerRepository;
             _customer = customer;
             DataContext = customer;
         }
@@ -53,7 +53,7 @@ namespace WPF.Views.CustomerView
                 CitizenIdNumber = txtCitizenID.Text,
 
         };
-            _customerRepository.UpdateUserProfile(customerUpdate);
+            _repository.UpdateUserProfile(customerUpdate);
             MessageBox.Show($"Customer {customerUpdate.FullName} updated successfully");
             CustomerUpdated?.Invoke(this, EventArgs.Empty);
             Close();

@@ -21,51 +21,61 @@ namespace WPF
     public partial class MainWindow : Window
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly ICombineRepository _repository;
 
-        public MainWindow(IServiceProvider serviceProvider)
+        public MainWindow(IServiceProvider serviceProvider, ICombineRepository repository)
         {
+            _repository = repository;
             InitializeComponent();
             _serviceProvider = serviceProvider;
             UpdateStaffButtonVisibility();
             MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
-
         }
 
         private async void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
-                var radioButton = sender as RadioButton;
-                if (radioButton != null)
+            var radioButton = sender as RadioButton;
+            if (radioButton != null)
+            {
+                switch (radioButton.Tag.ToString())
                 {
-                    switch (radioButton.Tag.ToString())
-                    {
-                        case "houseWindow":
-                            MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
-                            break;
-                        case "staffWindow":
-                            MainContentControl.Content = _serviceProvider.GetService<WindowStaff>();
-                            break;
-                        case "serviceWindow":
-                            MainContentControl.Content = _serviceProvider.GetService<WindowService>();
-                            break;
-                        case "contractWindow":
-                            MainContentControl.Content = _serviceProvider.GetService<WindowContract>();
-                            break;
-                        case "notificationWindow":
-                            MainContentControl.Content = _serviceProvider.GetService<WindowNotification>();
-                            break;
-                        case "billWindow":
-                            MainContentControl.Content = _serviceProvider.GetService<WindowBill>();
-                            break;
-                    }
+                    case "houseWindow":
+                        MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
+                        break;
+                    case "staffWindow":
+                        MainContentControl.Content = _serviceProvider.GetService<WindowStaff>();
+                        break;
+                    case "serviceWindow":
+                        MainContentControl.Content = _serviceProvider.GetService<WindowService>();
+                        break;
+                    case "contractWindow":
+                        MainContentControl.Content = _serviceProvider.GetService<WindowContract>();
+                        break;
+                    case "notificationWindow":
+                        MainContentControl.Content = _serviceProvider.GetService<WindowNotification>();
+                        break;
+                    case "billWindow":
+                        MainContentControl.Content = _serviceProvider.GetService<WindowBill>();
+                        break;
                 }
-            
+            }
+
         }
         private async void UpdateStaffButtonVisibility()
         {
-            IUserRepository userRepository = new UserRepository();
-            var user = await userRepository.GetUserById(App.LoggedInUserId);
-            staffRadioButton.Visibility = user.Role == UserEnum.OWNER ? Visibility.Visible : Visibility.Collapsed;
+           
+            var user = await _repository.GetUserById(App.LoggedInUserId);
+            if (user != null)
+            {
+                staffRadioButton.Visibility = user.Role == UserEnum.OWNER ? Visibility.Visible : Visibility.Collapsed;
+            }
+            else
+            {
+                MessageBox.Show("User not found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
+
 
         private void btnLogout_Click(object sender, RoutedEventArgs e)
         {

@@ -16,22 +16,19 @@ namespace WPF
 {
     public partial class WindowHouseDetails : UserControl
     {
-        private readonly IHouseRepository _houseRepository;
-        private readonly IRoomRepository _roomRepository;
         private readonly IServiceProvider _serviceProvider;
-        private readonly IStaffRepository _staffRepository;
+        private readonly ICombineRepository _repository;
         private string _houseName;
         private string _address;
         private int? _roomQuantity;
         private int? _availableRoom;
         private Guid _houseId;
 
-        public WindowHouseDetails(IHouseRepository houseRepository, IRoomRepository roomRepository, IServiceProvider serviceProvider,
-            string houseName, string address, int? roomQuantity, int? availableRoom, Guid houseId, IStaffRepository staffRepository)
+        public WindowHouseDetails(IServiceProvider serviceProvider,ICombineRepository repository,
+            string houseName, string address, int? roomQuantity, int? availableRoom, Guid houseId)
         {
             InitializeComponent();
-            _houseRepository = houseRepository;
-            _roomRepository = roomRepository;
+            
             _serviceProvider = serviceProvider;
             _houseName = houseName;
             _address = address;
@@ -42,13 +39,13 @@ namespace WPF
             RoomQuantityTextBlock.Text = _roomQuantity.ToString();
             AvailableRoomTextBlock.Text = _availableRoom.ToString();
             _houseId = houseId;
-            _staffRepository = staffRepository;
+            _repository = repository;
             Initialize();
         }
 
         public async void LoadRooms(Guid houseId)
         {
-            lvRooms.ItemsSource = await _roomRepository.GetRooms(houseId);
+            lvRooms.ItemsSource = await _repository.GetRooms(houseId);
         }
 
         private void BackToHouseManagement_Click(object sender, RoutedEventArgs e)
@@ -56,7 +53,7 @@ namespace WPF
             MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
             if (mainWindow != null)
             {
-                WindowHouse houseWindow = new WindowHouse(_houseRepository, _roomRepository, _serviceProvider);
+                WindowHouse houseWindow = new WindowHouse(_serviceProvider, _repository);
                 mainWindow.MainContentControl.Content = houseWindow;
             }
         }
@@ -66,7 +63,7 @@ namespace WPF
             var selectedRoom = (sender as Border)?.DataContext as Room;
             if (selectedRoom != null)
             {
-                WindowCustomersInRoom customersWindow = new WindowCustomersInRoom(selectedRoom.Id, _serviceProvider, _houseId);
+                WindowCustomersInRoom customersWindow = new WindowCustomersInRoom(_serviceProvider, _repository, _houseId, selectedRoom.Id);
                 customersWindow.LoadCustomers(selectedRoom.Id);
 
                 MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
@@ -79,7 +76,7 @@ namespace WPF
 
         private void AddNewRoom_Click(object sender, RoutedEventArgs e)
         {
-            var windowAddRoom = new WindowAddRoom(_serviceProvider.GetService<IRoomRepository>(), _houseId);
+            var windowAddRoom = new WindowAddRoom(_serviceProvider.GetService<ICombineRepository>(), _houseId);
             windowAddRoom.RoomAdded += (s, args) =>
             {
                 LoadRooms(_houseId);
@@ -91,7 +88,7 @@ namespace WPF
         {
             if (sender is Border border && border.DataContext is Room room)
             {
-                var customers = await _roomRepository.GetListCustomerByRoomId(room.Id);
+                var customers = await _repository.GetListCustomerByRoomId(room.Id);
                 PopupRoomName.Text = room.Name;
                 PopupRoomPrice.Text = $"Price: {room.Price}";
                 PopupListCustomers.Text = "Customers: " + string.Join(", ", customers.Select(customer => customer.FullName));
@@ -121,7 +118,7 @@ namespace WPF
                     var room = border.DataContext as Room;
                     if (room != null)
                     {
-                        var updateRoomWindow = new WindowUpdateRoom(_serviceProvider.GetService<IRoomRepository>(), room);
+                        var updateRoomWindow = new WindowUpdateRoom(_serviceProvider.GetService<ICombineRepository>(), room);
                         updateRoomWindow.RoomUpdated += (s, args) =>
                         {
                             LoadRooms(_houseId);
@@ -146,7 +143,7 @@ namespace WPF
                         WindowDeleteRoom confirmDialog = new WindowDeleteRoom(room.Name);
                         confirmDialog.RoomDeleted += async (s, args) =>
                         {
-                            await _roomRepository.DeleteRoom(_houseId, room.Id);
+                            await _repository.DeleteRoom(_houseId, room.Id);
                             MessageBox.Show("Room deleted successfully.");
                             LoadRooms(_houseId);
                         };
@@ -161,7 +158,7 @@ namespace WPF
             if (cmbStaffList.SelectedItem != null)
             {
                 var selectedStaff = cmbStaffList.SelectedItem as User;
-                var result = await _staffRepository.AddStaffToHouse(selectedStaff.Id, _houseId);
+                var result = await _repository.AddStaffToHouse(selectedStaff.Id, _houseId);
                 if (result)
                 {
                     MessageBox.Show("Staff assigned successfully", "Success");
@@ -180,7 +177,7 @@ namespace WPF
 
         private async void Initialize()
         {
-            var staffResult = await _staffRepository.GetAllStaffByOwnerId(App.LoggedInUserId);
+            var staffResult = await _repository.GetAllStaffByOwnerId(App.LoggedInUserId);
             if (staffResult.IsSuccess)
             {
                 var staffList = staffResult.Data as List<User>;
@@ -199,7 +196,7 @@ namespace WPF
                 MessageBox.Show(staffResult.Message, "Error");
             }
 
-            var assignedStaffResult = await _staffRepository.GetAssignedStaffByHouseId(_houseId);
+            var assignedStaffResult = await _repository.GetAssignedStaffByHouseId(_houseId);
             if (assignedStaffResult.IsSuccess && assignedStaffResult.Data != null)
             {
                 var assignedStaff = assignedStaffResult.Data as User;

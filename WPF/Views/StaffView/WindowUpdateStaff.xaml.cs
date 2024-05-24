@@ -25,12 +25,12 @@ namespace WPF.Views.StaffView
         public event EventHandler staffUpdated;
         private readonly User _staff;
 
-        private readonly ICustomerRepository _customerRepository;
+        private readonly ICombineRepository _repository;
 
-        public WindowUpdateStaff(ICustomerRepository customerRepository, User staff)
+        public WindowUpdateStaff(ICombineRepository repository, User staff)
         {
+            _repository = repository;
             InitializeComponent();
-            _customerRepository = customerRepository;
             _staff = staff;
             DataContext = staff;
         }
@@ -51,7 +51,7 @@ namespace WPF.Views.StaffView
                 CitizenIdNumber = txtCitizenID.Text,
 
             };
-            _customerRepository.UpdateUserProfile(staffUpdate);
+            _repository.UpdateUserProfile(staffUpdate);
             MessageBox.Show($"Staff {staffUpdate.FullName} updated successfully");
             staffUpdated?.Invoke(this, EventArgs.Empty);
             Close();

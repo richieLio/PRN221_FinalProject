@@ -26,12 +26,12 @@ namespace WPF
     /// </summary>
     public partial class WindowLogin : Window
     {
-        private readonly IUserRepository _userRepository;
+        private readonly ICombineRepository _repository;
         private readonly IServiceProvider _serviceProvider;
-        public WindowLogin(IServiceProvider serviceProvider,IUserRepository userRepository)
+        public WindowLogin(IServiceProvider serviceProvider, ICombineRepository repository)
         {
+            _repository = repository;
             InitializeComponent();
-            _userRepository = userRepository;
             _serviceProvider = serviceProvider;
         }
 
@@ -61,8 +61,8 @@ namespace WPF
                     }
                     return;
                 }
-                var userLogin = await _userRepository.GetUserByEmail(userLoginReqModel.Email);
-                var loginResult = await _userRepository.Login(userLoginReqModel);
+                var userLogin = await _repository.GetUserByEmail(userLoginReqModel.Email);
+                var loginResult = await _repository.Login(userLoginReqModel);
 
                 if (loginResult.IsSuccess)
                 {

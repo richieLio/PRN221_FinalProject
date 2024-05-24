@@ -25,15 +25,16 @@ namespace WPF
     public partial class ResetPasswordWindow : Window
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly IUserRepository _userRepository;
-        public ResetPasswordWindow(IServiceProvider serviceProvider, IUserRepository userRepository)
+        private readonly ICombineRepository _repository;
+        public ResetPasswordWindow(IServiceProvider serviceProvider, ICombineRepository repository)
         {
+            _repository = repository;
             InitializeComponent();
             NewPasswordBox.IsEnabled = false;
             ConfirmPasswordBox.IsEnabled = false;
             ResetPasswordButton.IsEnabled = false;
             _serviceProvider = serviceProvider;
-            _userRepository = userRepository;
+            
         }
         private void OTPTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -83,7 +84,7 @@ namespace WPF
                     }
                     return;
                 }
-                _userRepository.ResetPassword(form);
+                _repository.ResetPassword(form);
                 MessageBox.Show("Password reseted successfully", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
 
@@ -114,7 +115,7 @@ namespace WPF
                     return;
                 }
 
-                var confirmResult = await _userRepository.VerifyOTPCode(email, OTP);
+                var confirmResult = await _repository.VerifyOTPCode(email, OTP);
 
                 if (confirmResult.IsSuccess)
                 {
@@ -144,7 +145,7 @@ namespace WPF
                     Email = email
                 };
 
-                _userRepository.SendOTPEmailRequest(form);
+                _repository.SendOTPEmailRequest(form);
                 MessageBox.Show("an OTP has been send to your email", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 var validationResults = ValidationHelper.ValidateModel(form);
                 if (validationResults.Count > 0)
@@ -173,7 +174,7 @@ namespace WPF
                     Email = email
                 };
 
-                _userRepository.SendOTPEmailRequest(form);
+                _repository.SendOTPEmailRequest(form);
                 MessageBox.Show("an OTP has been send to your email", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 var validationResults = ValidationHelper.ValidateModel(form);
                 if (validationResults.Count > 0)

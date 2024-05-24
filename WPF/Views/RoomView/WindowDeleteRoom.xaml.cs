@@ -21,6 +21,7 @@ namespace WPF.Views.RoomView
     {
         public string RoomName { get; private set; }
         public bool IsConfirmed { get; private set; } = false;
+
         public event EventHandler RoomDeleted;
         public WindowDeleteRoom(string roomName)
         {
