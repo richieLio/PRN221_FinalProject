@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DataAccess.Enums;
+using DataAccess.Repository;
+using Microsoft.Extensions.DependencyInjection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,36 +26,45 @@ namespace WPF
         {
             InitializeComponent();
             _serviceProvider = serviceProvider;
+            UpdateStaffButtonVisibility();
             MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
+
         }
 
-        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        private async void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
-            var radioButton = sender as RadioButton;
-            if (radioButton != null)
-            {
-                switch (radioButton.Tag.ToString())
+                var radioButton = sender as RadioButton;
+                if (radioButton != null)
                 {
-                    case "houseWindow":
-                        MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
-                        break;
-                    case "staffWindow":
-                        MainContentControl.Content = _serviceProvider.GetService<WindowStaff>();
-                        break;
-                    case "serviceWindow":
-                        MainContentControl.Content = _serviceProvider.GetService<WindowService>();
-                        break;
-                    case "contractWindow":
-                        MainContentControl.Content = _serviceProvider.GetService<WindowContract>();
-                        break;
-                    case "notificationWindow":
-                        MainContentControl.Content = _serviceProvider.GetService<WindowNotification>();
-                        break;
-                    case "billWindow":
-                        MainContentControl.Content = _serviceProvider.GetService<WindowBill>();
-                        break;
+                    switch (radioButton.Tag.ToString())
+                    {
+                        case "houseWindow":
+                            MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
+                            break;
+                        case "staffWindow":
+                            MainContentControl.Content = _serviceProvider.GetService<WindowStaff>();
+                            break;
+                        case "serviceWindow":
+                            MainContentControl.Content = _serviceProvider.GetService<WindowService>();
+                            break;
+                        case "contractWindow":
+                            MainContentControl.Content = _serviceProvider.GetService<WindowContract>();
+                            break;
+                        case "notificationWindow":
+                            MainContentControl.Content = _serviceProvider.GetService<WindowNotification>();
+                            break;
+                        case "billWindow":
+                            MainContentControl.Content = _serviceProvider.GetService<WindowBill>();
+                            break;
+                    }
                 }
-            }
+            
+        }
+        private async void UpdateStaffButtonVisibility()
+        {
+            IUserRepository userRepository = new UserRepository();
+            var user = await userRepository.GetUserById(App.LoggedInUserId);
+            staffRadioButton.Visibility = user.Role == UserEnum.OWNER ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void btnLogout_Click(object sender, RoutedEventArgs e)

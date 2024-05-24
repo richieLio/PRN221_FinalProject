@@ -93,7 +93,7 @@ namespace DataAccess.DAO
             using var context = new RmsContext();
 
             var staffUsers = await context.Users
-                                           .Where(user => user.Role == "Staff" && user.OwnerId == ownerUserId)
+                                           .Where(user => user.Role == UserEnum.STAFF && user.OwnerId == ownerUserId)
                                            .ToListAsync();
             return new ResultModel
             {
@@ -162,6 +162,17 @@ namespace DataAccess.DAO
                     Message = e.InnerException != null ? e.InnerException.Message + "\n" + e.StackTrace : e.Message + "\n" + e.StackTrace
                 };
             }
+        }
+
+        public async Task<IEnumerable<House>> GetAllHouseByStaffId(Guid staffId)
+        {
+            using var context = new RmsContext();
+
+            var houses = await context.Houses
+                                      .Where(h => h.Staff.Any(s => s.Id == staffId))
+                                      .ToListAsync();
+            return houses;
+
         }
     }
 }

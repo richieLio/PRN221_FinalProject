@@ -21,7 +21,7 @@
                 <StackPanel Orientation="Vertical">
                     <RadioButton Content="Houses" GroupName="Views" Checked="RadioButton_Checked" Tag="houseWindow" Margin="5,10,5,0"/>
                     <RadioButton Content="Customers" GroupName="Views" Checked="RadioButton_Checked" Tag="customerWindow" Margin="5,10,5,0"/>
-                    <RadioButton Content="Staffs" GroupName="Views" Checked="RadioButton_Checked" Tag="staffWindow" Margin="5,10,5,0"/>
+                    <RadioButton x:Name="staffRadioButton" Content="Staffs" GroupName="Views" Checked="RadioButton_Checked" Tag="staffWindow" Margin="5,10,5,0" />
                     <RadioButton Content="Services" GroupName="Views" Checked="RadioButton_Checked" Tag="serviceWindow" Margin="5,10,5,0"/>
                     <RadioButton Content="Contracts" GroupName="Views" Checked="RadioButton_Checked" Tag="contractWindow" Margin="5,10,5,0"/>
                     <RadioButton Content="Notifications" GroupName="Views" Checked="RadioButton_Checked" Tag="notificationWindow" Margin="5,10,5,0"/>

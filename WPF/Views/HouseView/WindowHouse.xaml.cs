@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Object;
+using DataAccess.Enums;
 using DataAccess.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -13,7 +14,7 @@ namespace WPF
     {
         private readonly IHouseRepository _houseRepository;
         private readonly IRoomRepository _roomRepository;
-        private readonly IServiceProvider _serviceProvider; 
+        private readonly IServiceProvider _serviceProvider;
 
         public WindowHouse(IHouseRepository houseRepository, IRoomRepository roomRepository, IServiceProvider serviceProvider)
         {
@@ -26,7 +27,16 @@ namespace WPF
 
         private async void LoadHouses()
         {
-            lvHouses.ItemsSource = await _houseRepository.GetHouses(App.LoggedInUserId);
+            IUserRepository userRepository = new UserRepository();
+            IStaffRepository staffRepository = new StaffRepository();
+            var user = await userRepository.GetUserById(App.LoggedInUserId);
+            if(user.Role == UserEnum.STAFF)
+            {
+                lvHouses.ItemsSource = await staffRepository.GetAllHouseByStaffId(App.LoggedInUserId);
+            } else {
+                lvHouses.ItemsSource = await _houseRepository.GetHouses(App.LoggedInUserId);
+
+            }
         }
 
         private void Border_Click(object sender, MouseButtonEventArgs e)
