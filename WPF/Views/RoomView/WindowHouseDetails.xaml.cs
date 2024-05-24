@@ -24,11 +24,11 @@ namespace WPF
         private int? _availableRoom;
         private Guid _houseId;
 
-        public WindowHouseDetails(IServiceProvider serviceProvider,ICombineRepository repository,
+        public WindowHouseDetails(IServiceProvider serviceProvider, ICombineRepository repository,
             string houseName, string address, int? roomQuantity, int? availableRoom, Guid houseId)
         {
             InitializeComponent();
-            
+
             _serviceProvider = serviceProvider;
             _houseName = houseName;
             _address = address;
@@ -178,22 +178,15 @@ namespace WPF
         private async void Initialize()
         {
             var staffResult = await _repository.GetAllStaffByOwnerId(App.LoggedInUserId);
-            if (staffResult.IsSuccess)
+
+            if (staffResult != null)
             {
-                var staffList = staffResult.Data as List<User>;
-                if (staffList != null)
-                {
-                    cmbStaffList.ItemsSource = staffList;
-                    cmbStaffList.DisplayMemberPath = "FullName";
-                }
-                else
-                {
-                    MessageBox.Show("Invalid data type for staff list.", "Error");
-                }
+                cmbStaffList.ItemsSource = staffResult;
+                cmbStaffList.DisplayMemberPath = "FullName";
             }
             else
             {
-                MessageBox.Show(staffResult.Message, "Error");
+                MessageBox.Show("Invalid data type for staff list.", "Error");
             }
 
             var assignedStaffResult = await _repository.GetAssignedStaffByHouseId(_houseId);
@@ -206,7 +199,7 @@ namespace WPF
                     txtStaffName.Visibility = Visibility.Visible;
                     cmbStaffList.Visibility = Visibility.Collapsed;
                     cmbStaffList.IsEnabled = false;
-                    AssignStaffButton.Visibility = Visibility.Collapsed; 
+                    AssignStaffButton.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
@@ -218,7 +211,7 @@ namespace WPF
                 txtStaffName.Visibility = Visibility.Collapsed;
                 cmbStaffList.Visibility = Visibility.Visible;
                 cmbStaffList.IsEnabled = true;
-                AssignStaffButton.Visibility = Visibility.Visible; 
+                AssignStaffButton.Visibility = Visibility.Visible;
 
             }
         }
