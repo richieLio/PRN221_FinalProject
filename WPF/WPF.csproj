@@ -29,4 +29,8 @@
     <PackageReference Include="MaterialDesignThemes.MahApps" Version="1.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\BillView\" />
+  </ItemGroup>
+
 </Project>

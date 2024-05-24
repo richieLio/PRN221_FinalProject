@@ -17,6 +17,7 @@ namespace DataAccess.Repository
 {
     public class UserRepository : IUserRepository
     {
+
         public Task CreateAccount(UserReqModel RegisterForm) => UserDAO.Instance.CreateAccount(RegisterForm);
 
         public Task<User> GetUserByEmail(string Email) => UserDAO.Instance.GetUserByEmail(Email);

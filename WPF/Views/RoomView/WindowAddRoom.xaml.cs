@@ -24,30 +24,34 @@ namespace WPF.Views.RoomView
     public partial class WindowAddRoom : Window
     {
         public event EventHandler RoomAdded;
-        private readonly IRoomRepository _roomRepository;
+        private readonly ICombineRepository _repository;
         private readonly Guid _houseId;
 
-        public WindowAddRoom(IRoomRepository roomRepository, Guid houseId)
+        public WindowAddRoom(ICombineRepository repository, Guid houseId)
         {
+            _repository = repository;
             InitializeComponent();
-            _roomRepository = roomRepository;
             _houseId = houseId;
         }
 
         private void btnAddNewRoom_Click(object sender, RoutedEventArgs e)
-        {
-            var room = new RoomCreateReqModel
+        { try
             {
-                RoomId = Guid.NewGuid(),
-                HouseId = _houseId,
-                Name = RoomNameTextBox.Text,
-                Price = decimal.Parse(RoomPriceTextBox.Text),
-            };
-
-            _roomRepository.AddRoom(App.LoggedInUserId, room);
-            MessageBox.Show("Room created successfully");
-            RoomAdded?.Invoke(this, EventArgs.Empty); 
-            Close();
+                var room = new RoomCreateReqModel
+                {
+                    RoomId = Guid.NewGuid(),
+                    HouseId = _houseId,
+                    Name = RoomNameTextBox.Text,
+                    Price = decimal.Parse(RoomPriceTextBox.Text),
+                };
+                _repository.AddRoom(App.LoggedInUserId, room);
+                MessageBox.Show("Room created successfully");
+                RoomAdded?.Invoke(this, EventArgs.Empty);
+                Close();
+            } catch {
+                MessageBox.Show("Pls fill all fields");
+            }
+            
         }
     }
 }

@@ -1,12 +1,12 @@
-﻿<Window x:Class="WPF.Views.CustomerView.WindowUpdateCustomer"
+﻿<Window x:Class="WPF.Views.StaffView.WindowUpdateStaff"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WPF.Views.CustomerView"
+        xmlns:local="clr-namespace:WPF.Views.StaffView"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="Update Customer" Height="450" Width="800"
+        Title="WindowUpdateStaff" Height="450" Width="800"
         WindowStartupLocation="CenterScreen">
 
 
@@ -61,7 +61,7 @@
         <TextBox x:Name="txtCitizenID" Grid.Row="8" Grid.Column="1" Margin="5" materialDesign:HintAssist.Hint="Citizen ID Number" Text="{Binding CitizenIdNumber, UpdateSourceTrigger=PropertyChanged}" />
 
         <StackPanel Grid.Row="9" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
-            <Button Content="Save" Margin="5" Style="{StaticResource MaterialDesignRaisedButton}" Click="btnUpdateCustomer_Click"/>
+            <Button Content="Save" Margin="5" Style="{StaticResource MaterialDesignRaisedButton}" Click="btnUpdateStaff_Click"/>
             <Button Content="Cancel" Margin="5" Style="{StaticResource MaterialDesignFlatButton}" Click="btnCancel_Click"/>
         </StackPanel>
     </Grid>

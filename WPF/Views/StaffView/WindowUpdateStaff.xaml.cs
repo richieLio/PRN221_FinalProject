@@ -1,8 +1,6 @@
 ﻿using BusinessObject.Object;
 using DataAccess.Model.CustomerModel;
-using DataAccess.Model.HouseModel;
 using DataAccess.Repository;
-using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,31 +15,31 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace WPF.Views.CustomerView
+namespace WPF.Views.StaffView
 {
     /// <summary>
-    /// Interaction logic for WindowUpdateCustomer.xaml
+    /// Interaction logic for WindowUpdateStaff.xaml
     /// </summary>
-    public partial class WindowUpdateCustomer : Window
+    public partial class WindowUpdateStaff : Window
     {
-        public event EventHandler CustomerUpdated;
-        private readonly User _customer;
+        public event EventHandler staffUpdated;
+        private readonly User _staff;
 
         private readonly ICombineRepository _repository;
 
-        public WindowUpdateCustomer(ICombineRepository repository, User customer)
+        public WindowUpdateStaff(ICombineRepository repository, User staff)
         {
             _repository = repository;
             InitializeComponent();
-            _customer = customer;
-            DataContext = customer;
+            _staff = staff;
+            DataContext = staff;
         }
 
-        private void btnUpdateCustomer_Click(object sender, RoutedEventArgs e)
+        private void btnUpdateStaff_Click(object sender, RoutedEventArgs e)
         {
-            var customerUpdate = new CustomerUpdateModel
+            var staffUpdate = new CustomerUpdateModel
             {
-                Id = _customer.Id,
+                Id = _staff.Id,
                 Email = txtEmail.Text,
                 PhoneNumber = txtPhoneNumber.Text,
                 Address = txtAddress.Text,
@@ -52,10 +50,10 @@ namespace WPF.Views.CustomerView
                 Status = "Acitve",
                 CitizenIdNumber = txtCitizenID.Text,
 
-        };
-            _repository.UpdateUserProfile(customerUpdate);
-            MessageBox.Show($"Customer {customerUpdate.FullName} updated successfully");
-            CustomerUpdated?.Invoke(this, EventArgs.Empty);
+            };
+            _repository.UpdateUserProfile(staffUpdate);
+            MessageBox.Show($"Staff {staffUpdate.FullName} updated successfully");
+            staffUpdated?.Invoke(this, EventArgs.Empty);
             Close();
         }
 

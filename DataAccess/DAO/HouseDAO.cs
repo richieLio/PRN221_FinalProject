@@ -179,5 +179,12 @@ namespace DataAccess.DAO
             var house = await context.Houses.FindAsync(houseId);
             return house?.RoomQuantity;
         }
+
+        public async Task<int?> GetAvailableRoomByHouseId(Guid houseId)
+        {
+            using var context = new RmsContext();
+            var house = await context.Houses.FindAsync(houseId);
+            return house?.AvailableRoom;
+        }
     }
 }

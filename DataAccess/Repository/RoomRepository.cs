@@ -22,6 +22,10 @@ namespace DataAccess.Repository
 
         public Task<ResultModel> UpdateRoom(RoomUpdateReqModel roomUpdateReqModel) => RoomDAO.Instance.UpdateRoom(roomUpdateReqModel);
 
-        public Task<ResultModel> DeleteRoom(Guid roomId) => RoomDAO.Instance.DeleteRoom(roomId);
+        public Task<ResultModel> DeleteRoom(Guid houseId, Guid roomId) => RoomDAO.Instance.DeleteRoom(houseId, roomId);
+
+        public Task<Room> GetRoom(Guid roomId) => RoomDAO.Instance.GetRoomById(roomId);
+
+        public Task<bool> AddUserToRoom(Guid userId, Guid roomId) => RoomDAO.Instance.AddUserToRoom(userId, roomId);
     }
 }

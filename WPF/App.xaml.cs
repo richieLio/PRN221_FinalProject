@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using System.Data;
 using System.Windows;
+using WPF.StaffView;
+using WPF.Views.CustomerView;
 using WPF.Views.HouseView;
 using WPF.Views.RoomView;
 
@@ -28,6 +30,8 @@ namespace WPF
             services.AddSingleton<IHouseRepository, HouseRepository>();
             services.AddSingleton<IRoomRepository, RoomRepository>();
             services.AddSingleton<ICustomerRepository, CustomerRepository>();
+            services.AddSingleton<IStaffRepository, StaffRepository>();
+            services.AddSingleton<ICombineRepository, CombineRepository>();
 
 
 
@@ -35,6 +39,8 @@ namespace WPF
             services.AddTransient<IHouseRepository, HouseRepository>();
             services.AddTransient<IRoomRepository, RoomRepository>();
             services.AddTransient<ICustomerRepository, CustomerRepository>();
+            services.AddTransient<IStaffRepository, StaffRepository>();
+            services.AddTransient<ICombineRepository, CombineRepository>();
 
 
 
@@ -52,6 +58,7 @@ namespace WPF
             services.AddSingleton<ConfirmDeleteHouse>();
             services.AddSingleton<WindowAddRoom>();
             services.AddSingleton<WindowCustomersInRoom>();
+            services.AddSingleton<WindowUpdateCustomer>();
 
 
 
@@ -69,6 +76,7 @@ namespace WPF
             services.AddTransient<ConfirmDeleteHouse>();
             services.AddTransient<WindowAddRoom>();
             services.AddTransient<WindowCustomersInRoom>();
+            services.AddTransient<WindowUpdateCustomer>();
 
 
         }

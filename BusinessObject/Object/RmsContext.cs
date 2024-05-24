@@ -109,6 +109,7 @@ public partial class RmsContext : DbContext
 
             entity.HasOne(d => d.Room).WithMany(p => p.Contracts)
                 .HasForeignKey(d => d.RoomId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Contract_Room");
         });
 
@@ -124,9 +125,22 @@ public partial class RmsContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Status).HasMaxLength(50);
 
-            entity.HasOne(d => d.Owner).WithMany(p => p.Houses)
-                .HasForeignKey(d => d.OwnerId)
-                .HasConstraintName("FK_House_User");
+            entity.HasMany(d => d.Staff).WithMany(p => p.Houses)
+                .UsingEntity<Dictionary<string, object>>(
+                    "HouseStaff",
+                    r => r.HasOne<User>().WithMany()
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK_HouseStaff_User"),
+                    l => l.HasOne<House>().WithMany()
+                        .HasForeignKey("HouseId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK_HouseStaff_House"),
+                    j =>
+                    {
+                        j.HasKey("HouseId", "StaffId").HasName("PK_HouseStaff_1");
+                        j.ToTable("HouseStaff");
+                    });
         });
 
         modelBuilder.Entity<Notification>(entity =>
@@ -247,11 +261,9 @@ public partial class RmsContext : DbContext
                     "UserRoom",
                     r => r.HasOne<Room>().WithMany()
                         .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("FK_UserRoom_Room"),
                     l => l.HasOne<User>().WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("FK_UserRoom_User"),
                     j =>
                     {

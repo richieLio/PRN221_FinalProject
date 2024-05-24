@@ -27,12 +27,12 @@ namespace WPF.Views.RoomView
         public event EventHandler RoomUpdated;
         private readonly Room _room;
 
-        private readonly IRoomRepository _roomRepository;
+        private readonly ICombineRepository _repository;
 
-        public WindowUpdateRoom(IRoomRepository roomRepository, Room room)
+        public WindowUpdateRoom(ICombineRepository repository, Room room)
         {
+            _repository = repository;
             InitializeComponent();
-            _roomRepository = roomRepository;
             _room = room;
             DataContext = room;
         }
@@ -44,7 +44,7 @@ namespace WPF.Views.RoomView
                 Name = RoomNameTextBox.Text,
                 Price = decimal.Parse(PriceTextBox.Text),
             };
-            _roomRepository.UpdateRoom(roomUpdate);
+            _repository.UpdateRoom(roomUpdate);
             MessageBox.Show("Room updated successfully");
             RoomUpdated?.Invoke(this, EventArgs.Empty);
             Close();

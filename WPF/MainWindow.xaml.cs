@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DataAccess.Enums;
+using DataAccess.Repository;
+using Microsoft.Extensions.DependencyInjection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WPF.StaffView;
 
 namespace WPF
 {
@@ -18,15 +21,18 @@ namespace WPF
     public partial class MainWindow : Window
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly ICombineRepository _repository;
 
-        public MainWindow(IServiceProvider serviceProvider)
+        public MainWindow(IServiceProvider serviceProvider, ICombineRepository repository)
         {
+            _repository = repository;
             InitializeComponent();
             _serviceProvider = serviceProvider;
+            UpdateStaffButtonVisibility();
             MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
         }
 
-        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        private async void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             var radioButton = sender as RadioButton;
             if (radioButton != null)
@@ -36,7 +42,7 @@ namespace WPF
                     case "houseWindow":
                         MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
                         break;
-                    case "Staffs":
+                    case "staffWindow":
                         MainContentControl.Content = _serviceProvider.GetService<WindowStaff>();
                         break;
                     case "serviceWindow":
@@ -53,7 +59,23 @@ namespace WPF
                         break;
                 }
             }
+
         }
+        private async void UpdateStaffButtonVisibility()
+        {
+           
+            var user = await _repository.GetUserById(App.LoggedInUserId);
+            if (user != null)
+            {
+                staffRadioButton.Visibility = user.Role == UserEnum.OWNER ? Visibility.Visible : Visibility.Collapsed;
+            }
+            else
+            {
+                MessageBox.Show("User not found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+
 
         private void btnLogout_Click(object sender, RoutedEventArgs e)
         {

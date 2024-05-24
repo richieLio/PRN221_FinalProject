@@ -17,7 +17,7 @@ namespace WPF
     /// <summary>
     /// Interaction logic for WindowService.xaml
     /// </summary>
-    public partial class WindowService : Window
+    public partial class WindowService : UserControl
     {
         public WindowService()
         {

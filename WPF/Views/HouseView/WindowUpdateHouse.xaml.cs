@@ -26,11 +26,11 @@ namespace WPF.Views.HouseView
         private readonly House _house;
 
 
-        private readonly IHouseRepository _houseRepository;
-        public WindowUpdateHouse(IHouseRepository houseRepository, House house)
+        private readonly ICombineRepository _repository;
+        public WindowUpdateHouse(ICombineRepository repository, House house)
         {
+            _repository = repository;
             InitializeComponent();
-            _houseRepository = houseRepository;
             _house = house;
             DataContext = house;
 
@@ -44,7 +44,7 @@ namespace WPF.Views.HouseView
                 Name = HouseNameTextBox.Text,
                 Address = AddressTextBox.Text,
             };
-            _houseRepository.UpdateHouse(App.LoggedInUserId, houseUpdate);
+            _repository.UpdateHouse(App.LoggedInUserId, houseUpdate);
             MessageBox.Show("House updated successfully");
             HouseUpdated?.Invoke(this, EventArgs.Empty);
             Close();
