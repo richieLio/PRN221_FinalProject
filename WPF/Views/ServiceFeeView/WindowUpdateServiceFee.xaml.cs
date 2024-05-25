@@ -37,7 +37,7 @@ namespace WPF.Views.ServiceFeeView
             _house = house;
         }
 
-        private void btnUpdateService_Click(object sender, RoutedEventArgs e)
+        private async void btnUpdateService_Click(object sender, RoutedEventArgs e)
         {
             var serviceUpdate = new ServiceUpdateReqModel
             {
@@ -46,8 +46,15 @@ namespace WPF.Views.ServiceFeeView
                 Price = decimal.Parse(txtServicePrice.Text),
                 HouseId = _house.Id,
             };
-            _repository.UpdateService(App.LoggedInUserId, serviceUpdate);
-            MessageBox.Show("Service updated successfully");
+            var result = await _repository.UpdateService(App.LoggedInUserId, serviceUpdate);
+            if (result.IsSuccess)
+            {
+                MessageBox.Show("Service updated sucessfully");
+            }
+            else
+            {
+                MessageBox.Show(result.Message, "Erorr");
+            }
             ServiceUpdated?.Invoke(this, EventArgs.Empty);
             Close();
         }

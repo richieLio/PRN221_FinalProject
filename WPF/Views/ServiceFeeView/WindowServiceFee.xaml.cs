@@ -38,7 +38,7 @@ namespace WPF.Views.ServiceFeeView
 
         public async void LoadService()
         {
-            lvServices.ItemsSource = await _repository.GetServicesList(App.LoggedInUserId, _house.Id);
+            lvServices.ItemsSource = await _repository.GetServicesList(_house.Id);
         }
         private void BackToHouseManagement_Click(object sender, RoutedEventArgs e)
         {
@@ -106,15 +106,23 @@ namespace WPF.Views.ServiceFeeView
                 MessageBox.Show($"An error occurred: {ex.Message}");
             }
         }
-        private void DeleteService_Click(object sender, RoutedEventArgs e)
+        private async void DeleteService_Click(object sender, RoutedEventArgs e)
         {
             if (lvServices.SelectedItem is Service selectedService)
             {
-                MessageBoxResult result = MessageBox.Show($"Are you sure to delete {selectedService.Name}?", "Warning", MessageBoxButton.OKCancel);
+                MessageBoxResult confirm = MessageBox.Show($"Are you sure to delete {selectedService.Name}?", "Warning", MessageBoxButton.OKCancel);
 
-                if (result == MessageBoxResult.OK)
+                if (confirm == MessageBoxResult.OK)
                 {
-                    _repository.RemoveService(App.LoggedInUserId ,selectedService.Id, _house.Id);
+                  var result = await _repository.RemoveService(App.LoggedInUserId ,selectedService.Id, _house.Id);
+                    if (result.IsSuccess)
+                    {
+                        MessageBox.Show("Service deleted sucessfully");
+                    }
+                    else
+                    {
+                        MessageBox.Show(result.Message, "Erorr");
+                    }
                     LoadService();
                 }
             }

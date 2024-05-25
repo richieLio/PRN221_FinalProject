@@ -12,7 +12,7 @@ namespace DataAccess.Repository
     public interface IServiceFeeRepository
     {
         Task<ResultModel> AddNewService(Guid userId, ServiceCreateReqModel service);
-        Task<IEnumerable<Service>> GetServicesList(Guid userId, Guid houseId); // for creating bill
+        Task<IEnumerable<Service>> GetServicesList(Guid houseId); // for creating bill
         Task<ResultModel> UpdateService(Guid userId, ServiceUpdateReqModel serviceUpdateModel);
         Task<ResultModel> RemoveService(Guid userId, Guid serviceId, Guid houseId);
     }

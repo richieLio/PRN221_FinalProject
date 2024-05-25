@@ -14,8 +14,8 @@ namespace DataAccess.Repository
     {
         public Task<ResultModel> AddNewService(Guid userId, ServiceCreateReqModel service)
             => ServiceFeeDAO.Instance.AddNewService(userId, service);
-        public Task<IEnumerable<Service>> GetServicesList(Guid userId, Guid houseId)
-            => ServiceFeeDAO.Instance.GetServicesList(userId, houseId);
+        public Task<IEnumerable<Service>> GetServicesList( Guid houseId)
+            => ServiceFeeDAO.Instance.GetServicesList(houseId);
 
         public Task<ResultModel> RemoveService(Guid userId, Guid serviceId, Guid houseId)
             => ServiceFeeDAO.Instance.RemoveService(userId, serviceId, houseId);

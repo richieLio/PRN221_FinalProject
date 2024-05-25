@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessObject.Object;
+using DataAccess.Enums;
 using DataAccess.Model.OperationResultModel;
 using DataAccess.Model.ServiceFeeModel;
 using DataAccess.Repository;
@@ -50,6 +51,13 @@ namespace DataAccess.DAO
                     Result.Message = "User not found.";
                     return Result;
                 }
+                if (user.Role == UserEnum.STAFF)
+                {
+                    Result.IsSuccess = false;
+                    Result.Code = 400;
+                    Result.Message = "Staff cannot create services";
+                    return Result;
+                }
 
 
                 var config = new MapperConfiguration(cfg =>
@@ -83,16 +91,12 @@ namespace DataAccess.DAO
             return Result;
         }
 
-        public async Task<IEnumerable<Service>> GetServicesList(Guid userId, Guid houseId)
+        public async Task<IEnumerable<Service>> GetServicesList(Guid houseId)
         {
             using var context = new RmsContext();
-            IUserRepository _userRepository = new UserRepository();
-
-            var user = await _userRepository.GetUserById(userId);
-
 
             var services = await context.Services
-                .Where(s => s.HouseId == houseId && s.CreatedBy == userId)
+                .Where(s => s.HouseId == houseId)
                 .ToListAsync();
             return services;
 
@@ -105,7 +109,14 @@ namespace DataAccess.DAO
             IUserRepository _userRepository = new UserRepository();
 
             var user = await _userRepository.GetUserById(userId);
-
+            if (user.Role == UserEnum.STAFF)
+            {
+                return new ResultModel
+                {
+                    IsSuccess = false,
+                    Message = "Staff cannot remove services"
+                };
+            }
 
             var service = await context.Services
                 .FirstOrDefaultAsync(s => s.Id == serviceId && s.HouseId == houseId && s.CreatedBy == userId);
@@ -124,6 +135,14 @@ namespace DataAccess.DAO
             IUserRepository _userRepository = new UserRepository();
 
             var user = await _userRepository.GetUserById(userId);
+            if (user.Role == UserEnum.STAFF)
+            {
+                return new ResultModel
+                {
+                    IsSuccess = false,
+                    Message = "Staff cannot update services"
+                };
+            }
 
 
             var service = await context.Services

@@ -46,8 +46,7 @@ namespace WPF
             var selectedHouse = (sender as Border)?.DataContext as House;
             if (selectedHouse != null)
             {
-                WindowHouseDetails detailsWindow = new WindowHouseDetails(_serviceProvider, _repository, selectedHouse.Name, selectedHouse.Address
-                    , selectedHouse.RoomQuantity, selectedHouse.AvailableRoom, selectedHouse.Id);
+                WindowHouseDetails detailsWindow = new WindowHouseDetails(_serviceProvider, _repository, selectedHouse);
                 detailsWindow.LoadRooms(selectedHouse.Id);
 
                 MainWindow mainWindow = Window.GetWindow(this) as MainWindow;

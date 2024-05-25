@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using System.Data;
 using System.Windows;
+using WPF.BillView;
 using WPF.StaffView;
 using WPF.Views.CustomerView;
 using WPF.Views.HouseView;

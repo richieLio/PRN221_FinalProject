@@ -32,7 +32,7 @@ namespace WPF.Views.ServiceFeeView
             _house = house;
         }
 
-        private void btnAddNewService_Click(object sender, RoutedEventArgs e)
+        private async void btnAddNewService_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -42,11 +42,19 @@ namespace WPF.Views.ServiceFeeView
                     Name = txtServiceName.Text,
                     HouseId = _house.Id,
                 };
-                _repository.AddNewService(App.LoggedInUserId, service);
-                MessageBox.Show("Service added sucessfully");
+                var result = await _repository.AddNewService(App.LoggedInUserId, service);
+                if (result.IsSuccess)
+                {
+                    MessageBox.Show("Service added sucessfully");
+                }
+                else
+                {
+                    MessageBox.Show(result.Message, "Erorr");
+                }
                 ServiceAdded?.Invoke(this, EventArgs.Empty);
                 Close();
-            }catch
+            }
+            catch
             {
                 MessageBox.Show("Pls fill all the fields");
             }

@@ -110,8 +110,8 @@ namespace DataAccess.Repository
         public Task<IEnumerable<Room>> GetRooms(Guid houseId)
  => _roomRepository.GetRooms(houseId);
 
-        public Task<IEnumerable<Service>> GetServicesList(Guid userId, Guid houseId)
-=> _serviceFeeRepository.GetServicesList(userId, houseId);
+        public Task<IEnumerable<Service>> GetServicesList(Guid houseId)
+=> _serviceFeeRepository.GetServicesList(houseId);
 
         public Task<ResultModel> GetStaffById(Guid id)
 => _staffRepository.GetStaffById(id);
