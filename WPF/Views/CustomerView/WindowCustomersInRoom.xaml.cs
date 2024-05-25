@@ -70,7 +70,7 @@ namespace WPF.Views.CustomerView
             {
                 // Create a new instance of WindowHouse
                 WindowHouseDetails houseWindowDetails = new WindowHouseDetails(_serviceProvider, _repository,
-                    house.Name, house.Address, house.RoomQuantity, house.AvailableRoom, _houseId);
+                    house);
                 houseWindowDetails.LoadRooms(_houseId);
                 // Set the MainContentControl content to the new WindowHouse instance
                 mainWindow.MainContentControl.Content = houseWindowDetails;

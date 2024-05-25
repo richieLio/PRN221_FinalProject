@@ -25,5 +25,7 @@ public partial class House
 
     public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
 
+    public virtual ICollection<Service> Services { get; set; } = new List<Service>();
+
     public virtual ICollection<User> Staff { get; set; } = new List<User>();
 }

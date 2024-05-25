@@ -1,4 +1,5 @@
-﻿using DataAccess.Model.OperationResultModel;
+﻿using BusinessObject.Object;
+using DataAccess.Model.OperationResultModel;
 using DataAccess.Model.ServiceFeeModel;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,8 @@ namespace DataAccess.Repository
     public interface IServiceFeeRepository
     {
         Task<ResultModel> AddNewService(Guid userId, ServiceCreateReqModel service);
-        Task<ResultModel> GetServicesList(Guid userId, int page);
-        Task<ResultModel> GetServicesList(Guid userId); // for creating bill
+        Task<IEnumerable<Service>> GetServicesList(Guid houseId); // for creating bill
         Task<ResultModel> UpdateService(Guid userId, ServiceUpdateReqModel serviceUpdateModel);
-        Task<ResultModel> RemoveService(Guid userId, Guid serviceId);
+        Task<ResultModel> RemoveService(Guid userId, Guid serviceId, Guid houseId);
     }
 }
