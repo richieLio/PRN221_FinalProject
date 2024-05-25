@@ -3,10 +3,12 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using System.Data;
 using System.Windows;
+using WPF.BillView;
 using WPF.StaffView;
 using WPF.Views.CustomerView;
 using WPF.Views.HouseView;
 using WPF.Views.RoomView;
+using WPF.Views.ServiceFeeView;
 
 namespace WPF
 {
@@ -31,6 +33,7 @@ namespace WPF
             services.AddSingleton<IRoomRepository, RoomRepository>();
             services.AddSingleton<ICustomerRepository, CustomerRepository>();
             services.AddSingleton<IStaffRepository, StaffRepository>();
+            services.AddSingleton<IServiceFeeRepository, ServiceFeeRepository>();
             services.AddSingleton<ICombineRepository, CombineRepository>();
 
 
@@ -40,6 +43,7 @@ namespace WPF
             services.AddTransient<IRoomRepository, RoomRepository>();
             services.AddTransient<ICustomerRepository, CustomerRepository>();
             services.AddTransient<IStaffRepository, StaffRepository>();
+            services.AddTransient<IServiceFeeRepository, ServiceFeeRepository>();
             services.AddTransient<ICombineRepository, CombineRepository>();
 
 
@@ -51,7 +55,6 @@ namespace WPF
             services.AddSingleton<WindowContract>();
             services.AddSingleton<WindowBill>();
             services.AddSingleton<WindowStaff>();
-            services.AddSingleton<WindowService>();
             services.AddSingleton<WindowHouseDetails>();
             services.AddSingleton<WindowAddHouse>();
             services.AddSingleton<WindowUpdateHouse>();
@@ -59,6 +62,9 @@ namespace WPF
             services.AddSingleton<WindowAddRoom>();
             services.AddSingleton<WindowCustomersInRoom>();
             services.AddSingleton<WindowUpdateCustomer>();
+            services.AddSingleton<WindowServiceFee>();
+            services.AddSingleton<WindowAddServiceFee>();
+            services.AddSingleton<WindowUpdateServiceFee>();
 
 
 
@@ -70,14 +76,15 @@ namespace WPF
             services.AddTransient<WindowHouse>();
             services.AddTransient<WindowContract>();
             services.AddTransient<WindowBill>();
-            services.AddTransient<WindowService>();
             services.AddTransient<WindowHouseDetails>();
             services.AddTransient<WindowUpdateHouse>();
             services.AddTransient<ConfirmDeleteHouse>();
             services.AddTransient<WindowAddRoom>();
             services.AddTransient<WindowCustomersInRoom>();
             services.AddTransient<WindowUpdateCustomer>();
-
+            services.AddTransient<WindowServiceFee>();
+            services.AddTransient<WindowAddServiceFee>();
+            services.AddTransient<WindowUpdateServiceFee>();
 
         }
         private void OnStartup(object sender, StartupEventArgs e)

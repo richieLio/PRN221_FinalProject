@@ -14,5 +14,7 @@ namespace DataAccess.Model.ServiceFeeModel
         public string? Name { get; set; }
 
         public decimal? Price { get; set; }
+
+        public Guid HouseId { get; set; }
     }
 }
