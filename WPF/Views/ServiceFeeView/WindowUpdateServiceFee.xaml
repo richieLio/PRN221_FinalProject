@@ -1,0 +1,33 @@
+﻿<Window x:Class="WPF.Views.ServiceFeeView.WindowUpdateServiceFee"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF.Views.ServiceFeeView"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="WindowUpdateServiceFee" Height="450" Width="400"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="20">
+        <TextBlock Text="Update service" FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
+
+        <TextBox Name="txtServiceName" Text="{Binding Name}" Margin="0,90,0,0" VerticalAlignment="Top"
+                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                 materialDesign:HintAssist.Hint="Enter Service Name" />
+        <TextBox Name="txtServicePrice" Text="{Binding Price}" Margin="0,150,0,0" VerticalAlignment="Top"
+         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+         materialDesign:HintAssist.Hint="Enter Service Price" />
+
+
+        <!-- Create Button -->
+        <Button Margin="0,220,0,0" VerticalAlignment="Top"
+                Style="{StaticResource MaterialDesignRaisedButton}"
+                Content="Create" Width="120" Height="40" Click="btnUpdateService_Click"
+                HorizontalAlignment="Center"
+                materialDesign:ButtonProgressAssist.IsIndeterminate="True"
+                materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
+                materialDesign:ButtonProgressAssist.Value="-1"
+                IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
+    </Grid>
+</Window>

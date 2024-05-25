@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WPF.StaffView;
+using WPF.Views.ServiceFeeView;
 
 namespace WPF
 {
@@ -48,7 +49,7 @@ namespace WPF
                         MainContentControl.Content = _serviceProvider.GetService<WindowStaff>();
                         break;
                     case "serviceWindow":
-                        MainContentControl.Content = _serviceProvider.GetService<WindowService>();
+                        MainContentControl.Content = _serviceProvider.GetService<WindowServiceFee>();
                         break;
                     case "contractWindow":
                         MainContentControl.Content = _serviceProvider.GetService<WindowContract>();

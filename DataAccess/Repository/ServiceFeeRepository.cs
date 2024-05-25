@@ -1,4 +1,6 @@
-﻿using DataAccess.Model.OperationResultModel;
+﻿using BusinessObject.Object;
+using DataAccess.DAO;
+using DataAccess.Model.OperationResultModel;
 using DataAccess.Model.ServiceFeeModel;
 using System;
 using System.Collections.Generic;
@@ -11,28 +13,14 @@ namespace DataAccess.Repository
     public class ServiceFeeRepository : IServiceFeeRepository
     {
         public Task<ResultModel> AddNewService(Guid userId, ServiceCreateReqModel service)
-        {
-            throw new NotImplementedException();
-        }
+            => ServiceFeeDAO.Instance.AddNewService(userId, service);
+        public Task<IEnumerable<Service>> GetServicesList(Guid userId, Guid houseId)
+            => ServiceFeeDAO.Instance.GetServicesList(userId, houseId);
 
-        public Task<ResultModel> GetServicesList(Guid userId, int page)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ResultModel> GetServicesList(Guid userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ResultModel> RemoveService(Guid userId, Guid serviceId)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<ResultModel> RemoveService(Guid userId, Guid serviceId, Guid houseId)
+            => ServiceFeeDAO.Instance.RemoveService(userId, serviceId, houseId);
 
         public Task<ResultModel> UpdateService(Guid userId, ServiceUpdateReqModel serviceUpdateModel)
-        {
-            throw new NotImplementedException();
-        }
+            => ServiceFeeDAO.Instance.UpdateService(userId, serviceUpdateModel);
     }
 }

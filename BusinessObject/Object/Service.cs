@@ -11,6 +11,8 @@ public partial class Service
 
     public decimal? Price { get; set; }
 
+    public Guid? HouseId { get; set; }
+
     public Guid? CreatedBy { get; set; }
 
     public DateTime CreatedAt { get; set; }
@@ -18,4 +20,6 @@ public partial class Service
     public virtual ICollection<BillService> BillServices { get; set; } = new List<BillService>();
 
     public virtual User? CreatedByNavigation { get; set; }
+
+    public virtual House? House { get; set; }
 }

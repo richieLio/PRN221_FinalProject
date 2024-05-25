@@ -4,6 +4,7 @@ using DataAccess.Model.EmailModel;
 using DataAccess.Model.HouseModel;
 using DataAccess.Model.OperationResultModel;
 using DataAccess.Model.RoomModel;
+using DataAccess.Model.ServiceFeeModel;
 using DataAccess.Model.UserModel;
 using DataAccess.Model.VerifyModel;
 using System;
@@ -21,9 +22,12 @@ namespace DataAccess.Repository
         private readonly IRoomRepository _roomRepository;
         private readonly IStaffRepository _staffRepository;
         private readonly ICustomerRepository _customerRepository;
+        private readonly IServiceFeeRepository _serviceFeeRepository;
+
+
         public CombineRepository(IUserRepository userRepository, IHouseRepository houseRepository,
             IRoomRepository roomRepository, IStaffRepository staffRepository
-            , ICustomerRepository customerRepository
+            , ICustomerRepository customerRepository, IServiceFeeRepository serviceFeeRepository
             )
         {
             _userRepository = userRepository;
@@ -31,6 +35,7 @@ namespace DataAccess.Repository
             _houseRepository = houseRepository;
             _roomRepository = roomRepository;
             _staffRepository = staffRepository;
+            _serviceFeeRepository = serviceFeeRepository;
         }
         public Task<ResultModel> AddCustomerToRoom(Guid userId, AddCustomerToRoomReqModel addCustomerToRoomReqModel)
             => _customerRepository.AddCustomerToRoom(userId, addCustomerToRoomReqModel);
@@ -38,50 +43,53 @@ namespace DataAccess.Repository
         public Task<ResultModel> AddHouse(Guid ownerId, HouseCreateReqModel formData)
             => _houseRepository.AddHouse(ownerId, formData);
 
+        public Task<ResultModel> AddNewService(Guid userId, ServiceCreateReqModel service)
+            => _serviceFeeRepository.AddNewService(userId, service);
+
         public Task<ResultModel> AddRoom(Guid userId, RoomCreateReqModel roomCreateReqModel)
             => _roomRepository.AddRoom(userId, roomCreateReqModel);
 
         public Task<ResultModel> AddStaff(Guid ownerId, UserReqModel user)
- => _staffRepository.AddStaff(ownerId, user);
+            => _staffRepository.AddStaff(ownerId, user);
 
         public Task<bool> AddStaffToHouse(Guid staffId, Guid houseId)
- => _staffRepository.AddStaffToHouse(staffId, houseId);
+             => _staffRepository.AddStaffToHouse(staffId, houseId);
 
         public Task<bool> AddUserToRoom(Guid userId, Guid roomId)
-=> _roomRepository.AddUserToRoom(userId, roomId);
+            => _roomRepository.AddUserToRoom(userId, roomId);
 
         public Task CreateAccount(UserReqModel RegisterForm)
- => _userRepository.CreateAccount(RegisterForm);
+            => _userRepository.CreateAccount(RegisterForm);
 
         public Task<ResultModel> DeleteCustomer(Guid customerId)
-=> _customerRepository.DeleteCustomer(customerId);
+            => _customerRepository.DeleteCustomer(customerId);
 
         public Task<ResultModel> DeleteHouse(Guid OwnerId, Guid houseId)
- => _houseRepository.DeleteHouse(OwnerId, houseId);
+             => _houseRepository.DeleteHouse(OwnerId, houseId);
 
         public Task<ResultModel> DeleteRoom(Guid houseId, Guid roomId)
- => (_roomRepository.DeleteRoom(houseId, roomId));
+            => (_roomRepository.DeleteRoom(houseId, roomId));
 
         public Task<IEnumerable<House>> GetAllHouseByStaffId(Guid staffId)
- => _staffRepository.GetAllHouseByStaffId(staffId);
+            => _staffRepository.GetAllHouseByStaffId(staffId);
 
         public Task<IEnumerable<User>> GetAllStaffByOwnerId(Guid ownerId)
- => _staffRepository.GetAllStaffByOwnerId(ownerId);
+            => _staffRepository.GetAllStaffByOwnerId(ownerId);
 
         public Task<ResultModel> GetAssignedStaffByHouseId(Guid houseId)
-=> _staffRepository.GetAssignedStaffByHouseId(houseId);
+            => _staffRepository.GetAssignedStaffByHouseId(houseId);
 
         public Task<int?> GetAvailableRoomByHouseId(Guid houseId)
- => _houseRepository.GetAvailableRoomByHouseId(houseId);
+            => _houseRepository.GetAvailableRoomByHouseId(houseId);
 
-        public Task<ResultModel> GetCustomerByRoomId(Guid roomId)
-=> _customerRepository.GetCustomerByRoomId(roomId);
+        public Task<ResultModel> GetCustomerByRoomId(Guid roomId) 
+            => _customerRepository.GetCustomerByRoomId(roomId);
 
         public Task<ResultModel> GetCustomerProfile(Guid customerId)
- => _customerRepository.GetCustomerProfile(customerId);
+            => _customerRepository.GetCustomerProfile(customerId);
 
         public Task<House> GetHouse(Guid houseId)
- => _houseRepository.GetHouse(houseId);
+            => _houseRepository.GetHouse(houseId);
 
         public Task<IEnumerable<House>> GetHouses(Guid userId)
  => _houseRepository.GetHouses(userId);
@@ -102,6 +110,9 @@ namespace DataAccess.Repository
         public Task<IEnumerable<Room>> GetRooms(Guid houseId)
  => _roomRepository.GetRooms(houseId);
 
+        public Task<IEnumerable<Service>> GetServicesList(Guid userId, Guid houseId)
+=> _serviceFeeRepository.GetServicesList(userId, houseId);
+
         public Task<ResultModel> GetStaffById(Guid id)
 => _staffRepository.GetStaffById(id);
 
@@ -120,6 +131,9 @@ namespace DataAccess.Repository
         public Task<ResultModel> Login(UserLoginReqModel userLoginReqModel)
  => _userRepository.Login(userLoginReqModel);
 
+        public Task<ResultModel> RemoveService(Guid userId, Guid serviceId, Guid houseId)
+=> _serviceFeeRepository.RemoveService(userId, serviceId, houseId);
+
         public Task ResetPassword(UserResetPasswordReqModel ResetPasswordReqModel)
 => _userRepository.ResetPassword(ResetPasswordReqModel);
 
@@ -131,6 +145,9 @@ namespace DataAccess.Repository
 
         public Task<ResultModel> UpdateRoom(RoomUpdateReqModel roomUpdateReqModel)
 => _roomRepository.UpdateRoom(roomUpdateReqModel);
+
+        public Task<ResultModel> UpdateService(Guid userId, ServiceUpdateReqModel serviceUpdateModel)
+=> _serviceFeeRepository.UpdateService(userId, serviceUpdateModel);
 
         public Task<ResultModel> UpdateUserProfile(CustomerUpdateModel customerUpdateModel)
 => _customerRepository.UpdateUserProfile(customerUpdateModel);

@@ -99,14 +99,6 @@ public partial class RmsContext : DbContext
             entity.Property(e => e.StartDate).HasPrecision(6);
             entity.Property(e => e.Status).HasMaxLength(50);
 
-            entity.HasOne(d => d.Customer).WithMany(p => p.ContractCustomers)
-                .HasForeignKey(d => d.CustomerId)
-                .HasConstraintName("FK_Contract_User1");
-
-            entity.HasOne(d => d.Owner).WithMany(p => p.ContractOwners)
-                .HasForeignKey(d => d.OwnerId)
-                .HasConstraintName("FK_Contract_User");
-
             entity.HasOne(d => d.Room).WithMany(p => p.Contracts)
                 .HasForeignKey(d => d.RoomId)
                 .OnDelete(DeleteBehavior.Cascade)
@@ -130,11 +122,9 @@ public partial class RmsContext : DbContext
                     "HouseStaff",
                     r => r.HasOne<User>().WithMany()
                         .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("FK_HouseStaff_User"),
                     l => l.HasOne<House>().WithMany()
                         .HasForeignKey("HouseId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("FK_HouseStaff_House"),
                     j =>
                     {
@@ -223,6 +213,10 @@ public partial class RmsContext : DbContext
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Services)
                 .HasForeignKey(d => d.CreatedBy)
                 .HasConstraintName("FK_Service_User");
+
+            entity.HasOne(d => d.House).WithMany(p => p.Services)
+                .HasForeignKey(d => d.HouseId)
+                .HasConstraintName("FK_Service_House");
         });
 
         modelBuilder.Entity<User>(entity =>

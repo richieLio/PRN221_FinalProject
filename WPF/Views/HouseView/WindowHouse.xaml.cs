@@ -1,12 +1,14 @@
 ﻿using BusinessObject.Object;
 using DataAccess.Enums;
 using DataAccess.Repository;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using WPF.Views.HouseView;
+using WPF.Views.ServiceFeeView;
 
 namespace WPF
 {
@@ -132,6 +134,28 @@ namespace WPF
                             LoadHouses();
                         };
                         confirmDialog.ShowDialog();
+                    }
+                }
+            }
+        }
+        private async void ServiceHouse_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            if (menuItem != null)
+            {
+                Border border = ((ContextMenu)menuItem.Parent).PlacementTarget as Border;
+                if (border != null)
+                {
+                    var house = border.DataContext as House;
+                    if (house != null)
+                    {
+                        WindowServiceFee windowServiceFee = new WindowServiceFee(_serviceProvider.GetService<ICombineRepository>(), _serviceProvider, house);
+                        windowServiceFee.LoadService();
+                        MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
+                        if (mainWindow != null)
+                        {
+                            mainWindow.MainContentControl.Content = windowServiceFee;
+                        }
                     }
                 }
             }
