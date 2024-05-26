@@ -49,9 +49,6 @@ namespace WPF
                     case "staffWindow":
                         MainContentControl.Content = _serviceProvider.GetService<WindowStaff>();
                         break;
-                    case "serviceWindow":
-                        MainContentControl.Content = _serviceProvider.GetService<WindowServiceFee>();
-                        break;
                     case "contractWindow":
                         MainContentControl.Content = _serviceProvider.GetService<WindowContract>();
                         break;
@@ -59,7 +56,10 @@ namespace WPF
                         MainContentControl.Content = _serviceProvider.GetService<WindowNotification>();
                         break;
                     case "billWindow":
-                        MainContentControl.Content = _serviceProvider.GetService<WindowBill>();
+                        var windowBill = _serviceProvider.GetService<WindowBill>();
+                        MainContentControl.Content = windowBill;
+                        windowBill.LoadAllBill();
+
                         break;
                 }
             }

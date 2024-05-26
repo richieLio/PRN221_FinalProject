@@ -5,6 +5,7 @@ using System.Data;
 using System.Windows;
 using WPF.BillView;
 using WPF.StaffView;
+using WPF.Views.BillView;
 using WPF.Views.CustomerView;
 using WPF.Views.HouseView;
 using WPF.Views.RoomView;
@@ -34,6 +35,7 @@ namespace WPF
             services.AddSingleton<ICustomerRepository, CustomerRepository>();
             services.AddSingleton<IStaffRepository, StaffRepository>();
             services.AddSingleton<IServiceFeeRepository, ServiceFeeRepository>();
+            services.AddSingleton<IBillRepository, BillRepository>();
             services.AddSingleton<ICombineRepository, CombineRepository>();
 
 
@@ -44,6 +46,7 @@ namespace WPF
             services.AddTransient<ICustomerRepository, CustomerRepository>();
             services.AddTransient<IStaffRepository, StaffRepository>();
             services.AddTransient<IServiceFeeRepository, ServiceFeeRepository>();
+            services.AddTransient<IBillRepository, BillRepository>();
             services.AddTransient<ICombineRepository, CombineRepository>();
 
 
@@ -53,7 +56,6 @@ namespace WPF
             services.AddSingleton<WindowRegister>();
             services.AddSingleton<WindowHouse>();
             services.AddSingleton<WindowContract>();
-            services.AddSingleton<WindowBill>();
             services.AddSingleton<WindowStaff>();
             services.AddSingleton<WindowHouseDetails>();
             services.AddSingleton<WindowAddHouse>();
@@ -65,6 +67,9 @@ namespace WPF
             services.AddSingleton<WindowServiceFee>();
             services.AddSingleton<WindowAddServiceFee>();
             services.AddSingleton<WindowUpdateServiceFee>();
+            services.AddSingleton<WindowBill>();
+            services.AddSingleton<WindowAddBill>();
+            services.AddSingleton<WindowUpdateBill>();
 
 
 
@@ -75,7 +80,6 @@ namespace WPF
             services.AddTransient<MainWindow>(); 
             services.AddTransient<WindowHouse>();
             services.AddTransient<WindowContract>();
-            services.AddTransient<WindowBill>();
             services.AddTransient<WindowHouseDetails>();
             services.AddTransient<WindowUpdateHouse>();
             services.AddTransient<ConfirmDeleteHouse>();
@@ -85,6 +89,9 @@ namespace WPF
             services.AddTransient<WindowServiceFee>();
             services.AddTransient<WindowAddServiceFee>();
             services.AddTransient<WindowUpdateServiceFee>();
+            services.AddTransient<WindowBill>();
+            services.AddTransient<WindowAddBill>();
+            services.AddTransient<WindowUpdateBill>();
 
         }
         private void OnStartup(object sender, StartupEventArgs e)

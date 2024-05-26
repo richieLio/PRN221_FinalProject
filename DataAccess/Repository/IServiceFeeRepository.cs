@@ -15,5 +15,6 @@ namespace DataAccess.Repository
         Task<IEnumerable<Service>> GetServicesList(Guid houseId); // for creating bill
         Task<ResultModel> UpdateService(Guid userId, ServiceUpdateReqModel serviceUpdateModel);
         Task<ResultModel> RemoveService(Guid userId, Guid serviceId, Guid houseId);
+        Task<Service> GetServiceById(Guid serviceId);
     }
 }
