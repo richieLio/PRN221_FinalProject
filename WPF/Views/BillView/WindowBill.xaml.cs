@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BusinessObject.Object;
+using DataAccess.Repository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +21,51 @@ namespace WPF.BillView
     /// </summary>
     public partial class WindowBill : UserControl
     {
-        public WindowBill()
+        private readonly IServiceProvider _serviceProvider;
+        private readonly ICombineRepository _repository;
+        public WindowBill(IServiceProvider serviceProvider, ICombineRepository repository)
         {
+            _repository = repository;
             InitializeComponent();
+            _serviceProvider = serviceProvider;
+            LoadBill();
+        }
+
+        public async void LoadBill()
+        {
+            try
+            {
+                var result = await _repository.GetAllBills(App.LoggedInUserId);
+
+                if (result.IsSuccess)
+                {
+                    if (result.Data is IEnumerable<Bill> bills)
+                    {
+                        lvBills.ItemsSource = bills;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid data type returned from repository.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(result.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while loading customers: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        private void EditBill_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void DeleteBill_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

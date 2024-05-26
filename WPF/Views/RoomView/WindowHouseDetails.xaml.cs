@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using WPF.Views.BillView;
 using WPF.Views.CustomerView;
 using WPF.Views.HouseView;
 using WPF.Views.RoomView;
@@ -140,6 +141,23 @@ namespace WPF
                             LoadRooms(_house.Id);
                         };
                         confirmDialog.ShowDialog();
+                    }
+                }
+            }
+        } 
+        private async void AddBill_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            if (menuItem != null)
+            {
+                Border border = ((ContextMenu)menuItem.Parent).PlacementTarget as Border;
+                if (border != null)
+                {
+                    var room = border.DataContext as Room;
+                    if (room != null)
+                    {
+                        WindowAddBill windowAddBill = new WindowAddBill(_repository, room, _house);
+                        windowAddBill.ShowDialog();
                     }
                 }
             }

@@ -12,7 +12,8 @@ namespace DataAccess.Repository
         ICustomerRepository, 
         IHouseRepository, 
         IRoomRepository, 
-        IServiceFeeRepository
+        IServiceFeeRepository,
+        IBillRepository
     {
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Object;
+using DataAccess.Model.BillModel;
 using DataAccess.Model.CustomerModel;
 using DataAccess.Model.EmailModel;
 using DataAccess.Model.HouseModel;
@@ -23,11 +24,13 @@ namespace DataAccess.Repository
         private readonly IStaffRepository _staffRepository;
         private readonly ICustomerRepository _customerRepository;
         private readonly IServiceFeeRepository _serviceFeeRepository;
+        private readonly IBillRepository _billRepository;
+
 
 
         public CombineRepository(IUserRepository userRepository, IHouseRepository houseRepository,
             IRoomRepository roomRepository, IStaffRepository staffRepository
-            , ICustomerRepository customerRepository, IServiceFeeRepository serviceFeeRepository
+            , ICustomerRepository customerRepository, IServiceFeeRepository serviceFeeRepository, IBillRepository billRepository
             )
         {
             _userRepository = userRepository;
@@ -36,6 +39,7 @@ namespace DataAccess.Repository
             _roomRepository = roomRepository;
             _staffRepository = staffRepository;
             _serviceFeeRepository = serviceFeeRepository;
+            _billRepository = billRepository;
         }
         public Task<ResultModel> AddCustomerToRoom(Guid userId, AddCustomerToRoomReqModel addCustomerToRoomReqModel)
             => _customerRepository.AddCustomerToRoom(userId, addCustomerToRoomReqModel);
@@ -61,6 +65,9 @@ namespace DataAccess.Repository
         public Task CreateAccount(UserReqModel RegisterForm)
             => _userRepository.CreateAccount(RegisterForm);
 
+        public Task<ResultModel> CreateBill(Guid userId, BillCreateReqModel billCreateReqModel)
+            => _billRepository.CreateBill(userId, billCreateReqModel);
+
         public Task<ResultModel> DeleteCustomer(Guid customerId)
             => _customerRepository.DeleteCustomer(customerId);
 
@@ -69,6 +76,9 @@ namespace DataAccess.Repository
 
         public Task<ResultModel> DeleteRoom(Guid houseId, Guid roomId)
             => (_roomRepository.DeleteRoom(houseId, roomId));
+
+        public Task<ResultModel> GetAllBills(Guid userId)
+            => _billRepository.GetAllBills(userId);
 
         public Task<IEnumerable<House>> GetAllHouseByStaffId(Guid staffId)
             => _staffRepository.GetAllHouseByStaffId(staffId);
@@ -82,7 +92,10 @@ namespace DataAccess.Repository
         public Task<int?> GetAvailableRoomByHouseId(Guid houseId)
             => _houseRepository.GetAvailableRoomByHouseId(houseId);
 
-        public Task<ResultModel> GetCustomerByRoomId(Guid roomId) 
+        public Task<ResultModel> getBillDetails(Guid userId, Guid billId)
+             => _billRepository.getBillDetails(userId, billId);
+
+        public Task<ResultModel> GetCustomerByRoomId(Guid roomId)
             => _customerRepository.GetCustomerByRoomId(roomId);
 
         public Task<ResultModel> GetCustomerProfile(Guid customerId)
@@ -109,6 +122,9 @@ namespace DataAccess.Repository
 
         public Task<IEnumerable<Room>> GetRooms(Guid houseId)
  => _roomRepository.GetRooms(houseId);
+
+        public Task<Service> GetServiceById(Guid serviceId)
+=> _serviceFeeRepository.GetServiceById(serviceId);
 
         public Task<IEnumerable<Service>> GetServicesList(Guid houseId)
 => _serviceFeeRepository.GetServicesList(houseId);
