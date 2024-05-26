@@ -53,39 +53,26 @@ namespace WPF.Views.BillView
         {
             try
             {
-                // Lấy danh sách các dịch vụ được chọn
                 var selectedServices = _services.Where(s => s.IsSelected).ToList();
-
-                // Tạo một dictionary để lưu các dịch vụ và số lượng tương ứng
                 var serviceQuantities = new Dictionary<Guid, decimal>();
-
-                // Lặp qua tất cả các dịch vụ trong danh sách
                 foreach (var service in _services)
                 {
-                    // Nếu dịch vụ đó được chọn
                     if (service.IsSelected)
                     {
-                        // Lấy số lượng từ dịch vụ đã chọn
                         serviceQuantities.Add(service.Id, service.Quantity);
                     }
                     else
                     {
-                        // Nếu không được chọn, đặt số lượng thành 0
                         serviceQuantities.Add(service.Id, 0);
                     }
                 }
-
-                // Tạo đối tượng BillUpdateReqModel để cập nhật hóa đơn
                 var updateBill = new BillUpdateReqModel
                 {
                     BillId = _existingBill.Id,
                     RoomId = _room.Id,
                     ServiceQuantities = serviceQuantities
                 };
-
-                // Gọi phương thức cập nhật hóa đơn từ repository
                 var result = await _repository.UpdateBill(App.LoggedInUserId, updateBill);
-
                 if (result.IsSuccess)
                 {
                     MessageBox.Show("Bill updated successfully!");
@@ -94,8 +81,6 @@ namespace WPF.Views.BillView
                 {
                     MessageBox.Show($"Failed to update bill: {result.Message}");
                 }
-
-                // Đóng cửa sổ
                 this.Close();
             }
             catch (Exception ex)
@@ -103,8 +88,5 @@ namespace WPF.Views.BillView
                 MessageBox.Show($"Error updating bill: {ex.Message}");
             }
         }
-
     }
-
-
 }
