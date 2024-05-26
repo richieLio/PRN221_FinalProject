@@ -92,6 +92,9 @@ namespace DataAccess.Repository
         public Task<int?> GetAvailableRoomByHouseId(Guid houseId)
             => _houseRepository.GetAvailableRoomByHouseId(houseId);
 
+        public Task<Bill> getBillById(Guid billId)
+            => _billRepository.getBillById(billId);
+
         public Task<ResultModel> GetBillByRoomID(Guid roomId)
            => _billRepository.GetBillByRoomID(roomId);
 
@@ -158,6 +161,9 @@ namespace DataAccess.Repository
 
         public Task<ResultModel> SendOTPEmailRequest(SendOTPReqModel sendOTPReqModel)
 => _userRepository.SendOTPEmailRequest(sendOTPReqModel);
+
+        public Task<ResultModel> UpdateBill(Guid userId, BillUpdateReqModel billUpdateReqModel)
+            => _billRepository.UpdateBill(userId, billUpdateReqModel);
 
         public Task<ResultModel> UpdateHouse(Guid OwnerId, HouseUpdateReqModel houseUpdateReqModel)
  => _houseRepository.UpdateHouse(OwnerId, houseUpdateReqModel);
