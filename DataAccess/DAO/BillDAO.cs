@@ -154,7 +154,8 @@ namespace DataAccess.DAO
                 if (user.Role == UserEnum.STAFF)
                 {
                     bills = await GetBillsByStaffUserId(userId);
-                } else
+                }
+                else
                 {
                     bills = await GetAllBillsByOwnerUserId(userId);
                 }
@@ -178,10 +179,10 @@ namespace DataAccess.DAO
                         RoomName = roomName,
                         HouseName = houseName
                     };
-                    billList.Add(bl); 
+                    billList.Add(bl);
                 }
 
-                
+
 
                 result.IsSuccess = true;
                 result.Code = 200;
@@ -242,8 +243,8 @@ namespace DataAccess.DAO
                 await context.SaveChangesAsync();
 
                 var serviceQuantities = billCreateReqModel.ServiceQuantities;
-                
-                
+
+
                 if (!await AddServicesToBill(newBill.Id, serviceQuantities, room.Price))
                 {
                     return new ResultModel
@@ -308,9 +309,14 @@ namespace DataAccess.DAO
 
         public async Task<Bill> GetBillById(Guid billId)
         {
-            using var context = new RmsContext();
-            return await context.Bills.FindAsync(billId);
+            using (var context = new RmsContext())
+            {
+                return await context.Bills
+                    .Include(b => b.BillServices)
+                    .FirstOrDefaultAsync(b => b.Id == billId);
+            }
         }
+
         public async Task<List<BillService>> GetBillServicesForBill(Guid billId)
         {
             using var context = new RmsContext();
@@ -349,10 +355,10 @@ namespace DataAccess.DAO
             ResultModel result = new ResultModel();
             try
             {
-                
-                
+
+
                 IEnumerable<Bill> bills = await GetAllBillsRoomId(roomId);
-                
+
                 List<BillResModel> billList = new List<BillResModel>();
 
                 foreach (var bill in bills)
@@ -395,8 +401,114 @@ namespace DataAccess.DAO
         public async Task<IEnumerable<Bill>> GetAllBillsRoomId(Guid roomId)
         {
             using var context = new RmsContext();
-            return await context.Bills.Where(b=> b.RoomId == roomId).ToListAsync();
-        
+            return await context.Bills.Where(b => b.RoomId == roomId).ToListAsync();
+
         }
+
+        public async Task<ResultModel> UpdateBill(Guid userId, BillUpdateReqModel billUpdateReqModel)
+        {
+            using var context = new RmsContext();
+            ResultModel result = new ResultModel();
+            IRoomRepository _roomRepository = new RoomRepository();
+            IUserRepository _userRepository = new UserRepository();
+
+            try
+            {
+                var bill = await context.Bills.Include(b => b.BillServices).FirstOrDefaultAsync(b => b.Id == billUpdateReqModel.BillId);
+                if (bill == null)
+                {
+                    return new ResultModel
+                    {
+                        IsSuccess = false,
+                        Code = 404,
+                        Message = "Bill not found."
+                    };
+                }
+
+                var user = await _userRepository.GetUserById(userId);
+                if (user == null)
+                {
+                    return new ResultModel
+                    {
+                        IsSuccess = false,
+                        Code = 404,
+                        Message = "User not found."
+                    };
+                }
+
+                var room = await _roomRepository.GetRoom(bill.RoomId.Value);
+                if (room.Status == RoomStatus.EMPTY)
+                {
+                    return new ResultModel
+                    {
+                        IsSuccess = false,
+                        Code = 400,
+                        Message = "Empty room cannot update bill"
+                    };
+                }
+
+                var serviceQuantities = billUpdateReqModel.ServiceQuantities;
+
+                decimal? totalPrice = 0;
+
+                foreach (var (serviceId, quantity) in serviceQuantities)
+                {
+                    var service = await context.Services.FindAsync(serviceId);
+                    if (service == null)
+                    {
+                        return new ResultModel
+                        {
+                            IsSuccess = false,
+                            Code = 404,
+                            Message = "Service not found."
+                        };
+                    }
+
+                    var existingBillService = bill.BillServices.FirstOrDefault(bs => bs.ServiceId == serviceId);
+                    if (existingBillService != null)
+                    {
+                        if (quantity == 0)
+                        {
+                            context.BillServices.Remove(existingBillService); // Remove service if quantity is 0
+                        }
+                        else
+                        {
+                            existingBillService.Quantity = quantity; // Update quantity if service exists
+                        }
+                    }
+                    else if (quantity > 0)
+                    {
+                        bill.BillServices.Add(new BillService // Add new service if quantity is greater than 0 and not already exists
+                        {
+                            BillId = billUpdateReqModel.BillId,
+                            ServiceId = serviceId,
+                            Quantity = quantity
+                        });
+                    }
+
+                    totalPrice = quantity * service.Price + room.Price;
+                }
+
+                bill.TotalPrice = totalPrice;
+                await context.SaveChangesAsync();
+
+                return new ResultModel
+                {
+                    IsSuccess = true,
+                    Code = 200,
+                    Message = "Bill updated successfully!"
+                };
+            }
+            catch (Exception e)
+            {
+                return new ResultModel
+                {
+                    IsSuccess = false,
+                    Code = 400,
+                    ResponseFailed = e.InnerException?.Message + "\n" + e.StackTrace ?? e.Message + "\n" + e.StackTrace
+                };
+            }
+        }
+
     }
 }
