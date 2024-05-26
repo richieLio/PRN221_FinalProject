@@ -167,5 +167,12 @@ namespace DataAccess.DAO
                 Message = "Service deleted successfully"
             };
         }
+
+        public async Task<Service> GetServiceById(Guid serviceId)
+        {
+            using var context = new RmsContext();
+            return await context.Services.FindAsync(serviceId);
+
+        }
     }
 }

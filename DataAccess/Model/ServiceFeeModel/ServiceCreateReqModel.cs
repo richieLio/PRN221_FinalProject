@@ -14,4 +14,11 @@ namespace DataAccess.Model.ServiceFeeModel
 
         public Guid HouseId { get; set; }
     }
+    public class ServiceViewModel
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public bool IsSelected { get; set; }
+        public decimal Quantity { get; set; }
+    }
 }
