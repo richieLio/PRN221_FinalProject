@@ -13,6 +13,7 @@ namespace DataAccess.Repository
 
         Task<ResultModel> CreateBill(Guid userId, BillCreateReqModel billCreateReqModel);
         Task<ResultModel> GetAllBills(Guid userId);
+        Task<ResultModel> GetBillByRoomID(Guid roomId);
         Task<ResultModel> getBillDetails(Guid userId, Guid billId);
     }
 }

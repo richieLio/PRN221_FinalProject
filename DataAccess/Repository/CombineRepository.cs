@@ -92,6 +92,9 @@ namespace DataAccess.Repository
         public Task<int?> GetAvailableRoomByHouseId(Guid houseId)
             => _houseRepository.GetAvailableRoomByHouseId(houseId);
 
+        public Task<ResultModel> GetBillByRoomID(Guid roomId)
+           => _billRepository.GetBillByRoomID(roomId);
+
         public Task<ResultModel> getBillDetails(Guid userId, Guid billId)
              => _billRepository.getBillDetails(userId, billId);
 

@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Object;
+using DataAccess.Model.BillModel;
 using DataAccess.Repository;
 using System;
 using System.Collections.Generic;
@@ -28,10 +29,9 @@ namespace WPF.BillView
             _repository = repository;
             InitializeComponent();
             _serviceProvider = serviceProvider;
-            LoadBill();
         }
 
-        public async void LoadBill()
+        public async void LoadAllBill()
         {
             try
             {
@@ -39,7 +39,7 @@ namespace WPF.BillView
 
                 if (result.IsSuccess)
                 {
-                    if (result.Data is IEnumerable<Bill> bills)
+                    if (result.Data is IEnumerable<BillResModel> bills)
                     {
                         lvBills.ItemsSource = bills;
                     }
@@ -53,6 +53,33 @@ namespace WPF.BillView
                     MessageBox.Show(result.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while loading customers: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        public async void LoadBillByRoomId(Guid roomId)
+        {
+            try
+            {
+                var result = await _repository.GetBillByRoomID(roomId);
+
+                if (result.IsSuccess)
+                {
+                    if (result.Data is IEnumerable<BillResModel> bills)
+                    {
+                        lvBills.ItemsSource = bills;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid data type returned from repository.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(result.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
             catch (Exception ex)
             {

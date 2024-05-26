@@ -339,5 +339,64 @@ namespace DataAccess.DAO
             using var context = new RmsContext();
             return await context.Bills.Where(b => b.CreateBy == ownerId).ToListAsync();
         }
+
+        public async Task<ResultModel> GetBillByRoomID(Guid roomId)
+        {
+            using var context = new RmsContext();
+            IRoomRepository _roomRepository = new RoomRepository();
+            IHouseRepository _houseRepository = new HouseRepository();
+
+            ResultModel result = new ResultModel();
+            try
+            {
+                
+                
+                IEnumerable<Bill> bills = await GetAllBillsRoomId(roomId);
+                
+                List<BillResModel> billList = new List<BillResModel>();
+
+                foreach (var bill in bills)
+                {
+                    var room = await _roomRepository.GetRoom(roomId);
+                    var house = await _houseRepository.GetHouse(room.HouseId.Value);
+                    string houseName = house.Name;
+                    string roomName = room.Name;
+                    BillResModel bl = new BillResModel()
+                    {
+                        Id = bill.Id,
+                        TotalPrice = bill.TotalPrice,
+                        Month = bill.Month,
+                        IsPaid = bill.IsPaid,
+                        PaymentDate = bill.PaymentDate,
+                        CreateBy = bill.CreateBy,
+                        RoomId = bill.RoomId,
+                        RoomName = roomName,
+                        HouseName = houseName
+                    };
+                    billList.Add(bl);
+                }
+
+
+
+                result.IsSuccess = true;
+                result.Code = 200;
+                result.Data = billList;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.IsSuccess = false;
+                result.Code = 500; // Internal Server Error
+                result.Message = ex.Message;
+                return result;
+            }
+        }
+
+        public async Task<IEnumerable<Bill>> GetAllBillsRoomId(Guid roomId)
+        {
+            using var context = new RmsContext();
+            return await context.Bills.Where(b=> b.RoomId == roomId).ToListAsync();
+        
+        }
     }
 }

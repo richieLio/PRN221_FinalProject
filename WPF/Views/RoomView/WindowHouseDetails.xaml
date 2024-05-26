@@ -78,6 +78,7 @@
                             <ContextMenu>
                                 <MenuItem Header="Update Room" Click="UpdateRoom_Click"/>
                                 <MenuItem Header="Delete Room" Click="DeleteRoom_Click"/>
+                                <MenuItem Header="Bill" Click="ViewListBill_Click"/>
                                 <MenuItem Header="Add bill for this room" Click="AddBill_Click"/>
                             </ContextMenu>
                         </Border.ContextMenu>

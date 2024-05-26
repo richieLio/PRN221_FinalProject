@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository
 {
-    public interface ICombineRepository 
-        : IUserRepository, 
-        IStaffRepository, 
-        ICustomerRepository, 
-        IHouseRepository, 
-        IRoomRepository, 
+    public interface ICombineRepository
+        : IUserRepository,
+        IStaffRepository,
+        ICustomerRepository,
+        IHouseRepository,
+        IRoomRepository,
         IServiceFeeRepository,
         IBillRepository
     {
+      
     }
 }

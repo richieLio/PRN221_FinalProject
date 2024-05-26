@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using WPF.BillView;
 using WPF.Views.BillView;
 using WPF.Views.CustomerView;
 using WPF.Views.HouseView;
@@ -158,6 +159,29 @@ namespace WPF
                     {
                         WindowAddBill windowAddBill = new WindowAddBill(_repository, room, _house);
                         windowAddBill.ShowDialog();
+                    }
+                }
+            }
+        }   
+        private async void ViewListBill_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            if (menuItem != null)
+            {
+                Border border = ((ContextMenu)menuItem.Parent).PlacementTarget as Border;
+                if (border != null)
+                {
+                    var room = border.DataContext as Room;
+                    if (room != null)
+                    {
+                        WindowBill windowBill = new WindowBill(_serviceProvider, _repository);
+                        windowBill.LoadBillByRoomId(room.Id);
+
+                        MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
+                        if (mainWindow != null)
+                        {
+                            mainWindow.MainContentControl.Content = windowBill;
+                        }
                     }
                 }
             }
