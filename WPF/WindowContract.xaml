@@ -7,6 +7,16 @@
         mc:Ignorable="d"
         Height="450" Width="800">
     <Grid>
-        <TextBlock>This is contract window</TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <ScrollViewer Grid.Row="2" Margin="20" MaxHeight="200" VerticalScrollBarVisibility="Auto">
+            <ListBox x:Name="messages" HorizontalAlignment="Stretch" Padding="20 10" BorderThickness="0"/>
+        </ScrollViewer>
     </Grid>
 </UserControl>
