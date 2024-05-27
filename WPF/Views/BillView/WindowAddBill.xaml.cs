@@ -8,6 +8,8 @@ using DataAccess.DAO;
 using DataAccess.Model.BillModel;
 using DataAccess.Model.ServiceFeeModel;
 using DataAccess.Repository;
+using Microsoft.AspNetCore.SignalR.Client;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace WPF.Views.BillView
 {
@@ -17,6 +19,7 @@ namespace WPF.Views.BillView
         private readonly Room _room;
         private readonly House _house;
         private IEnumerable<ServiceViewModel> _services;
+        HubConnection _connection;
 
 
         public WindowAddBill(ICombineRepository repository, Room room, House house)
@@ -26,8 +29,18 @@ namespace WPF.Views.BillView
             _room = room;
             _house = house;
             LoadData();
+            SetupSignalR();
         }
+        private async void SetupSignalR()
+        {
+            _connection = new HubConnectionBuilder()
+                .WithUrl("https://localhost:7259/notihub")
+            .WithAutomaticReconnect()
+                .Build();
 
+            await _connection.StartAsync();
+
+        }
         private async void LoadData()
         {
             try
@@ -63,12 +76,22 @@ namespace WPF.Views.BillView
                     RoomId = _room.Id,
                     ServiceQuantities = serviceQuantities // Assign the mapped dictionary
                 };
+                var user =  await _repository.GetUserById(App.LoggedInUserId);
 
                 var result = await _repository.CreateBill(App.LoggedInUserId, newBill);
 
                 if (result.IsSuccess)
                 {
                     MessageBox.Show("Bill created successfully!");
+
+
+                    try { 
+                    await _connection.InvokeAsync("NotifyBillCreated", _house.OwnerId,
+                        $"A new bill in {_room.Name} of {_house.Name} has been created by {user.FullName}");
+                    } catch (Exception ex)
+                    {
+                        MessageBox.Show("signalR: " + ex.Message);
+                    }
                 }
                 else
                 {
