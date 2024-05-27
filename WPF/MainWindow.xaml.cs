@@ -1,5 +1,6 @@
 ﻿using DataAccess.Enums;
 using DataAccess.Repository;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
 using System.Windows;
@@ -24,6 +25,7 @@ namespace WPF
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ICombineRepository _repository;
+        HubConnection _connection;
 
         public MainWindow(IServiceProvider serviceProvider, ICombineRepository repository)
         {
@@ -35,7 +37,7 @@ namespace WPF
             staffWindow.LoadStaffs();
             MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
         }
-
+       
         private async void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             var radioButton = sender as RadioButton;
@@ -67,7 +69,7 @@ namespace WPF
         }
         private async void UpdateStaffButtonVisibility()
         {
-           
+
             var user = await _repository.GetUserById(App.LoggedInUserId);
             if (user != null)
             {

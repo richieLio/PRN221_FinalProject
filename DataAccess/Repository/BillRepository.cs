@@ -18,11 +18,16 @@ namespace DataAccess.Repository
         public Task<ResultModel> GetAllBills(Guid userId)
             => BillDAO.Instance.GetAllBills(userId);
 
+        public Task<Bill> getBillById(Guid billId)
+            => BillDAO.Instance.GetBillById(billId);
         public Task<ResultModel> GetBillByRoomID(Guid roomId)
             => BillDAO.Instance.GetBillByRoomID(roomId);
 
 
         public Task<ResultModel> getBillDetails(Guid userId, Guid billId)
             => BillDAO.Instance.getBillDetails(userId, billId);
+
+        public Task<ResultModel> UpdateBill(Guid userId, BillUpdateReqModel billUpdateReqModel)
+            => BillDAO.Instance.UpdateBill(userId, billUpdateReqModel);
     }
 }

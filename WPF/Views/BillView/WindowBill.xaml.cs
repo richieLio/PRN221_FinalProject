@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WPF.Views.BillView;
 
 namespace WPF.BillView
 {
@@ -86,10 +87,34 @@ namespace WPF.BillView
                 MessageBox.Show($"An error occurred while loading customers: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        private void EditBill_Click(object sender, RoutedEventArgs e)
+        private async void EditBill_Click(object sender, RoutedEventArgs e)
         {
+            if (lvBills.SelectedItem is BillResModel selectedBill)
+            {
+                var billResult = await _repository.getBillById(selectedBill.Id);
+                if (billResult == null)
+                {
+                    MessageBox.Show("Failed to fetch bill details.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
 
+                
+
+                var roomResult = await _repository.GetRoom(billResult.RoomId.Value);
+                if (roomResult == null)
+                {
+                    MessageBox.Show("Failed to fetch room details.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                var updateWindow = new WindowUpdateBill(_repository, roomResult, billResult);
+                updateWindow.ShowDialog();
+
+                // Reload the bills after update
+                LoadAllBill();
+            }
         }
+
         private void DeleteBill_Click(object sender, RoutedEventArgs e)
         {
 
