@@ -35,9 +35,24 @@
          materialDesign:ButtonProgressAssist.Value="-1"
          IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
         </StackPanel>
-
+        <!-- New StackPanel for user actions -->
+        <StackPanel Grid.Column="2" Orientation="Vertical" HorizontalAlignment="Right" Margin="0,0,20,556" RenderTransformOrigin="0.5,0.5">
+            <Menu materialDesign:MenuAssist.TopLevelMenuItemHeight="80">
+                <MenuItem Height="71">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Account" />
+                            <TextBlock Text="{Binding FullName}" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </MenuItem.Header>
+                    <MenuItem Header="Item 1" />
+                    <MenuItem Header="Item 2" />
+                    <MenuItem Header="Item 3" />
+                </MenuItem>
+            </Menu>
+        </StackPanel>
         <GridSplitter Grid.Column="1" Width="5" Background="Gray" HorizontalAlignment="Stretch"/>
 
-        <ContentControl Grid.Column="1" x:Name="MainContentControl" Margin="0,0,0,0" Grid.ColumnSpan="2"/>
+        <ContentControl Grid.Column="1" x:Name="MainContentControl" Margin="0,78,0,0" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>

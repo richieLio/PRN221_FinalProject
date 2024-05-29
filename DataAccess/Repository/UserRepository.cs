@@ -26,6 +26,9 @@ namespace DataAccess.Repository
 
 
         public Task<User> GetUserByVerificationToken(string otp) => UserDAO.Instance.GetUserByVerificationToken(otp);
+
+        public string GetUserFullName(Guid id) => UserDAO.Instance.GetUserFullName(id);
+
         public Task<ResultModel> Login(UserLoginReqModel userLoginReqModel) => UserDAO.Instance.Login(userLoginReqModel);
 
         public Task ResetPassword(UserResetPasswordReqModel ResetPasswordReqModel) => UserDAO.Instance.ResetPassword(ResetPasswordReqModel);

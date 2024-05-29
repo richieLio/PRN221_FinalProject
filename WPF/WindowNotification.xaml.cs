@@ -21,55 +21,20 @@ namespace WPF
     /// </summary>
     public partial class WindowNotification : UserControl
     {
-        private readonly HubConnection _connection;
         private readonly ICombineRepository _repository;
 
         public WindowNotification(ICombineRepository repository)
         {
             InitializeComponent();
             _repository = repository;
-            _connection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:7259/notihub")
-                .WithAutomaticReconnect()
-                .Build();
-
-            openConnect();
+          
         }
 
   
 
-        private async void openConnect()
-        {
-            try
-            {
+       
 
-
-
-                _connection.On<Guid, string>("ReceiveNotification", (ownerId, message) =>
-                {
-                    this.Dispatcher.Invoke(() =>
-                    {
-                        var newMessage = $"{ownerId}: {message}";
-                        if (App.LoggedInUserId == ownerId)
-                        {
-                            messages.Items.Add(newMessage);
-                        }
-                    });
-                });
-
-                await _connection.StartAsync();
-                messages.Items.Add("Connection started");
-            }
-            catch (Exception ex)
-            {
-                messages.Items.Add($"Error: {ex.Message}");
-            }
-        }
-
-        private async void openConnection_Click(object sender, RoutedEventArgs e)
-        {
-            openConnect();
-        }
+       
 
     }
 }

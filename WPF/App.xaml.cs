@@ -113,7 +113,6 @@ namespace WPF
                 .WithUrl("https://localhost:7259/notihub")
                 .WithAutomaticReconnect()
                 .Build();
-
             try
             {
                 await SignalRConnection.StartAsync();

@@ -77,7 +77,7 @@ namespace WPF.Views.BillView
                     try
                     {
                         await App.SignalRConnection.InvokeAsync("NotifyBillCreated", _house.OwnerId,
-                            $"A new bill in {_room.Name} of {_house.Name} has been created by {user.FullName}");
+                            $"A new bill in {_room.Name} of {_house.Name} has been created by staff {user.FullName}");
                     }
                     catch (Exception ex)
                     {

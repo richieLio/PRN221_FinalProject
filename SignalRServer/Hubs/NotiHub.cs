@@ -10,7 +10,18 @@ namespace SignalRServer.Hubs
 
             return Clients.All.SendAsync("ReceiveNotification", ownerId, message);
         }
-    
+        public async Task<bool> IsUserOnline(string userId)
+        {
+            try
+            {
+                await Clients.Client(userId).SendAsync("ping");
+                return true; 
+            }
+            catch
+            {
+                return false; 
+            }
+        }
 
     }
 }

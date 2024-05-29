@@ -147,6 +147,9 @@ namespace DataAccess.Repository
         public Task<User> GetUserByVerificationToken(string otp)
  => _userRepository.GetUserByVerificationToken(otp);
 
+        public string GetUserFullName(Guid id)
+            => _userRepository.GetUserFullName(id);
+
         public Task<bool> IsUserInRoom(Guid roomId, string email, string phoneNumber, string licensePlates, string citizenIdNumber)
  => _customerRepository.IsUserInRoom(roomId, email, phoneNumber, licensePlates, citizenIdNumber);
 

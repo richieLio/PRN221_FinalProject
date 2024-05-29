@@ -367,6 +367,21 @@ namespace DataAccess.DAO
             using var context = new RmsContext();
             return await context.Users.FirstOrDefaultAsync(x => x.Id == id);
         }
-       
+
+        public string GetUserFullName(Guid id)
+        {
+            using (var context = new RmsContext())
+            {
+                var user = context.Users.Find(id);
+                if (user != null)
+                {
+                    return user.FullName;
+                }
+                else
+                {
+                    return "User not found";
+                }
+            }
+        }
     }
 }
