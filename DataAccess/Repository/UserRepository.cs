@@ -17,6 +17,7 @@ namespace DataAccess.Repository
 {
     public class UserRepository : IUserRepository
     {
+        public Task<ResultModel> ChangePassword(Guid userId, ChangePasswordReqModel changePasswordModel) => UserDAO.Instance.ChangePassword(userId, changePasswordModel);
 
         public Task CreateAccount(UserReqModel RegisterForm) => UserDAO.Instance.CreateAccount(RegisterForm);
 
@@ -34,6 +35,8 @@ namespace DataAccess.Repository
         public Task ResetPassword(UserResetPasswordReqModel ResetPasswordReqModel) => UserDAO.Instance.ResetPassword(ResetPasswordReqModel);
 
         public Task<ResultModel> SendOTPEmailRequest(SendOTPReqModel sendOTPReqModel) => UserDAO.Instance.SendOTPEmailRequest(sendOTPReqModel);
+
+        public Task<ResultModel> UpdateUserProfile(UserUpdateModel updateModel) => UserDAO.Instance.UpdateUserProfile(updateModel);
 
         public Task VerifyEmail(EmailVerificationReqModel verificationModel) => UserDAO.Instance.VerifyEmail(verificationModel);
 

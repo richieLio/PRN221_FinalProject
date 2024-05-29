@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using WPF.BillView;
 using WPF.StaffView;
+using WPF.Views.UserView;
 
 namespace WPF
 {
@@ -130,6 +131,17 @@ namespace WPF
             var windowLogin = _serviceProvider.GetService<WindowLogin>();
             windowLogin.Show();
             Close();
+        }
+        private void btnChangePassword_Click(object sender, RoutedEventArgs e)
+        {
+            var windowChangePassword = _serviceProvider.GetService<WindowChangePassword>();
+            windowChangePassword.Show();
+        }
+        private async void btnUpdateProfile_Click(object sender, RoutedEventArgs e)
+        {
+            var user = await _repository.GetUserById(App.LoggedInUserId);
+            var windowUpdateProfile = new WindowUpdateProfile(_repository, user);
+            windowUpdateProfile.Show();
         }
     }
 }

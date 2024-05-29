@@ -383,5 +383,95 @@ namespace DataAccess.DAO
                 }
             }
         }
+
+        public async Task<ResultModel> ChangePassword(Guid userId, ChangePasswordReqModel changePasswordModel)
+        {
+            using var context = new RmsContext();
+
+            ResultModel result = new ResultModel();
+            try
+            {
+                var user = await GetUserById(userId);
+
+                if (user == null)
+                {
+                    result.IsSuccess = false;
+                    result.Code = 404; // Not Found
+                    result.Message = "User not found";
+                    return result;
+                }
+
+                // Verify the old password
+                var oldPasswordHash = user.Password;
+                var oldPasswordSalt = user.Salt;
+                var isOldPasswordValid = Encoder.VerifyPasswordHashed(changePasswordModel.OldPassword, oldPasswordSalt, oldPasswordHash);
+
+                if (!isOldPasswordValid)
+                {
+                    result.IsSuccess = false;
+                    result.Code = 400;
+                    result.Message = "Old password is incorrect";
+                    return result;
+                }
+
+                // Generate new password hash and salt
+                var newPasswordHashModel = Encoder.CreateHashPassword(changePasswordModel.NewPassword);
+                user.Password = newPasswordHashModel.HashedPassword;
+                user.Salt = newPasswordHashModel.Salt;
+
+                context.Update(user);
+                await context.SaveChangesAsync();
+
+                result.IsSuccess = true;
+                result.Code = 200;
+                result.Message = "Password updated successfully";
+            }
+            catch (Exception e)
+            {
+                result.IsSuccess = false;
+                result.Code = 500; // Internal Server Error
+                result.ResponseFailed = e.InnerException != null ? e.InnerException.Message + "\n" + e.StackTrace : e.Message + "\n" + e.StackTrace;
+            }
+            return result;
+        }
+
+        public async Task<ResultModel> UpdateUserProfile(UserUpdateModel updateModel)
+        {
+            using var context = new RmsContext();
+            ResultModel Result = new();
+            try
+            {
+                var user = await GetUserById(updateModel.Id);
+
+                if (user == null)
+                {
+                    Result.IsSuccess = false;
+                    Result.Code = 400;
+                    Result.Message = "Not found";
+                    return Result;
+                }
+                user.Email = updateModel.Email;
+                user.PhoneNumber = updateModel.PhoneNumber;
+                user.Address = updateModel.Address;
+                user.Gender = updateModel.Gender;
+                user.FullName = updateModel.FullName;
+                user.Dob = updateModel.Dob;
+
+
+                context.Update(user);
+                await context.SaveChangesAsync();
+                Result.IsSuccess = true;
+                Result.Code = 200;
+                Result.Message = "Profile updated successfully";
+            }
+            catch (Exception ex)
+            {
+                Result.IsSuccess = false;
+                Result.Code = 400;
+                Result.Message = "User doesn't have the required roles";
+
+            }
+            return Result;
+        }
     }
 }

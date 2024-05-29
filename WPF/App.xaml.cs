@@ -11,6 +11,7 @@ using WPF.Views.CustomerView;
 using WPF.Views.HouseView;
 using WPF.Views.RoomView;
 using WPF.Views.ServiceFeeView;
+using WPF.Views.UserView;
 
 namespace WPF
 {
@@ -77,6 +78,8 @@ namespace WPF
             services.AddSingleton<WindowBill>();
             services.AddSingleton<WindowAddBill>();
             services.AddSingleton<WindowUpdateBill>();
+            services.AddSingleton<WindowChangePassword>();
+            services.AddSingleton<WindowUpdateProfile>();
 
 
 
@@ -100,6 +103,8 @@ namespace WPF
             services.AddTransient<WindowBill>();
             services.AddTransient<WindowAddBill>();
             services.AddTransient<WindowUpdateBill>();
+            services.AddTransient<WindowChangePassword>();
+            services.AddTransient<WindowUpdateProfile>();
 
         }
         private void OnStartup(object sender, StartupEventArgs e)
