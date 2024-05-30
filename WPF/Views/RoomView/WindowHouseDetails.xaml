@@ -29,6 +29,7 @@
 
                 <!-- Assign Button -->
                 <Button x:Name="AssignStaffButton" Content="Assign Staff" Click="AssignStaff_Click" Width="120" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed"/>
+                <Button x:Name="UnAssignStaffButton" Content="UnAssign Staff" Click="UnAssignStaff_Click" Width="120" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed"/>
             </StackPanel>
         </StackPanel>
 

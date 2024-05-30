@@ -129,6 +129,28 @@ namespace DataAccess.DAO
 
             return true;
         }
+        public async Task<bool> RemoveStaffFromHouse(Guid staffId, Guid houseId)
+        {
+            using var context = new RmsContext();
+
+            var house = await context.Houses.Include(h => h.Staff).FirstOrDefaultAsync(h => h.Id == houseId);
+            if (house == null)
+            {
+                return false; // House not found
+            }
+
+            var staffToRemove = house.Staff.FirstOrDefault(u => u.Id == staffId);
+            if (staffToRemove == null)
+            {
+                return false; // Staff not assigned to this house
+            }
+
+            house.Staff.Remove(staffToRemove);
+            await context.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<ResultModel> GetAssignedStaffByHouseId(Guid houseId)
         {
             using var context = new RmsContext();

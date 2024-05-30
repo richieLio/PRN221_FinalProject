@@ -163,7 +163,10 @@ namespace DataAccess.Repository
     public Task<ResultModel> RemoveService(Guid userId, Guid serviceId, Guid houseId)
 => _serviceFeeRepository.RemoveService(userId, serviceId, houseId);
 
-    public Task ResetPassword(UserResetPasswordReqModel ResetPasswordReqModel)
+        public Task<bool> RemoveStaffFromHouse(Guid staffId, Guid houseId)
+=> _staffRepository.RemoveStaffFromHouse(staffId, houseId);
+
+        public Task ResetPassword(UserResetPasswordReqModel ResetPasswordReqModel)
 => _userRepository.ResetPassword(ResetPasswordReqModel);
 
     public Task<ResultModel> SendOTPEmailRequest(SendOTPReqModel sendOTPReqModel)
