@@ -1,4 +1,5 @@
 ﻿using DataAccess.Repository;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using System.Data;
@@ -10,6 +11,7 @@ using WPF.Views.CustomerView;
 using WPF.Views.HouseView;
 using WPF.Views.RoomView;
 using WPF.Views.ServiceFeeView;
+using WPF.Views.UserView;
 
 namespace WPF
 {
@@ -20,12 +22,17 @@ namespace WPF
     {
         private ServiceProvider serviceProvider;
         public static Guid LoggedInUserId { get; set; }
+        public static HubConnection SignalRConnection { get;  set; }
+
         public App()
         {
             ServiceCollection services = new ServiceCollection();
             ConfigureServices(services);
             serviceProvider = services.BuildServiceProvider();
             LoggedInUserId = Guid.Empty;
+
+            SetupSignalR();
+
         }
         private void ConfigureServices(ServiceCollection services)
         {
@@ -56,6 +63,7 @@ namespace WPF
             services.AddSingleton<WindowRegister>();
             services.AddSingleton<WindowHouse>();
             services.AddSingleton<WindowContract>();
+            services.AddSingleton<WindowNotification>();
             services.AddSingleton<WindowStaff>();
             services.AddSingleton<WindowHouseDetails>();
             services.AddSingleton<WindowAddHouse>();
@@ -70,6 +78,8 @@ namespace WPF
             services.AddSingleton<WindowBill>();
             services.AddSingleton<WindowAddBill>();
             services.AddSingleton<WindowUpdateBill>();
+            services.AddSingleton<WindowChangePassword>();
+            services.AddSingleton<WindowUpdateProfile>();
 
 
 
@@ -80,6 +90,7 @@ namespace WPF
             services.AddTransient<MainWindow>(); 
             services.AddTransient<WindowHouse>();
             services.AddTransient<WindowContract>();
+            services.AddTransient<WindowNotification>();
             services.AddTransient<WindowHouseDetails>();
             services.AddTransient<WindowUpdateHouse>();
             services.AddTransient<ConfirmDeleteHouse>();
@@ -92,12 +103,29 @@ namespace WPF
             services.AddTransient<WindowBill>();
             services.AddTransient<WindowAddBill>();
             services.AddTransient<WindowUpdateBill>();
+            services.AddTransient<WindowChangePassword>();
+            services.AddTransient<WindowUpdateProfile>();
 
         }
         private void OnStartup(object sender, StartupEventArgs e)
         {
             var loginWindow = serviceProvider.GetService<WindowLogin>();
             loginWindow.Show();
+        }
+        private async void SetupSignalR()
+        {
+            SignalRConnection = new HubConnectionBuilder()
+                .WithUrl("https://localhost:7259/notihub")
+                .WithAutomaticReconnect()
+                .Build();
+            try
+            {
+                await SignalRConnection.StartAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"SignalR connection error: {ex.Message}");
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using DataAccess.Repository;
+using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,45 +21,50 @@ namespace WPF
     /// </summary>
     public partial class WindowContract : UserControl
     {
-        HubConnection connection;
+        private readonly HubConnection _connection;
+
         public WindowContract()
         {
             InitializeComponent();
-            connection = new HubConnectionBuilder()
+            _connection = new HubConnectionBuilder()
                 .WithUrl("https://localhost:7259/notihub")
                 .WithAutomaticReconnect()
                 .Build();
 
-            
             openConnect();
         }
         private async void openConnect()
         {
-            connection.On<string>("ReceiveNotification", ( message) =>
-            {
-                this.Dispatcher.Invoke(() =>
-                {
-                    var newMessage = $"{message}";
-                    messages.Items.Add(newMessage);
-                });
-            });
             try
             {
-                await connection.StartAsync();
-                messages.Items.Add("Connection stated");
-               
+
+
+
+                _connection.On<Guid, string>("ReceiveNotification", (ownerId, message) =>
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        var newMessage = $"{ownerId}: {message}";
+                        if (App.LoggedInUserId == ownerId)
+                        {
+                            messages.Items.Add(newMessage);
+                        }
+                    });
+                });
+
+                await _connection.StartAsync();
+                messages.Items.Add("Connection started");
             }
             catch (Exception ex)
             {
-                messages.Items.Add(ex.Message);
-
+                messages.Items.Add($"Error: {ex.Message}");
             }
         }
+
         private async void openConnection_Click(object sender, RoutedEventArgs e)
         {
             openConnect();
         }
 
-        
     }
 }

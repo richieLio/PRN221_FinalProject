@@ -260,6 +260,7 @@ namespace DataAccess.DAO
                 {
                     IsSuccess = true,
                     Code = 200,
+                    Data = newBill,
                     Message = "Bill created successfully!"
                 };
             }
@@ -338,13 +339,24 @@ namespace DataAccess.DAO
                 .Include(b => b.Room)
                 .ThenInclude(r => r.House)
                 .Where(b => b.Room.HouseId != null && staffHouses.Contains(b.Room.HouseId.Value))
+                .OrderByDescending(b => b.Month)
                 .ToListAsync();
         }
         public async Task<IEnumerable<Bill>> GetAllBillsByOwnerUserId(Guid ownerId)
         {
             using var context = new RmsContext();
-            return await context.Bills.Where(b => b.CreateBy == ownerId).ToListAsync();
+            var staffIds = await context.Users
+                                        .Where(u => u.OwnerId == ownerId)
+                                        .Select(u => u.Id)
+                                        .ToListAsync();
+
+            return await context.Bills
+                                .Where(b => b.CreateBy == ownerId || staffIds.Contains(b.CreateBy.Value))
+                                .OrderByDescending(b => b.Month)
+                                .ToListAsync();
         }
+
+
 
         public async Task<ResultModel> GetBillByRoomID(Guid roomId)
         {

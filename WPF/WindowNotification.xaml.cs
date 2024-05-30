@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataAccess.Repository;
+using Microsoft.AspNetCore.SignalR.Client;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,11 +19,22 @@ namespace WPF
     /// <summary>
     /// Interaction logic for WindowNotification.xaml
     /// </summary>
-    public partial class WindowNotification : Window
+    public partial class WindowNotification : UserControl
     {
-        public WindowNotification()
+        private readonly ICombineRepository _repository;
+
+        public WindowNotification(ICombineRepository repository)
         {
             InitializeComponent();
+            _repository = repository;
+          
         }
+
+  
+
+       
+
+       
+
     }
 }
