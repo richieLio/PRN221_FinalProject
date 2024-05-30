@@ -39,7 +39,7 @@ namespace DataAccess.DAO
             using var context = new RmsContext();
             List<Room> rooms = context.Rooms
                                     .Where(r => r.HouseId == houseId)
-                                    .OrderBy(r => r.CreatedAt) 
+                                    .OrderBy(r => r.CreatedAt)
                                     .ToList();
 
             return rooms;
@@ -133,7 +133,7 @@ namespace DataAccess.DAO
                 Room.Name = roomUpdateReqModel.Name;
                 Room.Price = roomUpdateReqModel.Price;
                 context.Update(Room);
-                context.SaveChanges();  
+                context.SaveChanges();
                 result.IsSuccess = true;
                 result.Code = 200;
                 result.Message = "Room updated successfully";
@@ -167,17 +167,71 @@ namespace DataAccess.DAO
            .ToListAsync();
         }
 
-        public async Task<ResultModel> DeleteRoom(Guid roomId)
+        public async Task<ResultModel> DeleteRoom(Guid houseId, Guid roomId)
         {
             using var context = new RmsContext();
+
+            // Retrieve the room to delete
             var room = await context.Rooms.FindAsync(roomId);
-             context.Rooms.Remove(room);
+            if (room == null)
+            {
+                return new ResultModel
+                {
+                    IsSuccess = false,
+                    Message = "Room not found."
+                };
+            }
+
+            // Update house room quantity
+            var house = await context.Houses.FindAsync(houseId);
+            if (house == null)
+            {
+                return new ResultModel
+                {
+                    IsSuccess = false,
+                    Message = "House not found."
+                };
+            }
+            house.RoomQuantity--;
+            house.AvailableRoom--;
+            context.Houses.Update(house);
+
+            // Remove the room
+            context.Rooms.Remove(room);
+
+            // Save changes
             await context.SaveChangesAsync();
-             return new ResultModel
+
+            return new ResultModel
             {
                 IsSuccess = true,
                 Message = "Room deleted successfully."
             };
         }
+
+        public async Task<bool> AddUserToRoom(Guid userId, Guid roomId)
+        {
+            using var context = new RmsContext();
+
+            var room = await GetRoomById(roomId);
+            if (room == null)
+                return false;
+
+            var user = context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+                return false;
+
+
+            if (room.Users.Any(u => u.Id == userId))
+                return false;
+            room.Users.Add(user);
+            context.Update(room);
+            context.SaveChanges();
+
+            return true;
+        }
     }
-}
+    }
+
+
+

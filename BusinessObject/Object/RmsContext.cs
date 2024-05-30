@@ -99,16 +99,9 @@ public partial class RmsContext : DbContext
             entity.Property(e => e.StartDate).HasPrecision(6);
             entity.Property(e => e.Status).HasMaxLength(50);
 
-            entity.HasOne(d => d.Customer).WithMany(p => p.ContractCustomers)
-                .HasForeignKey(d => d.CustomerId)
-                .HasConstraintName("FK_Contract_User1");
-
-            entity.HasOne(d => d.Owner).WithMany(p => p.ContractOwners)
-                .HasForeignKey(d => d.OwnerId)
-                .HasConstraintName("FK_Contract_User");
-
             entity.HasOne(d => d.Room).WithMany(p => p.Contracts)
                 .HasForeignKey(d => d.RoomId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Contract_Room");
         });
 
@@ -124,9 +117,20 @@ public partial class RmsContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Status).HasMaxLength(50);
 
-            entity.HasOne(d => d.Owner).WithMany(p => p.Houses)
-                .HasForeignKey(d => d.OwnerId)
-                .HasConstraintName("FK_House_User");
+            entity.HasMany(d => d.Staff).WithMany(p => p.Houses)
+                .UsingEntity<Dictionary<string, object>>(
+                    "HouseStaff",
+                    r => r.HasOne<User>().WithMany()
+                        .HasForeignKey("StaffId")
+                        .HasConstraintName("FK_HouseStaff_User"),
+                    l => l.HasOne<House>().WithMany()
+                        .HasForeignKey("HouseId")
+                        .HasConstraintName("FK_HouseStaff_House"),
+                    j =>
+                    {
+                        j.HasKey("HouseId", "StaffId").HasName("PK_HouseStaff_1");
+                        j.ToTable("HouseStaff");
+                    });
         });
 
         modelBuilder.Entity<Notification>(entity =>
@@ -209,6 +213,10 @@ public partial class RmsContext : DbContext
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Services)
                 .HasForeignKey(d => d.CreatedBy)
                 .HasConstraintName("FK_Service_User");
+
+            entity.HasOne(d => d.House).WithMany(p => p.Services)
+                .HasForeignKey(d => d.HouseId)
+                .HasConstraintName("FK_Service_House");
         });
 
         modelBuilder.Entity<User>(entity =>
@@ -247,11 +255,9 @@ public partial class RmsContext : DbContext
                     "UserRoom",
                     r => r.HasOne<Room>().WithMany()
                         .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("FK_UserRoom_Room"),
                     l => l.HasOne<User>().WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("FK_UserRoom_User"),
                     j =>
                     {

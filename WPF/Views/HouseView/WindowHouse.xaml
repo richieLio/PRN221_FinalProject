@@ -32,6 +32,7 @@
                             <ContextMenu>
                                 <MenuItem Header="Update House" Click="UpdateHouse_Click"/>
                                 <MenuItem Header="Delete House" Click="DeleteHouse_Click"/>
+                                <MenuItem Header="Services" Click="ServiceHouse_Click"/>
                             </ContextMenu>
                         </Border.ContextMenu>
                         <Border.Style>

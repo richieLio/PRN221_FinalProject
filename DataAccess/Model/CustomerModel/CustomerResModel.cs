@@ -1,4 +1,6 @@
-﻿namespace DataAccess.Model.CustomerModel
+﻿using DataAccess.Model.HouseModel;
+
+namespace DataAccess.Model.CustomerModel
 {
     public class CustomerResModel
     {
@@ -12,5 +14,10 @@
         public string LicensePlates { get; set; }
         public string CreatedAt { get; set; }
         public string CitizenIdNumber { get; set; }
+    }
+    public class AddCustomerToRoomReqModel
+    {
+        public CustomerCreateReqModel customerCreateReqModel { get; set; }
+        public HouseUpdateAvaiableRoomReqModel houseUpdateAvaiableRoom { get; set; }
     }
 }

@@ -23,5 +23,9 @@ namespace DataAccess.Repository
 
         public Task<ResultModel> DeleteHouse(Guid OwnerId, Guid houseId) => HouseDAO.Instance.DeleteHouse(OwnerId, houseId);
         public Task<int?> GetRoomQuantityByHouseId(Guid houseId) => HouseDAO.Instance.GetRoomQuantityByHouseId(houseId);
+
+        public Task<int?> GetAvailableRoomByHouseId(Guid houseId) => HouseDAO.Instance.GetAvailableRoomByHouseId(houseId);
+
+       
     }
 }

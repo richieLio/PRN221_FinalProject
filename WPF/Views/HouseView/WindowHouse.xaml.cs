@@ -1,32 +1,44 @@
 ﻿using BusinessObject.Object;
+using DataAccess.Enums;
 using DataAccess.Repository;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using WPF.Views.HouseView;
+using WPF.Views.ServiceFeeView;
 
 namespace WPF
 {
     public partial class WindowHouse : UserControl
     {
-        private readonly IHouseRepository _houseRepository;
-        private readonly IRoomRepository _roomRepository;
-        private readonly IServiceProvider _serviceProvider; 
+        private readonly ICombineRepository _repository;
 
-        public WindowHouse(IHouseRepository houseRepository, IRoomRepository roomRepository, IServiceProvider serviceProvider)
+        private readonly IServiceProvider _serviceProvider;
+
+        public WindowHouse(IServiceProvider serviceProvider, ICombineRepository repository)
         {
+            _repository = repository;
             InitializeComponent();
-            _houseRepository = houseRepository;
-            _roomRepository = roomRepository;
             _serviceProvider = serviceProvider;
             LoadHouses();
         }
 
         private async void LoadHouses()
         {
-            lvHouses.ItemsSource = await _houseRepository.GetHouses(App.LoggedInUserId);
+
+            var user = await _repository.GetUserById(App.LoggedInUserId);
+            if (user.Role == UserEnum.STAFF)
+            {
+                lvHouses.ItemsSource = await _repository.GetAllHouseByStaffId(App.LoggedInUserId);
+            }
+            else
+            {
+                lvHouses.ItemsSource = await _repository.GetHouses(App.LoggedInUserId);
+
+            }
         }
 
         private void Border_Click(object sender, MouseButtonEventArgs e)
@@ -34,8 +46,7 @@ namespace WPF
             var selectedHouse = (sender as Border)?.DataContext as House;
             if (selectedHouse != null)
             {
-                WindowHouseDetails detailsWindow = new WindowHouseDetails(_houseRepository, _roomRepository, _serviceProvider, selectedHouse.Name, selectedHouse.Address
-                    , selectedHouse.RoomQuantity, selectedHouse.AvailableRoom,  selectedHouse.Id);
+                WindowHouseDetails detailsWindow = new WindowHouseDetails(_serviceProvider, _repository, selectedHouse);
                 detailsWindow.LoadRooms(selectedHouse.Id);
 
                 MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
@@ -71,7 +82,7 @@ namespace WPF
 
         private void AddNewHouse_Click(object sender, RoutedEventArgs e)
         {
-            var addNewHouseWindow = new WindowAddHouse(_serviceProvider.GetService<IHouseRepository>());
+            var addNewHouseWindow = new WindowAddHouse(_serviceProvider.GetService<ICombineRepository>());
             addNewHouseWindow.HouseAdded += (s, args) =>
             {
                 // HouseAdded event handler, you might want to refresh the list of houses or take other actions
@@ -93,7 +104,7 @@ namespace WPF
                     var house = border.DataContext as House; // Replace House with your actual data type
                     if (house != null)
                     {
-                        var updateHouseWindow = new WindowUpdateHouse(_serviceProvider.GetService<IHouseRepository>(), house);
+                        var updateHouseWindow = new WindowUpdateHouse(_serviceProvider.GetService<ICombineRepository>(), house);
                         updateHouseWindow.HouseUpdated += (s, args) =>
                         {
                             LoadHouses();
@@ -117,11 +128,33 @@ namespace WPF
                         ConfirmDeleteHouse confirmDialog = new ConfirmDeleteHouse(house.Name);
                         confirmDialog.HouseDeleted += async (s, args) =>
                         {
-                            await _houseRepository.DeleteHouse(App.LoggedInUserId, house.Id);
+                            await _repository.DeleteHouse(App.LoggedInUserId, house.Id);
                             MessageBox.Show("House deleted successfully.");
                             LoadHouses();
                         };
                         confirmDialog.ShowDialog();
+                    }
+                }
+            }
+        }
+        private async void ServiceHouse_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            if (menuItem != null)
+            {
+                Border border = ((ContextMenu)menuItem.Parent).PlacementTarget as Border;
+                if (border != null)
+                {
+                    var house = border.DataContext as House;
+                    if (house != null)
+                    {
+                        WindowServiceFee windowServiceFee = new WindowServiceFee(_serviceProvider.GetService<ICombineRepository>(), _serviceProvider, house);
+                        windowServiceFee.LoadService();
+                        MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
+                        if (mainWindow != null)
+                        {
+                            mainWindow.MainContentControl.Content = windowServiceFee;
+                        }
                     }
                 }
             }

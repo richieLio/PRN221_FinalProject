@@ -21,4 +21,10 @@ namespace DataAccess.Model.HouseModel
 
         public string? Address { get; set; }
     }
+    public class HouseUpdateAvaiableRoomReqModel
+    {
+        public Guid HouseId { get; set; }
+        public int? AvailableRoom { get; set; }
+
+    }
 }

@@ -18,6 +18,6 @@ namespace DataAccess.Repository
         Task<ResultModel> DeleteHouse(Guid OwnerId, Guid houseId);
 
         Task<int?> GetRoomQuantityByHouseId(Guid houseId);
-
+        Task<int?> GetAvailableRoomByHouseId(Guid houseId);
     }
 }

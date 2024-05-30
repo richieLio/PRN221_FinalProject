@@ -25,9 +25,5 @@ public partial class Contract
 
     public DateTime CreatedAt { get; set; }
 
-    public virtual User? Customer { get; set; }
-
-    public virtual User? Owner { get; set; }
-
     public virtual Room? Room { get; set; }
 }

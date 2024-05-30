@@ -12,8 +12,11 @@ namespace DataAccess.Repository
     public interface ICustomerRepository
     {
         Task<ResultModel> UpdateUserProfile(CustomerUpdateModel customerUpdateModel);
-        Task<ResultModel> GetCustomerProfile(Guid customerId);
+        Task<ResultModel> GetCustomerProfile(Guid customerId); 
+        Task<ResultModel> DeleteCustomer(Guid customerId);
         Task<ResultModel> GetCustomerByRoomId(Guid roomId);
+        Task<ResultModel> AddCustomerToRoom(Guid userId, AddCustomerToRoomReqModel addCustomerToRoomReqModel);
+        Task<bool> IsUserInRoom(Guid roomId, string email, string phoneNumber, string licensePlates, string citizenIdNumber); // New method
 
     }
 }
