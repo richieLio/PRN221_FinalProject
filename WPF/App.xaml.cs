@@ -9,6 +9,7 @@ using WPF.StaffView;
 using WPF.Views.BillView;
 using WPF.Views.CustomerView;
 using WPF.Views.HouseView;
+using WPF.Views.LocalNotificationView;
 using WPF.Views.RoomView;
 using WPF.Views.ServiceFeeView;
 using WPF.Views.UserView;
@@ -43,6 +44,7 @@ namespace WPF
             services.AddSingleton<IStaffRepository, StaffRepository>();
             services.AddSingleton<IServiceFeeRepository, ServiceFeeRepository>();
             services.AddSingleton<IBillRepository, BillRepository>();
+            services.AddSingleton<ILocalNotification, LocalNotification>();
             services.AddSingleton<ICombineRepository, CombineRepository>();
 
 
@@ -54,6 +56,7 @@ namespace WPF
             services.AddTransient<IStaffRepository, StaffRepository>();
             services.AddTransient<IServiceFeeRepository, ServiceFeeRepository>();
             services.AddTransient<IBillRepository, BillRepository>();
+            services.AddTransient<ILocalNotification, LocalNotification>();
             services.AddTransient<ICombineRepository, CombineRepository>();
 
 
@@ -80,6 +83,7 @@ namespace WPF
             services.AddSingleton<WindowUpdateBill>();
             services.AddSingleton<WindowChangePassword>();
             services.AddSingleton<WindowUpdateProfile>();
+            services.AddSingleton<NotificationPopup>();
 
 
 
@@ -105,6 +109,7 @@ namespace WPF
             services.AddTransient<WindowUpdateBill>();
             services.AddTransient<WindowChangePassword>();
             services.AddTransient<WindowUpdateProfile>();
+            services.AddTransient<NotificationPopup>();
 
         }
         private void OnStartup(object sender, StartupEventArgs e)

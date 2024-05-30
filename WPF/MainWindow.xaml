@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF"
+        xmlns:notification="clr-namespace:WPF.Views.LocalNotificationView"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="MainWindow" Height="650" Width="1100"
@@ -27,7 +28,20 @@
                 </StackPanel>
             </ScrollViewer>
         </StackPanel>
-        <StackPanel Grid.Column="2" Orientation="Vertical" HorizontalAlignment="Right" Margin="0,0,20,556" RenderTransformOrigin="0.5,0.5">
+
+        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,556" RenderTransformOrigin="0.5,0.5">
+            <Popup x:Name="NotificationPopup" Placement="Bottom" StaysOpen="False">
+                <notification:NotificationPopup/>
+            </Popup>
+
+            <materialDesign:Badged Badge="{Binding UnreadNotificationCount}" Margin="0,20,20,0">
+                <Button Content="Notification" Click="NotificationButton_Click"
+            IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
+            </materialDesign:Badged>
+
+
+
+
             <Menu materialDesign:MenuAssist.TopLevelMenuItemHeight="80">
                 <MenuItem Height="71">
                     <MenuItem.Header>
@@ -42,6 +56,7 @@
                 </MenuItem>
             </Menu>
         </StackPanel>
+
         <GridSplitter Grid.Column="1" Width="5" Background="Gray" HorizontalAlignment="Stretch"/>
 
         <ContentControl Grid.Column="1" x:Name="MainContentControl" Margin="0,78,0,0" Grid.ColumnSpan="2"/>

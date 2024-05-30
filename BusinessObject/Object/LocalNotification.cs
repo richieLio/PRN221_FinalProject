@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BusinessObject.Object;
 
-public partial class Notification
+public partial class LocalNotification
 {
     public Guid Id { get; set; }
 
@@ -11,9 +11,9 @@ public partial class Notification
 
     public string? Content { get; set; }
 
-    public Guid? HouseId { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public Guid? UserId { get; set; }
 
-    public virtual House? House { get; set; }
+    public virtual User? User { get; set; }
 }
