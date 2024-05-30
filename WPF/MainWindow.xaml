@@ -15,7 +15,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Background="#c2c2c4" Grid.Column="0" Orientation="Vertical" Margin="10">
+        <StackPanel  Grid.Column="0" Orientation="Vertical" Margin="10">
             <TextBlock Text="Menu" FontWeight="Bold" FontSize="16" Margin="5"/>
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel Orientation="Vertical">
@@ -26,18 +26,24 @@
                     <RadioButton Content="Bills" GroupName="Views" Checked="RadioButton_Checked" Tag="billWindow" Margin="5,10,5,0"/>
                 </StackPanel>
             </ScrollViewer>
-            <Button Grid.Row="2" Margin="0,20,0,0"
-         Style="{StaticResource MaterialDesignRaisedButton}"
-         Content="Log out" Width="130" Height="40" Click="btnLogout_Click"
-         HorizontalAlignment="Center"
-         materialDesign:ButtonProgressAssist.IsIndeterminate="True"
-         materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
-         materialDesign:ButtonProgressAssist.Value="-1"
-         IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
         </StackPanel>
-
+        <StackPanel Grid.Column="2" Orientation="Vertical" HorizontalAlignment="Right" Margin="0,0,20,556" RenderTransformOrigin="0.5,0.5">
+            <Menu materialDesign:MenuAssist.TopLevelMenuItemHeight="80">
+                <MenuItem Height="71">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Account" />
+                            <TextBlock Text="{Binding FullName}" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </MenuItem.Header>
+                    <MenuItem Header="Update Profile"  Click="btnUpdateProfile_Click"/>
+                    <MenuItem Header="Change Password" Click="btnChangePassword_Click" />
+                    <MenuItem Header="Log Out" Click="btnLogout_Click"/>
+                </MenuItem>
+            </Menu>
+        </StackPanel>
         <GridSplitter Grid.Column="1" Width="5" Background="Gray" HorizontalAlignment="Stretch"/>
 
-        <ContentControl Grid.Column="1" x:Name="MainContentControl" Margin="0,0,0,0" Grid.ColumnSpan="2"/>
+        <ContentControl Grid.Column="1" x:Name="MainContentControl" Margin="0,78,0,0" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>

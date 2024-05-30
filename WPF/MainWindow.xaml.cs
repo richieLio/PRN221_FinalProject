@@ -1,20 +1,14 @@
-﻿using DataAccess.Enums;
+﻿using BusinessObject.Object;
+using DataAccess.Enums;
+using DataAccess.Model.UserModel;
 using DataAccess.Repository;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using WPF.BillView;
 using WPF.StaffView;
-using WPF.Views.ServiceFeeView;
+using WPF.Views.UserView;
 
 namespace WPF
 {
@@ -25,19 +19,71 @@ namespace WPF
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ICombineRepository _repository;
-        HubConnection _connection;
+        private readonly HubConnection _connection;
 
         public MainWindow(IServiceProvider serviceProvider, ICombineRepository repository)
         {
             _repository = repository;
             InitializeComponent();
             _serviceProvider = serviceProvider;
+
+
             UpdateStaffButtonVisibility();
+
             var staffWindow = _serviceProvider.GetService<WindowStaff>();
             staffWindow.LoadStaffs();
+
+
             MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
+
+            _connection = new HubConnectionBuilder()
+               .WithUrl("https://localhost:7259/notihub")
+               .WithAutomaticReconnect()
+               .Build();
+
+            openConnect();
+
+            LoadUserFullName();
+
         }
-       
+
+        private void LoadUserFullName()
+        {
+            var name = _repository.GetUserFullName(App.LoggedInUserId);
+            UserReqModel userReqModel = new UserReqModel
+            {
+                FullName = name
+            };
+            DataContext = userReqModel;
+        }
+
+        private async void openConnect()
+        {
+            
+            try
+            {
+                _connection.On<Guid, Guid, string>("ReceiveNotification", async (ownerId, billId, message) =>
+                {
+                    var bill =  await _repository.getBillById(billId);
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        var newMessage = $"{message}";
+                        if (App.LoggedInUserId == ownerId && bill.CreateBy != App.LoggedInUserId)
+                        {
+                            MessageBox.Show(newMessage);
+                        }
+                    });
+                });
+                await _connection.StartAsync();
+                //    MessageBox.Show("Connection started");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+        }
+
+
         private async void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             var radioButton = sender as RadioButton;
@@ -65,7 +111,6 @@ namespace WPF
                         break;
                 }
             }
-
         }
         private async void UpdateStaffButtonVisibility()
         {
@@ -88,6 +133,17 @@ namespace WPF
             var windowLogin = _serviceProvider.GetService<WindowLogin>();
             windowLogin.Show();
             Close();
+        }
+        private void btnChangePassword_Click(object sender, RoutedEventArgs e)
+        {
+            var windowChangePassword = _serviceProvider.GetService<WindowChangePassword>();
+            windowChangePassword.Show();
+        }
+        private async void btnUpdateProfile_Click(object sender, RoutedEventArgs e)
+        {
+            var user = await _repository.GetUserById(App.LoggedInUserId);
+            var windowUpdateProfile = new WindowUpdateProfile(_repository, user);
+            windowUpdateProfile.Show();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace WPF
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ICombineRepository _repository;
-        private readonly House _house; 
+        private readonly House _house;
 
         public WindowHouseDetails(IServiceProvider serviceProvider, ICombineRepository repository,
            House house)
@@ -145,7 +145,7 @@ namespace WPF
                     }
                 }
             }
-        } 
+        }
         private async void AddBill_Click(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = sender as MenuItem;
@@ -162,7 +162,7 @@ namespace WPF
                     }
                 }
             }
-        }   
+        }
         private async void ViewListBill_Click(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = sender as MenuItem;
@@ -208,6 +208,48 @@ namespace WPF
                 MessageBox.Show("Please select a staff member to assign.", "Error");
             }
         }
+        private async void UnAssignStaff_Click(object sender, RoutedEventArgs e)
+        {
+            var staffResult = await _repository.GetAssignedStaffByHouseId(_house.Id);
+
+            if (staffResult.IsSuccess)
+            {
+                var staff = staffResult.Data;
+
+                if (staff != null)
+                {
+                    if (staff is User user) 
+                    {
+                        var result = await _repository.RemoveStaffFromHouse(user.Id, _house.Id);
+
+                        if (result)
+                        {
+                            MessageBox.Show("Staff unassigned successfully", "Success");
+                            Initialize();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to unassign staff.", "Error");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid staff type.", "Error");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("No staff assigned to this house.", "Error");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Failed to retrieve assigned staff.", "Error");
+            }
+        }
+
+
+
 
         private async void Initialize()
         {
@@ -234,6 +276,7 @@ namespace WPF
                     cmbStaffList.Visibility = Visibility.Collapsed;
                     cmbStaffList.IsEnabled = false;
                     AssignStaffButton.Visibility = Visibility.Collapsed;
+                    UnAssignStaffButton.Visibility = Visibility.Visible;
                 }
                 else
                 {
@@ -246,6 +289,7 @@ namespace WPF
                 cmbStaffList.Visibility = Visibility.Visible;
                 cmbStaffList.IsEnabled = true;
                 AssignStaffButton.Visibility = Visibility.Visible;
+                UnAssignStaffButton.Visibility = Visibility.Collapsed;
 
             }
         }

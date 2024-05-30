@@ -19,7 +19,6 @@ namespace WPF.Views.BillView
         private readonly Room _room;
         private readonly House _house;
         private IEnumerable<ServiceViewModel> _services;
-        HubConnection _connection;
 
 
         public WindowAddBill(ICombineRepository repository, Room room, House house)
@@ -29,18 +28,8 @@ namespace WPF.Views.BillView
             _room = room;
             _house = house;
             LoadData();
-            SetupSignalR();
         }
-        private async void SetupSignalR()
-        {
-            _connection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:7259/notihub")
-            .WithAutomaticReconnect()
-                .Build();
 
-            await _connection.StartAsync();
-
-        }
         private async void LoadData()
         {
             try
@@ -52,8 +41,8 @@ namespace WPF.Views.BillView
                 {
                     Id = s.Id,
                     Name = s.Name,
-                    IsSelected = false, 
-                    Quantity = 0 
+                    IsSelected = false,
+                    Quantity = 0
                 }).ToList();
 
                 servicesListBox.ItemsSource = _services;
@@ -74,24 +63,30 @@ namespace WPF.Views.BillView
                 var newBill = new BillCreateReqModel
                 {
                     RoomId = _room.Id,
-                    ServiceQuantities = serviceQuantities // Assign the mapped dictionary
+                    ServiceQuantities = serviceQuantities
                 };
-                var user =  await _repository.GetUserById(App.LoggedInUserId);
+                var user = await _repository.GetUserById(App.LoggedInUserId);
 
                 var result = await _repository.CreateBill(App.LoggedInUserId, newBill);
-
                 if (result.IsSuccess)
                 {
                     MessageBox.Show("Bill created successfully!");
 
 
-                    try { 
-                    await _connection.InvokeAsync("NotifyBillCreated", _house.OwnerId,
-                        $"A new bill in {_room.Name} of {_house.Name} has been created by {user.FullName}");
-                    } catch (Exception ex)
+                    try
+                    {
+                        var bill = result.Data as Bill;
+                        if (bill != null)
+                        {
+                            await App.SignalRConnection.InvokeAsync("NotifyBillCreated", _house.OwnerId, bill.Id,
+                                $"A new bill in {_room.Name} of {_house.Name} has been created by staff {user.FullName}");
+                        }
+                    }
+                    catch (Exception ex)
                     {
                         MessageBox.Show("signalR: " + ex.Message);
                     }
+                    this.Close();
                 }
                 else
                 {
@@ -104,6 +99,6 @@ namespace WPF.Views.BillView
             }
         }
 
-       
+
     }
 }

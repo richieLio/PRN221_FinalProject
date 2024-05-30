@@ -62,125 +62,137 @@ namespace DataAccess.Repository
         public Task<bool> AddUserToRoom(Guid userId, Guid roomId)
             => _roomRepository.AddUserToRoom(userId, roomId);
 
-        public Task CreateAccount(UserReqModel RegisterForm)
-            => _userRepository.CreateAccount(RegisterForm);
+        public Task<ResultModel> ChangePassword(Guid userId, ChangePasswordReqModel changePasswordModel)
+            => _userRepository.ChangePassword(userId, changePasswordModel);
+    
 
-        public Task<ResultModel> CreateBill(Guid userId, BillCreateReqModel billCreateReqModel)
-            => _billRepository.CreateBill(userId, billCreateReqModel);
+    public Task CreateAccount(UserReqModel RegisterForm)
+        => _userRepository.CreateAccount(RegisterForm);
 
-        public Task<ResultModel> DeleteCustomer(Guid customerId)
-            => _customerRepository.DeleteCustomer(customerId);
+    public Task<ResultModel> CreateBill(Guid userId, BillCreateReqModel billCreateReqModel)
+        => _billRepository.CreateBill(userId, billCreateReqModel);
 
-        public Task<ResultModel> DeleteHouse(Guid OwnerId, Guid houseId)
-             => _houseRepository.DeleteHouse(OwnerId, houseId);
+    public Task<ResultModel> DeleteCustomer(Guid customerId)
+        => _customerRepository.DeleteCustomer(customerId);
 
-        public Task<ResultModel> DeleteRoom(Guid houseId, Guid roomId)
-            => (_roomRepository.DeleteRoom(houseId, roomId));
+    public Task<ResultModel> DeleteHouse(Guid OwnerId, Guid houseId)
+         => _houseRepository.DeleteHouse(OwnerId, houseId);
 
-        public Task<ResultModel> GetAllBills(Guid userId)
-            => _billRepository.GetAllBills(userId);
+    public Task<ResultModel> DeleteRoom(Guid houseId, Guid roomId)
+        => (_roomRepository.DeleteRoom(houseId, roomId));
 
-        public Task<IEnumerable<House>> GetAllHouseByStaffId(Guid staffId)
-            => _staffRepository.GetAllHouseByStaffId(staffId);
+    public Task<ResultModel> GetAllBills(Guid userId)
+        => _billRepository.GetAllBills(userId);
 
-        public Task<IEnumerable<User>> GetAllStaffByOwnerId(Guid ownerId)
-            => _staffRepository.GetAllStaffByOwnerId(ownerId);
+    public Task<IEnumerable<House>> GetAllHouseByStaffId(Guid staffId)
+        => _staffRepository.GetAllHouseByStaffId(staffId);
 
-        public Task<ResultModel> GetAssignedStaffByHouseId(Guid houseId)
-            => _staffRepository.GetAssignedStaffByHouseId(houseId);
+    public Task<IEnumerable<User>> GetAllStaffByOwnerId(Guid ownerId)
+        => _staffRepository.GetAllStaffByOwnerId(ownerId);
 
-        public Task<int?> GetAvailableRoomByHouseId(Guid houseId)
-            => _houseRepository.GetAvailableRoomByHouseId(houseId);
+    public Task<ResultModel> GetAssignedStaffByHouseId(Guid houseId)
+        => _staffRepository.GetAssignedStaffByHouseId(houseId);
 
-        public Task<Bill> getBillById(Guid billId)
-            => _billRepository.getBillById(billId);
+    public Task<int?> GetAvailableRoomByHouseId(Guid houseId)
+        => _houseRepository.GetAvailableRoomByHouseId(houseId);
 
-        public Task<ResultModel> GetBillByRoomID(Guid roomId)
-           => _billRepository.GetBillByRoomID(roomId);
+    public Task<Bill> getBillById(Guid billId)
+        => _billRepository.getBillById(billId);
 
-        public Task<ResultModel> getBillDetails(Guid userId, Guid billId)
-             => _billRepository.getBillDetails(userId, billId);
+    public Task<ResultModel> GetBillByRoomID(Guid roomId)
+       => _billRepository.GetBillByRoomID(roomId);
 
-        public Task<ResultModel> GetCustomerByRoomId(Guid roomId)
-            => _customerRepository.GetCustomerByRoomId(roomId);
+    public Task<ResultModel> getBillDetails(Guid userId, Guid billId)
+         => _billRepository.getBillDetails(userId, billId);
 
-        public Task<ResultModel> GetCustomerProfile(Guid customerId)
-            => _customerRepository.GetCustomerProfile(customerId);
+    public Task<ResultModel> GetCustomerByRoomId(Guid roomId)
+        => _customerRepository.GetCustomerByRoomId(roomId);
 
-        public Task<House> GetHouse(Guid houseId)
-            => _houseRepository.GetHouse(houseId);
+    public Task<ResultModel> GetCustomerProfile(Guid customerId)
+        => _customerRepository.GetCustomerProfile(customerId);
 
-        public Task<IEnumerable<House>> GetHouses(Guid userId)
- => _houseRepository.GetHouses(userId);
+    public Task<House> GetHouse(Guid houseId)
+        => _houseRepository.GetHouse(houseId);
+
+    public Task<IEnumerable<House>> GetHouses(Guid userId)
+=> _houseRepository.GetHouses(userId);
 
 
-        public Task<IEnumerable<User>> GetListCustomerByRoomId(Guid roomId)
-  => _roomRepository.GetListCustomerByRoomId(roomId);
+    public Task<IEnumerable<User>> GetListCustomerByRoomId(Guid roomId)
+=> _roomRepository.GetListCustomerByRoomId(roomId);
 
-        public Task<Room> GetRoom(Guid roomId)
- => _roomRepository.GetRoom(roomId);
+    public Task<Room> GetRoom(Guid roomId)
+=> _roomRepository.GetRoom(roomId);
 
-        public Task<Room> GetRoomByName(Guid houseId, string name)
- => _roomRepository.GetRoomByName(houseId, name);
+    public Task<Room> GetRoomByName(Guid houseId, string name)
+=> _roomRepository.GetRoomByName(houseId, name);
 
-        public Task<int?> GetRoomQuantityByHouseId(Guid houseId)
- => _houseRepository.GetRoomQuantityByHouseId(houseId);
+    public Task<int?> GetRoomQuantityByHouseId(Guid houseId)
+=> _houseRepository.GetRoomQuantityByHouseId(houseId);
 
-        public Task<IEnumerable<Room>> GetRooms(Guid houseId)
- => _roomRepository.GetRooms(houseId);
+    public Task<IEnumerable<Room>> GetRooms(Guid houseId)
+=> _roomRepository.GetRooms(houseId);
 
-        public Task<Service> GetServiceById(Guid serviceId)
+    public Task<Service> GetServiceById(Guid serviceId)
 => _serviceFeeRepository.GetServiceById(serviceId);
 
-        public Task<IEnumerable<Service>> GetServicesList(Guid houseId)
+    public Task<IEnumerable<Service>> GetServicesList(Guid houseId)
 => _serviceFeeRepository.GetServicesList(houseId);
 
-        public Task<ResultModel> GetStaffById(Guid id)
+    public Task<ResultModel> GetStaffById(Guid id)
 => _staffRepository.GetStaffById(id);
 
-        public Task<User> GetUserByEmail(string Email)
+    public Task<User> GetUserByEmail(string Email)
 => _userRepository.GetUserByEmail(Email);
 
-        public Task<User> GetUserById(Guid id)
- => _userRepository.GetUserById(id);
+    public Task<User> GetUserById(Guid id)
+=> _userRepository.GetUserById(id);
 
-        public Task<User> GetUserByVerificationToken(string otp)
- => _userRepository.GetUserByVerificationToken(otp);
+    public Task<User> GetUserByVerificationToken(string otp)
+=> _userRepository.GetUserByVerificationToken(otp);
 
-        public Task<bool> IsUserInRoom(Guid roomId, string email, string phoneNumber, string licensePlates, string citizenIdNumber)
- => _customerRepository.IsUserInRoom(roomId, email, phoneNumber, licensePlates, citizenIdNumber);
+    public string GetUserFullName(Guid id)
+        => _userRepository.GetUserFullName(id);
 
-        public Task<ResultModel> Login(UserLoginReqModel userLoginReqModel)
- => _userRepository.Login(userLoginReqModel);
+    public Task<bool> IsUserInRoom(Guid roomId, string email, string phoneNumber, string licensePlates, string citizenIdNumber)
+=> _customerRepository.IsUserInRoom(roomId, email, phoneNumber, licensePlates, citizenIdNumber);
 
-        public Task<ResultModel> RemoveService(Guid userId, Guid serviceId, Guid houseId)
+    public Task<ResultModel> Login(UserLoginReqModel userLoginReqModel)
+=> _userRepository.Login(userLoginReqModel);
+
+    public Task<ResultModel> RemoveService(Guid userId, Guid serviceId, Guid houseId)
 => _serviceFeeRepository.RemoveService(userId, serviceId, houseId);
+
+        public Task<bool> RemoveStaffFromHouse(Guid staffId, Guid houseId)
+=> _staffRepository.RemoveStaffFromHouse(staffId, houseId);
 
         public Task ResetPassword(UserResetPasswordReqModel ResetPasswordReqModel)
 => _userRepository.ResetPassword(ResetPasswordReqModel);
 
-        public Task<ResultModel> SendOTPEmailRequest(SendOTPReqModel sendOTPReqModel)
+    public Task<ResultModel> SendOTPEmailRequest(SendOTPReqModel sendOTPReqModel)
 => _userRepository.SendOTPEmailRequest(sendOTPReqModel);
 
-        public Task<ResultModel> UpdateBill(Guid userId, BillUpdateReqModel billUpdateReqModel)
-            => _billRepository.UpdateBill(userId, billUpdateReqModel);
+    public Task<ResultModel> UpdateBill(Guid userId, BillUpdateReqModel billUpdateReqModel)
+        => _billRepository.UpdateBill(userId, billUpdateReqModel);
 
-        public Task<ResultModel> UpdateHouse(Guid OwnerId, HouseUpdateReqModel houseUpdateReqModel)
- => _houseRepository.UpdateHouse(OwnerId, houseUpdateReqModel);
+    public Task<ResultModel> UpdateHouse(Guid OwnerId, HouseUpdateReqModel houseUpdateReqModel)
+=> _houseRepository.UpdateHouse(OwnerId, houseUpdateReqModel);
 
-        public Task<ResultModel> UpdateRoom(RoomUpdateReqModel roomUpdateReqModel)
+    public Task<ResultModel> UpdateRoom(RoomUpdateReqModel roomUpdateReqModel)
 => _roomRepository.UpdateRoom(roomUpdateReqModel);
 
-        public Task<ResultModel> UpdateService(Guid userId, ServiceUpdateReqModel serviceUpdateModel)
+    public Task<ResultModel> UpdateService(Guid userId, ServiceUpdateReqModel serviceUpdateModel)
 => _serviceFeeRepository.UpdateService(userId, serviceUpdateModel);
 
-        public Task<ResultModel> UpdateUserProfile(CustomerUpdateModel customerUpdateModel)
+    public Task<ResultModel> UpdateUserProfile(CustomerUpdateModel customerUpdateModel)
 => _customerRepository.UpdateUserProfile(customerUpdateModel);
 
-        public Task VerifyEmail(EmailVerificationReqModel verificationModel)
+    public Task<ResultModel> UpdateUserProfile(UserUpdateModel updateModel)
+=> _userRepository.UpdateUserProfile(updateModel);
+    public Task VerifyEmail(EmailVerificationReqModel verificationModel)
 => _userRepository.VerifyEmail(verificationModel);
 
-        public Task<ResultModel> VerifyOTPCode(string email, string otpCode)
+    public Task<ResultModel> VerifyOTPCode(string email, string otpCode)
 => _userRepository.VerifyOTPCode(email, otpCode);
-    }
+}
 }

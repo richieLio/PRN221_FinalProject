@@ -1,12 +1,12 @@
 ﻿<UserControl x:Class="WPF.BillView.WindowBill"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:local="clr-namespace:WPF.BillView"
-        mc:Ignorable="d"
-               Height="500" Width="900">
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:WPF.BillView"
+             mc:Ignorable="d"
+             Height="600" Width="900">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -14,36 +14,34 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <TextBlock Text="Bill management"
-           FontSize="24"
-           FontWeight="Bold"
-           Margin="16"
-           HorizontalAlignment="Center"
-           VerticalAlignment="Center"
-           Style="{StaticResource MaterialDesignHeadline1TextBlock}"/>
-
-        
+                   FontSize="24"
+                   FontWeight="Bold"
+                   Margin="16"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Style="{StaticResource MaterialDesignHeadline1TextBlock}"/>
 
         <materialDesign:Card Grid.Row="1">
-            <ListView Name="lvBills" 
-                      Style="{StaticResource MaterialDesignListView}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="TotalPrice" DisplayMemberBinding="{Binding TotalPrice}" Width="140"/>
-                        <GridViewColumn Header="Month" DisplayMemberBinding="{Binding Month}" Width="150"/>
-                        <GridViewColumn Header="IsPaid" DisplayMemberBinding="{Binding IsPaid}" Width="120"/>
-                        <GridViewColumn Header="RoomName" DisplayMemberBinding="{Binding RoomName}" Width="220"/>
-                        <GridViewColumn Header="HouseName" DisplayMemberBinding="{Binding HouseName}" Width="220"/>
-                       
-                    </GridView>
-                </ListView.View>
-                <ListView.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Edit" Click="EditBill_Click"/>
-                        <MenuItem Header="Delete" Click="DeleteBill_Click"/>
-                    </ContextMenu>
-                </ListView.ContextMenu>
-            </ListView>
+            <ScrollViewer VerticalScrollBarVisibility="Visible">
+                <ListView Name="lvBills" 
+                          Style="{StaticResource MaterialDesignListView}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="TotalPrice" DisplayMemberBinding="{Binding TotalPrice}" Width="140"/>
+                            <GridViewColumn Header="Month" DisplayMemberBinding="{Binding Month}" Width="150"/>
+                            <GridViewColumn Header="IsPaid" DisplayMemberBinding="{Binding IsPaid}" Width="120"/>
+                            <GridViewColumn Header="RoomName" DisplayMemberBinding="{Binding RoomName}" Width="220"/>
+                            <GridViewColumn Header="HouseName" DisplayMemberBinding="{Binding HouseName}" Width="220"/>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Edit" Click="EditBill_Click"/>
+                            <MenuItem Header="Delete" Click="DeleteBill_Click"/>
+                        </ContextMenu>
+                    </ListView.ContextMenu>
+                </ListView>
+            </ScrollViewer>
         </materialDesign:Card>
     </Grid>
 </UserControl>
-

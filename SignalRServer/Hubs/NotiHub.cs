@@ -4,10 +4,12 @@ namespace SignalRServer.Hubs
 {
     public class NotiHub : Hub
     {
-        public Task NotifyBillCreated(string ownerId, string message)
+
+        public Task NotifyBillCreated(Guid ownerId, Guid billId, string message)
         {
-            return Clients.User(ownerId).SendAsync("ReceiveNotification", message);
+
+            return Clients.All.SendAsync("ReceiveNotification", ownerId, billId, message);
         }
-        
+       
     }
 }
