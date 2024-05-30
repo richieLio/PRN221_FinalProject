@@ -63,12 +63,11 @@ namespace WPF.Views.BillView
                 var newBill = new BillCreateReqModel
                 {
                     RoomId = _room.Id,
-                    ServiceQuantities = serviceQuantities 
+                    ServiceQuantities = serviceQuantities
                 };
                 var user = await _repository.GetUserById(App.LoggedInUserId);
 
                 var result = await _repository.CreateBill(App.LoggedInUserId, newBill);
-
                 if (result.IsSuccess)
                 {
                     MessageBox.Show("Bill created successfully!");
@@ -76,8 +75,12 @@ namespace WPF.Views.BillView
 
                     try
                     {
-                        await App.SignalRConnection.InvokeAsync("NotifyBillCreated", _house.OwnerId,
-                            $"A new bill in {_room.Name} of {_house.Name} has been created by staff {user.FullName}");
+                        var bill = result.Data as Bill;
+                        if (bill != null)
+                        {
+                            await App.SignalRConnection.InvokeAsync("NotifyBillCreated", _house.OwnerId, bill.Id,
+                                $"A new bill in {_room.Name} of {_house.Name} has been created by staff {user.FullName}");
+                        }
                     }
                     catch (Exception ex)
                     {

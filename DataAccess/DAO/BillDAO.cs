@@ -260,6 +260,7 @@ namespace DataAccess.DAO
                 {
                     IsSuccess = true,
                     Code = 200,
+                    Data = newBill,
                     Message = "Bill created successfully!"
                 };
             }

@@ -59,14 +59,16 @@ namespace WPF
 
         private async void openConnect()
         {
+            
             try
             {
-                _connection.On<Guid, string>("ReceiveNotification", (ownerId, message) =>
+                _connection.On<Guid, Guid, string>("ReceiveNotification", async (ownerId, billId, message) =>
                 {
+                    var bill =  await _repository.getBillById(billId);
                     this.Dispatcher.Invoke(() =>
                     {
                         var newMessage = $"{message}";
-                        if (App.LoggedInUserId == ownerId)
+                        if (App.LoggedInUserId == ownerId && bill.CreateBy != App.LoggedInUserId)
                         {
                             MessageBox.Show(newMessage);
                         }
