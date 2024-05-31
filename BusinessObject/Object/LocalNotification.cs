@@ -15,5 +15,7 @@ public partial class LocalNotification
 
     public Guid? UserId { get; set; }
 
+    public bool IsRead { get; set; }
+
     public virtual User? User { get; set; }
 }

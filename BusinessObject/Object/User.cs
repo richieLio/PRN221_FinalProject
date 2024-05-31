@@ -44,7 +44,7 @@ public partial class User
     public Guid? OwnerId { get; set; }
 
     public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
- 
+
     public virtual ICollection<LocalNotification> LocalNotifications { get; set; } = new List<LocalNotification>();
 
     public virtual ICollection<Otpverify> Otpverifies { get; set; } = new List<Otpverify>();

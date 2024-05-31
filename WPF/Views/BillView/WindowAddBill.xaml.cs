@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using BusinessObject.Object;
 using DataAccess.DAO;
+using DataAccess.Enums;
 using DataAccess.Model.BillModel;
 using DataAccess.Model.ServiceFeeModel;
 using DataAccess.Repository;
@@ -71,15 +72,32 @@ namespace WPF.Views.BillView
                 if (result.IsSuccess)
                 {
                     MessageBox.Show("Bill created successfully!");
-
-
                     try
                     {
+                        var billCreatedBy = await _repository.GetUserById(App.LoggedInUserId);
+
+                        var message = $"A new bill in {_room.Name} of {_house.Name} has been created by staff {user.FullName}";
+                        // add localNoti
+                        var localNotification = new LocalNotification
+                        {
+                            Id = Guid.NewGuid(),
+                            Subject = "New bill created",
+                            Content = message,
+                            CreatedAt = DateTime.Now,
+                            UserId = billCreatedBy.Role == UserEnum.OWNER ? App.LoggedInUserId : billCreatedBy.OwnerId,
+                            IsRead = false,
+                        };
+                        await _repository.InsertLocalNotifications(App.LoggedInUserId, localNotification);
+
+
+                        var unReadNoti = _repository.GetNotificationQuantity(user.OwnerId.Value);
+
+                        //send signal R
                         var bill = result.Data as Bill;
                         if (bill != null)
                         {
                             await App.SignalRConnection.InvokeAsync("NotifyBillCreated", _house.OwnerId, bill.Id,
-                                $"A new bill in {_room.Name} of {_house.Name} has been created by staff {user.FullName}");
+                                message, unReadNoti);
                         }
                     }
                     catch (Exception ex)

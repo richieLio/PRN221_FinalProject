@@ -30,6 +30,8 @@ namespace DataAccess.Model.UserModel
         public string? FullName { get; set; }
 
         public DateTime? CreatedAt { get; set; }
+
+        public int UnreadNotificationCount { get; set; }
     }
 
     public class UserLoginReqModel
