@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Object;
 using DataAccess.DAO;
+using DataAccess.Enums;
 using DataAccess.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -253,6 +254,7 @@ namespace WPF
 
         private async void Initialize()
         {
+            var user = await _repository.GetUserById(App.LoggedInUserId);
             var staffResult = await _repository.GetAllStaffByOwnerId(App.LoggedInUserId);
 
             if (staffResult != null)
@@ -269,7 +271,7 @@ namespace WPF
             if (assignedStaffResult.IsSuccess && assignedStaffResult.Data != null)
             {
                 var assignedStaff = assignedStaffResult.Data as User;
-                if (assignedStaff != null)
+                if (assignedStaff != null && user.Role == UserEnum.OWNER)
                 {
                     txtStaffName.Text = $"Managed by: {assignedStaff.FullName}";
                     txtStaffName.Visibility = Visibility.Visible;
@@ -278,10 +280,7 @@ namespace WPF
                     AssignStaffButton.Visibility = Visibility.Collapsed;
                     UnAssignStaffButton.Visibility = Visibility.Visible;
                 }
-                else
-                {
-                    MessageBox.Show("Invalid data type for assigned staff.", "Error");
-                }
+                
             }
             else
             {

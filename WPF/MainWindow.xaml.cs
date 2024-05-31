@@ -20,7 +20,6 @@ namespace WPF
         private readonly IServiceProvider _serviceProvider;
         private readonly ICombineRepository _repository;
         private readonly HubConnection _connection;
-
         public MainWindow(IServiceProvider serviceProvider, ICombineRepository repository)
         {
             _repository = repository;
@@ -59,12 +58,12 @@ namespace WPF
 
         private async void openConnect()
         {
-            
+
             try
             {
                 _connection.On<Guid, Guid, string>("ReceiveNotification", async (ownerId, billId, message) =>
                 {
-                    var bill =  await _repository.getBillById(billId);
+                    var bill = await _repository.getBillById(billId);
                     this.Dispatcher.Invoke(() =>
                     {
                         var newMessage = $"{message}";
@@ -125,6 +124,12 @@ namespace WPF
                 MessageBox.Show("User not found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        private void NotificationButton_Click(object sender, RoutedEventArgs e)
+        {
+            NotificationPopup.IsOpen = !NotificationPopup.IsOpen;
+        }
+
+
 
 
 

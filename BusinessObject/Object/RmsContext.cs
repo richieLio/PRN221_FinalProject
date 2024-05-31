@@ -23,6 +23,8 @@ public partial class RmsContext : DbContext
 
     public virtual DbSet<House> Houses { get; set; }
 
+    public virtual DbSet<LocalNotification> LocalNotifications { get; set; }
+
     public virtual DbSet<Notification> Notifications { get; set; }
 
     public virtual DbSet<Otpverify> Otpverifies { get; set; }
@@ -133,6 +135,19 @@ public partial class RmsContext : DbContext
                     });
         });
 
+        modelBuilder.Entity<LocalNotification>(entity =>
+        {
+            entity.ToTable("LocalNotification");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.Subject).HasMaxLength(100);
+
+            entity.HasOne(d => d.User).WithMany(p => p.LocalNotifications)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_LocalNotification_User");
+        });
+
         modelBuilder.Entity<Notification>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Notifica__3214EC071651BB24");
@@ -141,6 +156,7 @@ public partial class RmsContext : DbContext
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.CreatedAt).HasPrecision(6);
+            entity.Property(e => e.Subject).HasMaxLength(100);
 
             entity.HasOne(d => d.House).WithMany(p => p.Notifications)
                 .HasForeignKey(d => d.HouseId)
