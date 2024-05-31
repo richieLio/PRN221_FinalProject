@@ -45,6 +45,8 @@ public partial class User
 
     public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
 
+    public virtual ICollection<LocalNotification> LocalNotifications { get; set; } = new List<LocalNotification>();
+
     public virtual ICollection<Otpverify> Otpverifies { get; set; } = new List<Otpverify>();
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();

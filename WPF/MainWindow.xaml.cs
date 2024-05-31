@@ -1,5 +1,7 @@
 ﻿using BusinessObject.Object;
+using ControlzEx.Standard;
 using DataAccess.Enums;
+using DataAccess.Model.BillModel;
 using DataAccess.Model.UserModel;
 using DataAccess.Repository;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -20,7 +22,6 @@ namespace WPF
         private readonly IServiceProvider _serviceProvider;
         private readonly ICombineRepository _repository;
         private readonly HubConnection _connection;
-
         public MainWindow(IServiceProvider serviceProvider, ICombineRepository repository)
         {
             _repository = repository;
@@ -43,7 +44,7 @@ namespace WPF
 
             openConnect();
 
-            LoadUserFullName();
+           LoadUserFullName();
 
         }
 
@@ -52,36 +53,43 @@ namespace WPF
             var name = _repository.GetUserFullName(App.LoggedInUserId);
             UserReqModel userReqModel = new UserReqModel
             {
-                FullName = name
+                FullName = name,
             };
             DataContext = userReqModel;
         }
 
         private async void openConnect()
         {
-            
             try
             {
-                _connection.On<Guid, Guid, string>("ReceiveNotification", async (ownerId, billId, message) =>
+                _connection.On<Guid, Guid, string, int>("ReceiveNotification", async (ownerId, billId, message, unReadNoti) =>
                 {
-                    var bill =  await _repository.getBillById(billId);
-                    this.Dispatcher.Invoke(() =>
+                    await Dispatcher.InvokeAsync(async () =>
                     {
-                        var newMessage = $"{message}";
-                        if (App.LoggedInUserId == ownerId && bill.CreateBy != App.LoggedInUserId)
+                        var bill = await _repository.getBillById(billId);
+                        if (bill != null && App.LoggedInUserId == ownerId && bill.CreateBy != App.LoggedInUserId)
                         {
-                            MessageBox.Show(newMessage);
+                            var name = _repository.GetUserFullName(App.LoggedInUserId);
+
+                            // Update UnreadNotificationCount
+                            var userReqModel = new UserReqModel
+                            {
+                                FullName = name,
+                                UnreadNotificationCount = unReadNoti,
+                            };
+                            DataContext = userReqModel;
                         }
                     });
                 });
+
                 await _connection.StartAsync();
-                //    MessageBox.Show("Connection started");
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}");
+                MessageBox.Show($"Error connecting to SignalR: {ex.Message}");
             }
         }
+
 
 
         private async void RadioButton_Checked(object sender, RoutedEventArgs e)
@@ -123,6 +131,54 @@ namespace WPF
             else
             {
                 MessageBox.Show("User not found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        private async void NotificationButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (NotificationPopup.IsOpen)
+            {
+                NotificationPopup.IsOpen = false;
+                messages.Items.Clear();
+                await _repository.UpdateIsReadNoti(App.LoggedInUserId);
+                var name = _repository.GetUserFullName(App.LoggedInUserId);
+                var userReqModel = new UserReqModel
+                {
+                    FullName = name,
+                    UnreadNotificationCount = 0,
+                };
+                DataContext = userReqModel;
+            }
+            else
+            {
+                FetchNotifications();
+                NotificationPopup.IsOpen = true;
+            }
+        }
+
+       
+
+        private async void FetchNotifications()
+        {
+            try
+            {
+                // Call the GetLocalNotifications function to retrieve notifications
+                var notifications = await _repository.GetLocalNotifications(App.LoggedInUserId);
+                if (notifications.Data is IEnumerable<LocalNotification> localNotifications)
+                {
+                    var messagessss = "";
+                    foreach (var localNotification in localNotifications)
+                    {
+                        messagessss = "Subject [" + localNotification.Subject + "] " + " Content [" + localNotification.Content + "]";
+                        messages.Items.Add(messagessss);
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

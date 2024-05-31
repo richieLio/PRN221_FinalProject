@@ -43,6 +43,7 @@ namespace WPF
             services.AddSingleton<IStaffRepository, StaffRepository>();
             services.AddSingleton<IServiceFeeRepository, ServiceFeeRepository>();
             services.AddSingleton<IBillRepository, BillRepository>();
+            services.AddSingleton<ILocalNotificationRepository, LocalNotificationRepository>();
             services.AddSingleton<ICombineRepository, CombineRepository>();
 
 
@@ -54,6 +55,7 @@ namespace WPF
             services.AddTransient<IStaffRepository, StaffRepository>();
             services.AddTransient<IServiceFeeRepository, ServiceFeeRepository>();
             services.AddTransient<IBillRepository, BillRepository>();
+            services.AddTransient<ILocalNotificationRepository, LocalNotificationRepository>();
             services.AddTransient<ICombineRepository, CombineRepository>();
 
 
@@ -78,6 +80,7 @@ namespace WPF
             services.AddSingleton<WindowBill>();
             services.AddSingleton<WindowAddBill>();
             services.AddSingleton<WindowUpdateBill>();
+            services.AddSingleton<WindowUpdateBillStatus>();
             services.AddSingleton<WindowChangePassword>();
             services.AddSingleton<WindowUpdateProfile>();
 
@@ -103,6 +106,7 @@ namespace WPF
             services.AddTransient<WindowBill>();
             services.AddTransient<WindowAddBill>();
             services.AddTransient<WindowUpdateBill>();
+            services.AddTransient<WindowUpdateBillStatus>();
             services.AddTransient<WindowChangePassword>();
             services.AddTransient<WindowUpdateProfile>();
 

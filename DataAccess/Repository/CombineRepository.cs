@@ -25,12 +25,13 @@ namespace DataAccess.Repository
         private readonly ICustomerRepository _customerRepository;
         private readonly IServiceFeeRepository _serviceFeeRepository;
         private readonly IBillRepository _billRepository;
-
+        private readonly ILocalNotificationRepository _localNotificationRepository;
 
 
         public CombineRepository(IUserRepository userRepository, IHouseRepository houseRepository,
             IRoomRepository roomRepository, IStaffRepository staffRepository
             , ICustomerRepository customerRepository, IServiceFeeRepository serviceFeeRepository, IBillRepository billRepository
+            , ILocalNotificationRepository localNotificationRepository
             )
         {
             _userRepository = userRepository;
@@ -40,6 +41,7 @@ namespace DataAccess.Repository
             _staffRepository = staffRepository;
             _serviceFeeRepository = serviceFeeRepository;
             _billRepository = billRepository;
+            _localNotificationRepository = localNotificationRepository;
         }
         public Task<ResultModel> AddCustomerToRoom(Guid userId, AddCustomerToRoomReqModel addCustomerToRoomReqModel)
             => _customerRepository.AddCustomerToRoom(userId, addCustomerToRoomReqModel);
@@ -78,7 +80,10 @@ namespace DataAccess.Repository
     public Task<ResultModel> DeleteHouse(Guid OwnerId, Guid houseId)
          => _houseRepository.DeleteHouse(OwnerId, houseId);
 
-    public Task<ResultModel> DeleteRoom(Guid houseId, Guid roomId)
+        public Task<ResultModel> DeleteLocalNotifications(Guid userId, LocalNotification localNotification)
+        => _localNotificationRepository.DeleteLocalNotifications(userId, localNotification);
+
+        public Task<ResultModel> DeleteRoom(Guid houseId, Guid roomId)
         => (_roomRepository.DeleteRoom(houseId, roomId));
 
     public Task<ResultModel> GetAllBills(Guid userId)
@@ -121,7 +126,13 @@ namespace DataAccess.Repository
     public Task<IEnumerable<User>> GetListCustomerByRoomId(Guid roomId)
 => _roomRepository.GetListCustomerByRoomId(roomId);
 
-    public Task<Room> GetRoom(Guid roomId)
+        public Task<ResultModel> GetLocalNotifications(Guid userId)
+        => _localNotificationRepository.GetLocalNotifications(userId);
+
+        public int GetNotificationQuantity(Guid userId)
+        => _localNotificationRepository.GetNotificationQuantity(userId);
+
+        public Task<Room> GetRoom(Guid roomId)
 => _roomRepository.GetRoom(roomId);
 
     public Task<Room> GetRoomByName(Guid houseId, string name)
@@ -154,13 +165,19 @@ namespace DataAccess.Repository
     public string GetUserFullName(Guid id)
         => _userRepository.GetUserFullName(id);
 
-    public Task<bool> IsUserInRoom(Guid roomId, string email, string phoneNumber, string licensePlates, string citizenIdNumber)
+        public Task<ResultModel> InsertLocalNotifications(Guid userId, LocalNotification localNotification)
+        => _localNotificationRepository.InsertLocalNotifications(userId, localNotification);
+
+        public Task<bool> IsUserInRoom(Guid roomId, string email, string phoneNumber, string licensePlates, string citizenIdNumber)
 => _customerRepository.IsUserInRoom(roomId, email, phoneNumber, licensePlates, citizenIdNumber);
 
     public Task<ResultModel> Login(UserLoginReqModel userLoginReqModel)
 => _userRepository.Login(userLoginReqModel);
 
-    public Task<ResultModel> RemoveService(Guid userId, Guid serviceId, Guid houseId)
+        public Task<ResultModel> RemoveBill(Guid userId, Guid billId)
+=> _billRepository.RemoveBill(userId, billId);
+
+        public Task<ResultModel> RemoveService(Guid userId, Guid serviceId, Guid houseId)
 => _serviceFeeRepository.RemoveService(userId, serviceId, houseId);
 
         public Task<bool> RemoveStaffFromHouse(Guid staffId, Guid houseId)
@@ -175,10 +192,16 @@ namespace DataAccess.Repository
     public Task<ResultModel> UpdateBill(Guid userId, BillUpdateReqModel billUpdateReqModel)
         => _billRepository.UpdateBill(userId, billUpdateReqModel);
 
-    public Task<ResultModel> UpdateHouse(Guid OwnerId, HouseUpdateReqModel houseUpdateReqModel)
+        public Task<ResultModel> UpdateBillStatus(Guid userId, BillUpdateStatusReqModel billUpdateStatusReqModel)
+         => _billRepository.UpdateBillStatus(userId, billUpdateStatusReqModel); 
+
+        public Task<ResultModel> UpdateHouse(Guid OwnerId, HouseUpdateReqModel houseUpdateReqModel)
 => _houseRepository.UpdateHouse(OwnerId, houseUpdateReqModel);
 
-    public Task<ResultModel> UpdateRoom(RoomUpdateReqModel roomUpdateReqModel)
+        public Task UpdateIsReadNoti(Guid userId)
+=> _localNotificationRepository.UpdateIsReadNoti(userId);
+
+        public Task<ResultModel> UpdateRoom(RoomUpdateReqModel roomUpdateReqModel)
 => _roomRepository.UpdateRoom(roomUpdateReqModel);
 
     public Task<ResultModel> UpdateService(Guid userId, ServiceUpdateReqModel serviceUpdateModel)
