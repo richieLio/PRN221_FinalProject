@@ -19,5 +19,6 @@ namespace DataAccess.Repository
         Task<ResultModel> GetBillByRoomID(Guid roomId);
         Task<ResultModel> getBillDetails(Guid userId, Guid billId);
         Task<Bill> getBillById(Guid billId);
+        Task<ResultModel> RemoveBill(Guid userId, Guid billId);
     }
 }

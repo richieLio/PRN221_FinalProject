@@ -27,6 +27,9 @@ namespace DataAccess.Repository
         public Task<ResultModel> getBillDetails(Guid userId, Guid billId)
             => BillDAO.Instance.getBillDetails(userId, billId);
 
+        public Task<ResultModel> RemoveBill(Guid userId, Guid billId)
+            =>BillDAO.Instance.RemoveBill(userId, billId);
+
         public Task<ResultModel> UpdateBill(Guid userId, BillUpdateReqModel billUpdateReqModel)
             => BillDAO.Instance.UpdateBill(userId, billUpdateReqModel);
 

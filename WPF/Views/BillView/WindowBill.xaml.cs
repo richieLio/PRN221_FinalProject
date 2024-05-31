@@ -148,9 +148,45 @@ namespace WPF.BillView
             }
         }
 
-        private void DeleteBill_Click(object sender, RoutedEventArgs e)
+        private async void DeleteBill_Click(object sender, RoutedEventArgs e)
         {
+            if (lvBills.SelectedItem is BillResModel selectedBill)
+            {
+                var result = MessageBox.Show("Are you sure you want to delete this bill?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        var deleteResult = await _repository.RemoveBill(App.LoggedInUserId, selectedBill.Id);
+                        if (deleteResult.IsSuccess)
+                        {
+                            MessageBox.Show("Bill deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
+                            if (_roomId != Guid.Empty)
+                            {
+                                LoadBillByRoomId(_roomId);
+                            }
+                            else
+                            {
+                                LoadAllBill();
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show(deleteResult.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"An error occurred while deleting the bill: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select a bill to delete.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
+
     }
 }

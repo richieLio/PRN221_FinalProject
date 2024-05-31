@@ -160,7 +160,10 @@ namespace DataAccess.Repository
     public Task<ResultModel> Login(UserLoginReqModel userLoginReqModel)
 => _userRepository.Login(userLoginReqModel);
 
-    public Task<ResultModel> RemoveService(Guid userId, Guid serviceId, Guid houseId)
+        public Task<ResultModel> RemoveBill(Guid userId, Guid billId)
+=> _billRepository.RemoveBill(userId, billId);
+
+        public Task<ResultModel> RemoveService(Guid userId, Guid serviceId, Guid houseId)
 => _serviceFeeRepository.RemoveService(userId, serviceId, houseId);
 
         public Task<bool> RemoveStaffFromHouse(Guid staffId, Guid houseId)
