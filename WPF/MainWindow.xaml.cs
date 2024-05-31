@@ -81,6 +81,7 @@ namespace WPF
                         }
                     });
                 });
+
                 _connection.On<string, string, string, int>("ReceiveCustomerNotification", async (roomName, customerName, message, unReadNoti) =>
                 {
 
@@ -97,6 +98,7 @@ namespace WPF
                         DataContext = userReqModel;
                     });
                 });
+
 
                 await _connection.StartAsync();
             }
@@ -187,7 +189,9 @@ namespace WPF
                     var messagessss = "";
                     foreach (var localNotification in localNotifications)
                     {
+
                         messagessss = "[" + localNotification.Subject + "] " + " [" + localNotification.Content + "]" + " at " + localNotification.CreatedAt;
+
                         messages.Items.Add(messagessss);
                     }
                 }

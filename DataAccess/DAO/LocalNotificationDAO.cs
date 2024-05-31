@@ -40,6 +40,7 @@ namespace DataAccess.DAO
         {
             using var context = new RmsContext();
             var notifications = await context.LocalNotifications.Where(l => l.UserId == userId).OrderByDescending(l=> l.CreatedAt).ToListAsync();
+
             return new ResultModel
             {
                 IsSuccess = true,

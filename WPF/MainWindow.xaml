@@ -29,6 +29,7 @@
         </StackPanel>
 
         <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,556" RenderTransformOrigin="0.5,0.5">
+
             <materialDesign:Badged Badge="{Binding UnreadNotificationCount}" Margin="0,20,20,0" Visibility="Collapsed" x:Name="BadgedNotiCount">
                 <Button x:Name="NotificationButton" Click="NotificationButton_Click" IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}">
                     <materialDesign:PackIcon Kind="Bell" />
