@@ -29,5 +29,8 @@ namespace DataAccess.Repository
 
         public Task<ResultModel> UpdateBill(Guid userId, BillUpdateReqModel billUpdateReqModel)
             => BillDAO.Instance.UpdateBill(userId, billUpdateReqModel);
+
+        public Task<ResultModel> UpdateBillStatus(Guid userId, BillUpdateStatusReqModel billUpdateStatusReqModel)
+            => BillDAO.Instance.UpdateBillStatus(userId, billUpdateStatusReqModel);
     }
 }

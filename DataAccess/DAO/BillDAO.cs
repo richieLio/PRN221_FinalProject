@@ -522,5 +522,36 @@ namespace DataAccess.DAO
             }
         }
 
+        public async Task<ResultModel> UpdateBillStatus(Guid userId, BillUpdateStatusReqModel billUpdateStatusReqModel)
+        {
+            using var context = new RmsContext();
+            IUserRepository _userRepository = new UserRepository();
+            IBillRepository _billRepository = new BillRepository();
+
+            var user = await _userRepository.GetUserById(userId);
+            if (user == null)
+            {
+                return new ResultModel
+                {
+                    IsSuccess = false,
+                    Code = 404,
+                    Message = "User not found."
+                };
+            }
+            var bill = await _billRepository.getBillById(billUpdateStatusReqModel.BillId);
+
+            bill.IsPaid  = billUpdateStatusReqModel.Status;
+            bill.PaymentDate = billUpdateStatusReqModel.PaymentDay;
+            context.Update(bill);
+            await context.SaveChangesAsync();
+
+            return new ResultModel
+            {
+                IsSuccess = true,
+                Code = 200,
+                Message = "Bill Updated successfully"
+            };
+
+        }
     }
 }

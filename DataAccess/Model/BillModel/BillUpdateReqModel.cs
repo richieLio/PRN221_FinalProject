@@ -12,5 +12,11 @@ namespace DataAccess.Model.BillModel
         public Guid RoomId { get; set; }
         public Dictionary<Guid, decimal> ServiceQuantities { get; set; }
     }
+    public class BillUpdateStatusReqModel
+    {
+        public Guid BillId { get; set; }
+        public bool Status { get; set; }
+        public DateTime? PaymentDay { get; set; }
+    }
 
 }

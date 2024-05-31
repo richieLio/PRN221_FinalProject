@@ -37,6 +37,7 @@
                     <ListView.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Edit" Click="EditBill_Click"/>
+                            <MenuItem Header="Edit Status" Click="EditBillStatus_Click"/>
                             <MenuItem Header="Delete" Click="DeleteBill_Click"/>
                         </ContextMenu>
                     </ListView.ContextMenu>

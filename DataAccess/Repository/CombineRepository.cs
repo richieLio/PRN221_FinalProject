@@ -175,7 +175,10 @@ namespace DataAccess.Repository
     public Task<ResultModel> UpdateBill(Guid userId, BillUpdateReqModel billUpdateReqModel)
         => _billRepository.UpdateBill(userId, billUpdateReqModel);
 
-    public Task<ResultModel> UpdateHouse(Guid OwnerId, HouseUpdateReqModel houseUpdateReqModel)
+        public Task<ResultModel> UpdateBillStatus(Guid userId, BillUpdateStatusReqModel billUpdateStatusReqModel)
+         => _billRepository.UpdateBillStatus(userId, billUpdateStatusReqModel); 
+
+        public Task<ResultModel> UpdateHouse(Guid OwnerId, HouseUpdateReqModel houseUpdateReqModel)
 => _houseRepository.UpdateHouse(OwnerId, houseUpdateReqModel);
 
     public Task<ResultModel> UpdateRoom(RoomUpdateReqModel roomUpdateReqModel)

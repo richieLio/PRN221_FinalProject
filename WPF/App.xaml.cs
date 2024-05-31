@@ -81,6 +81,7 @@ namespace WPF
             services.AddSingleton<WindowBill>();
             services.AddSingleton<WindowAddBill>();
             services.AddSingleton<WindowUpdateBill>();
+            services.AddSingleton<WindowUpdateBillStatus>();
             services.AddSingleton<WindowChangePassword>();
             services.AddSingleton<WindowUpdateProfile>();
             services.AddSingleton<NotificationPopup>();
@@ -107,6 +108,7 @@ namespace WPF
             services.AddTransient<WindowBill>();
             services.AddTransient<WindowAddBill>();
             services.AddTransient<WindowUpdateBill>();
+            services.AddTransient<WindowUpdateBillStatus>();
             services.AddTransient<WindowChangePassword>();
             services.AddTransient<WindowUpdateProfile>();
             services.AddTransient<NotificationPopup>();
