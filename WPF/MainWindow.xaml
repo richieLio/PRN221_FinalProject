@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF"
-        xmlns:notification="clr-namespace:WPF.Views.LocalNotificationView"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="MainWindow" Height="650" Width="1100"
@@ -30,15 +29,20 @@
         </StackPanel>
 
         <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,556" RenderTransformOrigin="0.5,0.5">
-            <Popup x:Name="NotificationPopup" Placement="Bottom" StaysOpen="False">
-                <notification:NotificationPopup/>
-            </Popup>
-
             <materialDesign:Badged Badge="{Binding UnreadNotificationCount}" Margin="0,20,20,0">
-                <Button Content="Notification" Click="NotificationButton_Click"
-            IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
+                <Button x:Name="NotificationButton" Content="Notification" Click="NotificationButton_Click"
+                IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
             </materialDesign:Badged>
 
+            <!-- Popup for notifications -->
+            <Popup x:Name="NotificationPopup" PlacementTarget="{Binding ElementName=NotificationButton}" Placement="Bottom">
+                <Border Background="White" BorderBrush="Black" BorderThickness="1">
+                    <StackPanel Margin="10">
+                        <TextBlock Text="Notifications" FontWeight="Bold" Margin="0,0,0,5"/>
+                        <ListBox x:Name="messages" />
+                    </StackPanel>
+                </Border>
+            </Popup>
 
 
 

@@ -13,7 +13,8 @@ namespace DataAccess.Repository
         IHouseRepository,
         IRoomRepository,
         IServiceFeeRepository,
-        IBillRepository
+        IBillRepository,
+        ILocalNotificationRepository
     {
       
     }
