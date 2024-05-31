@@ -10,6 +10,10 @@ namespace SignalRServer.Hubs
 
             return Clients.All.SendAsync("ReceiveNotification", ownerId, billId, message, unReadNoti);
         }
-       
+        public Task NotifyCustomerAdded(string roomName, string customerName, string message, int unReadNoti)
+        {
+            return Clients.All.SendAsync("ReceiveCustomerNotification", roomName, customerName, message, unReadNoti);
+        }
+
     }
 }
