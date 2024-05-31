@@ -1,7 +1,10 @@
 ﻿using BusinessObject.Object;
+using DataAccess.Enums;
 using DataAccess.Model.CustomerModel;
 using DataAccess.Model.HouseModel;
 using DataAccess.Repository;
+using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.VisualBasic.ApplicationServices;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -57,11 +60,32 @@ namespace WPF.Views.CustomerView
                 };
 
                 var result = await _repository.AddCustomerToRoom(App.LoggedInUserId, customer);
+                var room = await _repository.GetRoom(_roomId);
+                var house = await _repository.GetHouse(_houseId);
+                var creator = await  _repository.GetUserById(App.LoggedInUserId);
+
+                var message = $"A new customer has been added to {room.Name} of {house.Name} by staff {creator.FullName}";
+                // add localNoti
+                var localNotification = new LocalNotification
+                {
+                    Id = Guid.NewGuid(),
+                    Subject = "New customer added ",
+                    Content = message,
+                    CreatedAt = DateTime.Now,
+                    UserId = creator.Role == UserEnum.OWNER ? App.LoggedInUserId : creator.OwnerId,
+                    IsRead = false,
+                };
+                await _repository.InsertLocalNotifications(App.LoggedInUserId, localNotification);
+
+                var unReadNoti = _repository.GetNotificationQuantity(creator.OwnerId.Value);
 
                 if (result.IsSuccess)
                 {
                     MessageBox.Show("Customer added to room successfully.");
                     CustomerAdded?.Invoke(this, EventArgs.Empty);
+                    // Send SignalR notification
+                    await App.SignalRConnection.InvokeAsync("NotifyCustomerAdded", room.Name, txtFullName.Text.Trim(), message, unReadNoti);
+
                     this.Close();
                 }
                 else

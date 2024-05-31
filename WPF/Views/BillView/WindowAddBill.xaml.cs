@@ -74,7 +74,7 @@ namespace WPF.Views.BillView
                     MessageBox.Show("Bill created successfully!");
                     try
                     {
-                        var billCreatedBy = await _repository.GetUserById(App.LoggedInUserId);
+                            var billCreatedBy = await _repository.GetUserById(App.LoggedInUserId);
 
                         var message = $"A new bill in {_room.Name} of {_house.Name} has been created by staff {user.FullName}";
                         // add localNoti
