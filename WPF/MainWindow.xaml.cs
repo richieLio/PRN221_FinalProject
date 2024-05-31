@@ -82,6 +82,24 @@ namespace WPF
                     });
                 });
 
+                _connection.On<string, string, string, int>("ReceiveCustomerNotification", async (roomName, customerName, message, unReadNoti) =>
+                {
+
+                    await Dispatcher.InvokeAsync(() =>
+                    {
+                        var name = _repository.GetUserFullName(App.LoggedInUserId);
+
+                        // Update UnreadNotificationCount
+                        var userReqModel = new UserReqModel
+                        {
+                            FullName = name,
+                            UnreadNotificationCount = unReadNoti,
+                        };
+                        DataContext = userReqModel;
+                    });
+                });
+
+
                 await _connection.StartAsync();
             }
             catch (Exception ex)
@@ -127,6 +145,8 @@ namespace WPF
             if (user != null)
             {
                 staffRadioButton.Visibility = user.Role == UserEnum.OWNER ? Visibility.Visible : Visibility.Collapsed;
+                NotificationButton.Visibility = user.Role == UserEnum.OWNER ? Visibility.Visible : Visibility.Collapsed;
+                BadgedNotiCount.Visibility = user.Role == UserEnum.OWNER ? Visibility.Visible : Visibility.Collapsed;
             }
             else
             {
@@ -169,7 +189,9 @@ namespace WPF
                     var messagessss = "";
                     foreach (var localNotification in localNotifications)
                     {
-                        messagessss = "Subject [" + localNotification.Subject + "] " + " Content [" + localNotification.Content + "]";
+
+                        messagessss = "[" + localNotification.Subject + "] " + " [" + localNotification.Content + "]" + " at " + localNotification.CreatedAt;
+
                         messages.Items.Add(messagessss);
                     }
                 }
