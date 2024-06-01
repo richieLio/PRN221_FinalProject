@@ -11,8 +11,11 @@ namespace DataAccess.Repository
 {
     public class LocalNotificationRepository : ILocalNotificationRepository
     {
-        public Task<ResultModel> DeleteLocalNotifications(Guid userId, LocalNotification localNotification) 
-            => LocalNotificationDAO.Instance.DeleteLocalNotifications(userId, localNotification);
+        public Task DeleteLocalNotifications(Guid localNotificationId)
+            => LocalNotificationDAO.Instance.DeleteLocalNotifications(localNotificationId);
+
+        public Task<LocalNotification> GetLocalNotificationByMessage(string message)
+            => LocalNotificationDAO.Instance.GetLocalNotificationByMessage(message);
 
         public Task<ResultModel> GetLocalNotifications(Guid userId)
             => LocalNotificationDAO.Instance.GetLocalNotifications(userId);

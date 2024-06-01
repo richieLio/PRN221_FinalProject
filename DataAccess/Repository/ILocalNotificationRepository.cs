@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Object;
 using DataAccess.Model.OperationResultModel;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,12 @@ namespace DataAccess.Repository
     {
         Task<ResultModel> GetLocalNotifications(Guid userId);
         Task<ResultModel> InsertLocalNotifications(Guid userId, LocalNotification localNotification);
-        Task<ResultModel> DeleteLocalNotifications(Guid userId, LocalNotification localNotification);
+        Task DeleteLocalNotifications(Guid localNotificationId);
 
         int GetNotificationQuantity(Guid userId);
         Task UpdateIsReadNoti(Guid userId);
+        Task<LocalNotification> GetLocalNotificationByMessage(string message);
+       
 
     }
 }

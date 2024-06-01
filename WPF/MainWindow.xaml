@@ -37,15 +37,25 @@
             </materialDesign:Badged>
 
 
-            <!-- Popup for notifications -->
             <Popup x:Name="NotificationPopup" PlacementTarget="{Binding ElementName=NotificationButton}" Placement="Bottom">
                 <Border Background="White" BorderBrush="Black" BorderThickness="1">
                     <StackPanel Margin="10">
-                        <TextBlock Text="Notifications" FontWeight="Bold" Margin="0,0,0,5"/>
-                        <ListBox x:Name="messages" />
+                        <TextBlock Text="Notifications" FontWeight="Bold" Margin="0,0,0,5" VerticalAlignment="Center" Width="400" TextWrapping="Wrap"/>
+                        <ListBox x:Name="messages">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding}" VerticalAlignment="Center" Width="380" TextWrapping="Wrap"/>
+                                        <Button Content="X" Width="20" Height="20" Margin="10,0,0,0" VerticalAlignment="Center" Click="DeleteNotification_Click"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                     </StackPanel>
                 </Border>
             </Popup>
+
+
 
 
 
