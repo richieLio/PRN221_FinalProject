@@ -254,12 +254,6 @@ public partial class RmsContext : DbContext
             entity.Property(e => e.Gender).HasMaxLength(50);
             entity.Property(e => e.LastLoggedIn).HasPrecision(6);
             entity.Property(e => e.LicensePlates).HasMaxLength(50);
-            entity.Property(e => e.Otp)
-                .HasMaxLength(255)
-                .HasColumnName("OTP");
-            entity.Property(e => e.Otpexpiration)
-                .HasColumnType("datetime")
-                .HasColumnName("OTPExpiration");
             entity.Property(e => e.Password).HasMaxLength(512);
             entity.Property(e => e.PhoneNumber).HasMaxLength(50);
             entity.Property(e => e.Role).HasMaxLength(50);

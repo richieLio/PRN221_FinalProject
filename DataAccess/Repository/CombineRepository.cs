@@ -215,7 +215,7 @@ namespace DataAccess.Repository
 
     public Task<ResultModel> UpdateUserProfile(UserUpdateModel updateModel)
 => _userRepository.UpdateUserProfile(updateModel);
-    public Task VerifyEmail(EmailVerificationReqModel verificationModel)
+    public Task<ResultModel> VerifyEmail(EmailVerificationReqModel verificationModel)
 => _userRepository.VerifyEmail(verificationModel);
 
     public Task<ResultModel> VerifyOTPCode(string email, string otpCode)
