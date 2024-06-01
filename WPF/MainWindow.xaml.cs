@@ -4,6 +4,7 @@ using DataAccess.Enums;
 using DataAccess.Model.BillModel;
 using DataAccess.Model.UserModel;
 using DataAccess.Repository;
+using Google.Apis.Storage.v1.Data;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
@@ -81,6 +82,7 @@ namespace WPF
                         }
                     });
                 });
+
                 _connection.On<string, string, string, int>("ReceiveCustomerNotification", async (roomName, customerName, message, unReadNoti) =>
                 {
 
@@ -97,6 +99,7 @@ namespace WPF
                         DataContext = userReqModel;
                     });
                 });
+
 
                 await _connection.StartAsync();
             }
@@ -187,7 +190,9 @@ namespace WPF
                     var messagessss = "";
                     foreach (var localNotification in localNotifications)
                     {
-                        messagessss = "[" + localNotification.Subject + "] " + " [" + localNotification.Content + "]" + " at " + localNotification.CreatedAt;
+
+                        messagessss = "[" + localNotification.Subject + "]" + " [" + localNotification.Content + "]" + " at " + localNotification.CreatedAt;
+
                         messages.Items.Add(messagessss);
                     }
                 }
@@ -199,6 +204,30 @@ namespace WPF
                 MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        private async void DeleteNotification_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button != null)
+            {
+                StackPanel stackPanel = button.Parent as StackPanel;
+                if (stackPanel != null)
+                {
+                    TextBlock textBlock = stackPanel.Children[0] as TextBlock;
+                    if (textBlock != null)
+                    {
+                        string message = textBlock.Text;
+                        messages.Items.Remove(message);
+
+                        var notification = await _repository.GetLocalNotificationByMessage(message);
+                        if (notification != null)
+                        {
+                           await _repository.DeleteLocalNotifications(notification.Id);
+                        }
+                    }
+                }
+            }
+        }
+
 
 
 

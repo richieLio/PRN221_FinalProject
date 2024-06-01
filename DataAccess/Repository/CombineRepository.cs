@@ -80,8 +80,8 @@ namespace DataAccess.Repository
     public Task<ResultModel> DeleteHouse(Guid OwnerId, Guid houseId)
          => _houseRepository.DeleteHouse(OwnerId, houseId);
 
-        public Task<ResultModel> DeleteLocalNotifications(Guid userId, LocalNotification localNotification)
-        => _localNotificationRepository.DeleteLocalNotifications(userId, localNotification);
+        public Task DeleteLocalNotifications(Guid localNotificationId)
+        => _localNotificationRepository.DeleteLocalNotifications(localNotificationId);
 
         public Task<ResultModel> DeleteRoom(Guid houseId, Guid roomId)
         => (_roomRepository.DeleteRoom(houseId, roomId));
@@ -125,6 +125,9 @@ namespace DataAccess.Repository
 
     public Task<IEnumerable<User>> GetListCustomerByRoomId(Guid roomId)
 => _roomRepository.GetListCustomerByRoomId(roomId);
+
+        public Task<LocalNotification> GetLocalNotificationByMessage(string message)
+=> _localNotificationRepository.GetLocalNotificationByMessage(message);
 
         public Task<ResultModel> GetLocalNotifications(Guid userId)
         => _localNotificationRepository.GetLocalNotifications(userId);

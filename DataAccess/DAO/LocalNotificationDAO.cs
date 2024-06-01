@@ -31,15 +31,19 @@ namespace DataAccess.DAO
             }
         }
 
-        internal async Task<ResultModel> DeleteLocalNotifications(Guid userId, LocalNotification localNotification)
+        public async Task DeleteLocalNotifications(Guid localNotificationId)
         {
-            throw new NotImplementedException();
+            using var context = new RmsContext();
+            var notification = await context.LocalNotifications.Where(l => l.Id == localNotificationId).FirstOrDefaultAsync();
+            context.LocalNotifications.Remove(notification);
+            context.SaveChanges();
+            
         }
 
         public async Task<ResultModel> GetLocalNotifications(Guid userId)
         {
             using var context = new RmsContext();
-            var notifications = await context.LocalNotifications.Where(l => l.UserId == userId).OrderByDescending(l=> l.CreatedAt).ToListAsync();
+            var notifications = await context.LocalNotifications.Where(l => l.UserId == userId).ToListAsync();
             return new ResultModel
             {
                 IsSuccess = true,
@@ -104,6 +108,25 @@ namespace DataAccess.DAO
             }
         }
 
+
+        public async Task<LocalNotification> GetLocalNotificationByMessage(string message)
+        {
+            using var context = new RmsContext();
+
+            var notifications = await context.LocalNotifications.ToListAsync();
+
+            foreach (var notification in notifications)
+            {
+                string formattedMessage = "[" + notification.Subject + "] [" + notification.Content + "] at " + notification.CreatedAt;
+
+                if (formattedMessage == message)
+                {
+                    return notification;
+                }
+            }
+
+            return null;
+        }
 
     }
 }

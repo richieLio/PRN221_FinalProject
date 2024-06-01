@@ -29,6 +29,7 @@
         </StackPanel>
 
         <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,556" RenderTransformOrigin="0.5,0.5">
+
             <materialDesign:Badged Badge="{Binding UnreadNotificationCount}" Margin="0,20,20,0" Visibility="Collapsed" x:Name="BadgedNotiCount">
                 <Button x:Name="NotificationButton" Click="NotificationButton_Click" IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}">
                     <materialDesign:PackIcon Kind="Bell" />
@@ -36,15 +37,25 @@
             </materialDesign:Badged>
 
 
-            <!-- Popup for notifications -->
             <Popup x:Name="NotificationPopup" PlacementTarget="{Binding ElementName=NotificationButton}" Placement="Bottom">
                 <Border Background="White" BorderBrush="Black" BorderThickness="1">
                     <StackPanel Margin="10">
-                        <TextBlock Text="Notifications" FontWeight="Bold" Margin="0,0,0,5"/>
-                        <ListBox x:Name="messages" />
+                        <TextBlock Text="Notifications" FontWeight="Bold" Margin="0,0,0,5" VerticalAlignment="Center" Width="400" TextWrapping="Wrap"/>
+                        <ListBox x:Name="messages">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding}" VerticalAlignment="Center" Width="380" TextWrapping="Wrap"/>
+                                        <Button Content="X" Width="20" Height="20" Margin="10,0,0,0" VerticalAlignment="Center" Click="DeleteNotification_Click"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                     </StackPanel>
                 </Border>
             </Popup>
+
+
 
 
 
