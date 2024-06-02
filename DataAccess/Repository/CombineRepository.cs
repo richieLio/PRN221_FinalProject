@@ -26,12 +26,13 @@ namespace DataAccess.Repository
         private readonly IServiceFeeRepository _serviceFeeRepository;
         private readonly IBillRepository _billRepository;
         private readonly ILocalNotificationRepository _localNotificationRepository;
-
+        private readonly ITransactionRepository _transactionRepository;
+        private readonly ILicenceRepository _licenceRepository;
 
         public CombineRepository(IUserRepository userRepository, IHouseRepository houseRepository,
             IRoomRepository roomRepository, IStaffRepository staffRepository
             , ICustomerRepository customerRepository, IServiceFeeRepository serviceFeeRepository, IBillRepository billRepository
-            , ILocalNotificationRepository localNotificationRepository
+            , ILocalNotificationRepository localNotificationRepository, ITransactionRepository transactionRepository, ILicenceRepository licenceRepository
             )
         {
             _userRepository = userRepository;
@@ -42,6 +43,8 @@ namespace DataAccess.Repository
             _serviceFeeRepository = serviceFeeRepository;
             _billRepository = billRepository;
             _localNotificationRepository = localNotificationRepository;
+            _transactionRepository = transactionRepository;
+            _licenceRepository = licenceRepository;
         }
         public Task<ResultModel> AddCustomerToRoom(Guid userId, AddCustomerToRoomReqModel addCustomerToRoomReqModel)
             => _customerRepository.AddCustomerToRoom(userId, addCustomerToRoomReqModel);
@@ -122,8 +125,10 @@ namespace DataAccess.Repository
     public Task<IEnumerable<House>> GetHouses(Guid userId)
 => _houseRepository.GetHouses(userId);
 
+        public Task<Licence> GetLicenceByUserId(Guid loggedInUserId)
+=> _licenceRepository.GetLicenceByUserId(loggedInUserId);
 
-    public Task<IEnumerable<User>> GetListCustomerByRoomId(Guid roomId)
+        public Task<IEnumerable<User>> GetListCustomerByRoomId(Guid roomId)
 => _roomRepository.GetListCustomerByRoomId(roomId);
 
         public Task<LocalNotification> GetLocalNotificationByMessage(string message)
@@ -168,8 +173,14 @@ namespace DataAccess.Repository
     public string GetUserFullName(Guid id)
         => _userRepository.GetUserFullName(id);
 
+        public void InsertLicence(Licence licence)
+=> _licenceRepository.InsertLicence(licence);
+
         public Task<ResultModel> InsertLocalNotifications(Guid userId, LocalNotification localNotification)
         => _localNotificationRepository.InsertLocalNotifications(userId, localNotification);
+
+        public void InsertTransaction(TransactionHistory transactionHistory)
+=> _transactionRepository.InsertTransaction(transactionHistory);
 
         public Task<bool> IsUserInRoom(Guid roomId, string email, string phoneNumber, string licensePlates, string citizenIdNumber)
 => _customerRepository.IsUserInRoom(roomId, email, phoneNumber, licensePlates, citizenIdNumber);
@@ -204,6 +215,9 @@ namespace DataAccess.Repository
         public Task UpdateIsReadNoti(Guid userId)
 => _localNotificationRepository.UpdateIsReadNoti(userId);
 
+        public void UpdateLicence(Licence existingLicence)
+=> _licenceRepository.UpdateLicence(existingLicence);
+
         public Task<ResultModel> UpdateRoom(RoomUpdateReqModel roomUpdateReqModel)
 => _roomRepository.UpdateRoom(roomUpdateReqModel);
 
@@ -215,7 +229,7 @@ namespace DataAccess.Repository
 
     public Task<ResultModel> UpdateUserProfile(UserUpdateModel updateModel)
 => _userRepository.UpdateUserProfile(updateModel);
-    public Task VerifyEmail(EmailVerificationReqModel verificationModel)
+    public Task<ResultModel> VerifyEmail(EmailVerificationReqModel verificationModel)
 => _userRepository.VerifyEmail(verificationModel);
 
     public Task<ResultModel> VerifyOTPCode(string email, string otpCode)

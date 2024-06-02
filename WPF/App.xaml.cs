@@ -9,6 +9,7 @@ using WPF.StaffView;
 using WPF.Views.BillView;
 using WPF.Views.CustomerView;
 using WPF.Views.HouseView;
+using WPF.Views.PaymentView;
 using WPF.Views.RoomView;
 using WPF.Views.ServiceFeeView;
 using WPF.Views.UserView;
@@ -44,6 +45,8 @@ namespace WPF
             services.AddSingleton<IServiceFeeRepository, ServiceFeeRepository>();
             services.AddSingleton<IBillRepository, BillRepository>();
             services.AddSingleton<ILocalNotificationRepository, LocalNotificationRepository>();
+            services.AddSingleton<ITransactionRepository, TransactionRepository>();
+            services.AddSingleton<ILicenceRepository, LicenceRepository>();
             services.AddSingleton<ICombineRepository, CombineRepository>();
 
 
@@ -56,6 +59,8 @@ namespace WPF
             services.AddTransient<IServiceFeeRepository, ServiceFeeRepository>();
             services.AddTransient<IBillRepository, BillRepository>();
             services.AddTransient<ILocalNotificationRepository, LocalNotificationRepository>();
+            services.AddTransient<ITransactionRepository, TransactionRepository>();
+            services.AddTransient<ILicenceRepository, LicenceRepository>();
             services.AddTransient<ICombineRepository, CombineRepository>();
 
 
@@ -83,6 +88,7 @@ namespace WPF
             services.AddSingleton<WindowUpdateBillStatus>();
             services.AddSingleton<WindowChangePassword>();
             services.AddSingleton<WindowUpdateProfile>();
+            services.AddSingleton<WindowPayment>();
 
 
 
@@ -109,6 +115,7 @@ namespace WPF
             services.AddTransient<WindowUpdateBillStatus>();
             services.AddTransient<WindowChangePassword>();
             services.AddTransient<WindowUpdateProfile>();
+            services.AddTransient<WindowPayment>();
 
         }
         private void OnStartup(object sender, StartupEventArgs e)

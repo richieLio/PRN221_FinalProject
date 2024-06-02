@@ -24,6 +24,7 @@
                     <RadioButton Content="Contracts" GroupName="Views" Checked="RadioButton_Checked" Tag="contractWindow" Margin="5,10,5,0"/>
                     <RadioButton Content="Notifications" GroupName="Views" Checked="RadioButton_Checked" Tag="notificationWindow" Margin="5,10,5,0"/>
                     <RadioButton Content="Bills" GroupName="Views" Checked="RadioButton_Checked" Tag="billWindow" Margin="5,10,5,0"/>
+                    <RadioButton Content="Payments" GroupName="Views" Checked="RadioButton_Checked" Tag="paymentWindow" Margin="5,10,5,0"/>
                 </StackPanel>
             </ScrollViewer>
         </StackPanel>

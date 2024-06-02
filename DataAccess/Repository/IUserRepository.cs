@@ -16,7 +16,7 @@ namespace DataAccess.Repository
         Task CreateAccount(UserReqModel RegisterForm);
         Task<User> GetUserByEmail(string Email);
         Task<ResultModel> Login(UserLoginReqModel userLoginReqModel);
-        Task VerifyEmail(EmailVerificationReqModel verificationModel);
+        Task<ResultModel> VerifyEmail(EmailVerificationReqModel verificationModel);
         Task<User> GetUserByVerificationToken(string otp);
         Task ResetPassword(UserResetPasswordReqModel ResetPasswordReqModel);
         Task<ResultModel> VerifyOTPCode(string email, string otpCode);
