@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using WPF.BillView;
 using WPF.StaffView;
+using WPF.Views.PaymentView;
 using WPF.Views.UserView;
 
 namespace WPF
@@ -134,7 +135,9 @@ namespace WPF
                         var windowBill = _serviceProvider.GetService<WindowBill>();
                         MainContentControl.Content = windowBill;
                         windowBill.LoadAllBill();
-
+                        break;
+                    case "paymentWindow":
+                        MainContentControl.Content = _serviceProvider.GetService<WindowPayment>();
                         break;
                 }
             }

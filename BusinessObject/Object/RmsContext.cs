@@ -23,17 +23,19 @@ public partial class RmsContext : DbContext
 
     public virtual DbSet<House> Houses { get; set; }
 
+    public virtual DbSet<Licence> Licences { get; set; }
+
     public virtual DbSet<LocalNotification> LocalNotifications { get; set; }
 
     public virtual DbSet<Notification> Notifications { get; set; }
 
     public virtual DbSet<Otpverify> Otpverifies { get; set; }
 
-    public virtual DbSet<Payment> Payments { get; set; }
-
     public virtual DbSet<Room> Rooms { get; set; }
 
     public virtual DbSet<Service> Services { get; set; }
+
+    public virtual DbSet<TransactionHistory> TransactionHistories { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -135,6 +137,18 @@ public partial class RmsContext : DbContext
                     });
         });
 
+        modelBuilder.Entity<Licence>(entity =>
+        {
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.ExpiryDate).HasColumnName("expiryDate");
+            entity.Property(e => e.IsLicence).HasColumnName("isLicence");
+            entity.Property(e => e.IssueDate).HasColumnName("issueDate");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Licences)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_Licences_User");
+        });
+
         modelBuilder.Entity<LocalNotification>(entity =>
         {
             entity.ToTable("LocalNotification");
@@ -180,23 +194,6 @@ public partial class RmsContext : DbContext
                 .HasConstraintName("FK_OTPVerify_User");
         });
 
-        modelBuilder.Entity<Payment>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Payments__3214EC07DA1061E1");
-
-            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.AccountNumber).HasMaxLength(50);
-            entity.Property(e => e.AccountType).HasMaxLength(50);
-            entity.Property(e => e.QrcodeImage)
-                .HasMaxLength(512)
-                .HasColumnName("QRCodeImage");
-            entity.Property(e => e.TransferContent).HasMaxLength(100);
-
-            entity.HasOne(d => d.Owner).WithMany(p => p.Payments)
-                .HasForeignKey(d => d.OwnerId)
-                .HasConstraintName("FK_Payments_User");
-        });
-
         modelBuilder.Entity<Room>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Room__3214EC075100575F");
@@ -233,6 +230,35 @@ public partial class RmsContext : DbContext
             entity.HasOne(d => d.House).WithMany(p => p.Services)
                 .HasForeignKey(d => d.HouseId)
                 .HasConstraintName("FK_Service_House");
+        });
+
+        modelBuilder.Entity<TransactionHistory>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Transact__3214EC075E7F477B");
+
+            entity.ToTable("TransactionHistory");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.IpnUrl).HasMaxLength(255);
+            entity.Property(e => e.MerchantRefId).HasMaxLength(50);
+            entity.Property(e => e.OrderId).HasMaxLength(50);
+            entity.Property(e => e.OrderInfo).HasMaxLength(255);
+            entity.Property(e => e.PartnerCode).HasMaxLength(50);
+            entity.Property(e => e.PaymentCode).HasMaxLength(50);
+            entity.Property(e => e.RedirectUrl).HasMaxLength(255);
+            entity.Property(e => e.RequestId).HasMaxLength(50);
+            entity.Property(e => e.RequestType).HasMaxLength(50);
+            entity.Property(e => e.Signature).HasMaxLength(255);
+            entity.Property(e => e.StoreId).HasMaxLength(50);
+            entity.Property(e => e.StoreName).HasMaxLength(100);
+
+            entity.HasOne(d => d.User).WithMany(p => p.TransactionHistories)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_TransactionHistory_User");
         });
 
         modelBuilder.Entity<User>(entity =>

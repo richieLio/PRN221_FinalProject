@@ -41,13 +41,15 @@ public partial class User
 
     public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
 
+    public virtual ICollection<Licence> Licences { get; set; } = new List<Licence>();
+
     public virtual ICollection<LocalNotification> LocalNotifications { get; set; } = new List<LocalNotification>();
 
     public virtual ICollection<Otpverify> Otpverifies { get; set; } = new List<Otpverify>();
 
-    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
-
     public virtual ICollection<Service> Services { get; set; } = new List<Service>();
+
+    public virtual ICollection<TransactionHistory> TransactionHistories { get; set; } = new List<TransactionHistory>();
 
     public virtual ICollection<House> Houses { get; set; } = new List<House>();
 
