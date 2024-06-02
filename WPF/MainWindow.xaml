@@ -19,12 +19,12 @@
             <TextBlock Text="Menu" FontWeight="Bold" FontSize="16" Margin="5"/>
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel Orientation="Vertical">
-                    <RadioButton Content="Houses" GroupName="Views" Checked="RadioButton_Checked" Tag="houseWindow" Margin="5,10,5,0"/>
+                    <RadioButton x:Name="houseRadioButton" Content="Houses" GroupName="Views" Checked="RadioButton_Checked" Tag="houseWindow" Margin="5,10,5,0"/>
                     <RadioButton x:Name="staffRadioButton" Content="Staffs" GroupName="Views" Checked="RadioButton_Checked" Tag="staffWindow" Margin="5,10,5,0" />
-                    <RadioButton Content="Contracts" GroupName="Views" Checked="RadioButton_Checked" Tag="contractWindow" Margin="5,10,5,0"/>
-                    <RadioButton Content="Notifications" GroupName="Views" Checked="RadioButton_Checked" Tag="notificationWindow" Margin="5,10,5,0"/>
-                    <RadioButton Content="Bills" GroupName="Views" Checked="RadioButton_Checked" Tag="billWindow" Margin="5,10,5,0"/>
-                    <RadioButton Content="Payments" GroupName="Views" Checked="RadioButton_Checked" Tag="paymentWindow" Margin="5,10,5,0"/>
+                    <RadioButton x:Name="contractRadioButton" Content="Contracts" GroupName="Views" Checked="RadioButton_Checked" Tag="contractWindow" Margin="5,10,5,0"/>
+                    <RadioButton x:Name="notificationRadioButton" Content="Notifications" GroupName="Views" Checked="RadioButton_Checked" Tag="notificationWindow" Margin="5,10,5,0"/>
+                    <RadioButton x:Name="billRadioButton" Content="Bills" GroupName="Views" Checked="RadioButton_Checked" Tag="billWindow" Margin="5,10,5,0"/>
+                    <RadioButton x:Name="paymentRadioButton" Content="Payments" GroupName="Views" Checked="RadioButton_Checked" Tag="paymentWindow" Margin="5,10,5,0"/>
                 </StackPanel>
             </ScrollViewer>
         </StackPanel>

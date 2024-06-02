@@ -146,16 +146,24 @@ namespace WPF
         {
 
             var user = await _repository.GetUserById(App.LoggedInUserId);
-            if (user != null)
+
+            var isUserLicene = await _repository.IsUserLicence(App.LoggedInUserId);
+            if(!isUserLicene)
+            {
+                houseRadioButton.Visibility = Visibility.Collapsed;
+                staffRadioButton.Visibility = Visibility.Collapsed;
+                contractRadioButton.Visibility = Visibility.Collapsed;
+                notificationRadioButton.Visibility = Visibility.Collapsed;
+                billRadioButton.Visibility = Visibility.Collapsed;
+            }
+            if (user != null && isUserLicene)
             {
                 staffRadioButton.Visibility = user.Role == UserEnum.OWNER ? Visibility.Visible : Visibility.Collapsed;
+                paymentRadioButton.Visibility = user.Role == UserEnum.OWNER ? Visibility.Visible : Visibility.Collapsed;
                 NotificationButton.Visibility = user.Role == UserEnum.OWNER ? Visibility.Visible : Visibility.Collapsed;
                 BadgedNotiCount.Visibility = user.Role == UserEnum.OWNER ? Visibility.Visible : Visibility.Collapsed;
             }
-            else
-            {
-                MessageBox.Show("User not found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            
         }
         private async void NotificationButton_Click(object sender, RoutedEventArgs e)
         {
