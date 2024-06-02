@@ -11,9 +11,9 @@ public partial class Licence
 
     public bool? IsLicence { get; set; }
 
-    public DateOnly? IssueDate { get; set; }
+    public DateTime? IssueDate { get; set; }
 
-    public DateOnly? ExpiryDate { get; set; }
+    public DateTime? ExpiryDate { get; set; }
 
     public virtual User? User { get; set; }
 }

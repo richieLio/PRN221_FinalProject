@@ -140,9 +140,13 @@ public partial class RmsContext : DbContext
         modelBuilder.Entity<Licence>(entity =>
         {
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.ExpiryDate).HasColumnName("expiryDate");
+            entity.Property(e => e.ExpiryDate)
+                .HasColumnType("datetime")
+                .HasColumnName("expiryDate");
             entity.Property(e => e.IsLicence).HasColumnName("isLicence");
-            entity.Property(e => e.IssueDate).HasColumnName("issueDate");
+            entity.Property(e => e.IssueDate)
+                .HasColumnType("datetime")
+                .HasColumnName("issueDate");
 
             entity.HasOne(d => d.User).WithMany(p => p.Licences)
                 .HasForeignKey(d => d.UserId)

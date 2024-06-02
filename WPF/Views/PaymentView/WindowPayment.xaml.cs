@@ -20,6 +20,7 @@ namespace WPF.Views.PaymentView
     {
 
         private readonly ICombineRepository _repository;
+        private int _selectedYears = 1; // Default to 1 year
         string _endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
         string _partnerCode = "MOMO"; // thay bang key cua minh
         string _accessKey = "F8BBA842ECF85";   // thay bang key cua minh
@@ -50,14 +51,20 @@ namespace WPF.Views.PaymentView
             if (radOneYear.IsChecked == true)
             {
                 totalAmount = 3000000;
+                _selectedYears = 1;
+
             }
             else if (radTwoYears.IsChecked == true)
             {
                 totalAmount = 5500000;
+                _selectedYears = 2;
+
             }
             else if (radThreeYears.IsChecked == true)
             {
                 totalAmount = 8000000;
+                _selectedYears = 3;
+
             }
 
             txtamount.Text = totalAmount.ToString();
@@ -197,7 +204,35 @@ namespace WPF.Views.PaymentView
                     RequestId = requestId,
                     Response = response,
                 };
-                 _repository.InsertTransaction(transactionHistory);
+                _repository.InsertTransaction(transactionHistory);
+
+
+                var existingLicence = await _repository.GetLicenceByUserId(App.LoggedInUserId);
+                if (existingLicence != null)
+                {
+                    if (existingLicence.IsLicence ==  true)
+                    {
+                        // Trường hợp user vẫn còn hợp đồng thì gia hạn
+                        var remainingDays = (existingLicence.ExpiryDate - DateTime.Now)?.Days ?? 0;
+                        var newExpiryDate = DateTime.Now.AddDays(remainingDays).AddYears(_selectedYears);
+                        existingLicence.ExpiryDate = newExpiryDate;
+                        _repository.UpdateLicence(existingLicence);
+                    }
+                }
+                else
+                {
+                    // Trường hợp user chưa có hợp đồng thì tạo hợp đồng mới
+                    var newLicence = new Licence
+                    {
+                        Id = Guid.NewGuid(),
+                        IsLicence = true,
+                        IssueDate = DateTime.Now,
+                        ExpiryDate = DateTime.Now.AddYears(_selectedYears),
+                        UserId = App.LoggedInUserId,
+                    };
+                    _repository.InsertLicence(newLicence);
+                }
+                
             }
             else
             {
