@@ -14,6 +14,8 @@ namespace DataAccess.Repository
 
         public void InsertLicence(Licence licence) => LicenceDAO.Instance.InsertLicence(licence);
 
+        public Task<bool> IsUserLicence(Guid userId) => LicenceDAO.Instance.IsUserLicence(userId);
+
         public void UpdateLicence(Licence existingLicence) => LicenceDAO.Instance.UpdateLicence(existingLicence);
     }
 }

@@ -185,7 +185,10 @@ namespace DataAccess.Repository
         public Task<bool> IsUserInRoom(Guid roomId, string email, string phoneNumber, string licensePlates, string citizenIdNumber)
 => _customerRepository.IsUserInRoom(roomId, email, phoneNumber, licensePlates, citizenIdNumber);
 
-    public Task<ResultModel> Login(UserLoginReqModel userLoginReqModel)
+        public Task<bool> IsUserLicence(Guid userId)
+=> _licenceRepository.IsUserLicence(userId);
+
+        public Task<ResultModel> Login(UserLoginReqModel userLoginReqModel)
 => _userRepository.Login(userLoginReqModel);
 
         public Task<ResultModel> RemoveBill(Guid userId, Guid billId)
