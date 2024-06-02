@@ -26,12 +26,13 @@ namespace DataAccess.Repository
         private readonly IServiceFeeRepository _serviceFeeRepository;
         private readonly IBillRepository _billRepository;
         private readonly ILocalNotificationRepository _localNotificationRepository;
+        private readonly ITransactionRepository _transactionRepository;
 
 
         public CombineRepository(IUserRepository userRepository, IHouseRepository houseRepository,
             IRoomRepository roomRepository, IStaffRepository staffRepository
             , ICustomerRepository customerRepository, IServiceFeeRepository serviceFeeRepository, IBillRepository billRepository
-            , ILocalNotificationRepository localNotificationRepository
+            , ILocalNotificationRepository localNotificationRepository, ITransactionRepository transactionRepository
             )
         {
             _userRepository = userRepository;
@@ -42,6 +43,7 @@ namespace DataAccess.Repository
             _serviceFeeRepository = serviceFeeRepository;
             _billRepository = billRepository;
             _localNotificationRepository = localNotificationRepository;
+            _transactionRepository = transactionRepository;
         }
         public Task<ResultModel> AddCustomerToRoom(Guid userId, AddCustomerToRoomReqModel addCustomerToRoomReqModel)
             => _customerRepository.AddCustomerToRoom(userId, addCustomerToRoomReqModel);
@@ -170,6 +172,9 @@ namespace DataAccess.Repository
 
         public Task<ResultModel> InsertLocalNotifications(Guid userId, LocalNotification localNotification)
         => _localNotificationRepository.InsertLocalNotifications(userId, localNotification);
+
+        public void InsertTransaction(TransactionHistory transactionHistory)
+=> _transactionRepository.InsertTransaction(transactionHistory);
 
         public Task<bool> IsUserInRoom(Guid roomId, string email, string phoneNumber, string licensePlates, string citizenIdNumber)
 => _customerRepository.IsUserInRoom(roomId, email, phoneNumber, licensePlates, citizenIdNumber);

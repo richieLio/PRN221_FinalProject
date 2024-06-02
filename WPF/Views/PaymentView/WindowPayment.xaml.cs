@@ -3,6 +3,13 @@ using Newtonsoft.Json.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Diagnostics;
 using System.Windows;
+using DataAccess.Repository;
+using System.Net;
+using System.Text;
+using BusinessObject.Object;
+using System.Net.Http;
+using static Google.Apis.Requests.BatchRequest;
+using MailKit.Search;
 
 namespace WPF.Views.PaymentView
 {
@@ -11,26 +18,26 @@ namespace WPF.Views.PaymentView
     /// </summary>
     public partial class WindowPayment : System.Windows.Controls.UserControl
     {
-        string endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
-        string partnerCode = "MOMO5RGX20191128"; // thay bang key cua minh
-        string accessKey = "M8brj9K6E22vXoDB";   // thay bang key cua minh
-        string serectkey = "nqQiVSgDMy809JoPF6OzP5OdBUB550Y4"; // thay bang key cua minh
-        string order_id;
-            
-        public WindowPayment()
+
+        private readonly ICombineRepository _repository;
+        string _endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
+        string _partnerCode = "MOMO"; // thay bang key cua minh
+        string _accessKey = "F8BBA842ECF85";   // thay bang key cua minh
+        string _serectkey = "K951B6PE1waDMi640xX08PD3vg6EkVlz"; // thay bang key cua minh
+        string _orderIdToCheck = "";
+        string _requestIdToCheck = "";
+        string _redirectUrl = "";
+
+        public WindowPayment(ICombineRepository repository)
         {
             InitializeComponent();
+            _repository = repository;
+
         }
 
 
 
-        /*     private void btnThemgiohang_Click(object sender, RoutedEventArgs e)
-             {
-                 int totalAmount = 0;
-                 if (ckbquan.IsChecked == true) totalAmount += (int)numquan.Value * 1000;
 
-                 txtamount.Text = totalAmount.ToString();
-             }*/
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             UpdateTotalAmount();
@@ -42,15 +49,15 @@ namespace WPF.Views.PaymentView
 
             if (radOneYear.IsChecked == true)
             {
-                totalAmount = 3000000; 
+                totalAmount = 3000000;
             }
             else if (radTwoYears.IsChecked == true)
             {
-                totalAmount = 5500000; 
+                totalAmount = 5500000;
             }
             else if (radThreeYears.IsChecked == true)
             {
-                totalAmount = 8000000; 
+                totalAmount = 8000000;
             }
 
             txtamount.Text = totalAmount.ToString();
@@ -61,17 +68,19 @@ namespace WPF.Views.PaymentView
         private void btnThanhtoan_Click(object sender, RoutedEventArgs e)
         {
             string endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
-            string partnerCode = "MOMO";
-            string accessKey = "F8BBA842ECF85";
-            string secretKey = "K951B6PE1waDMi640xX08PD3vg6EkVlz";
-            string orderInfo = "thanh toan dich vu tai rms";
+            string partnerCode = _partnerCode;
+            string accessKey = _accessKey;
+            string secretKey = _serectkey;
+            string orderInfo = "Thanh toan dich vu tai RMS";
             string redirectUrl = "https://momo.vn/return";
             string ipnUrl = "https://momo.vn/notify";
             string requestType = "captureWallet";
 
             string orderId = Guid.NewGuid().ToString();
+            _orderIdToCheck = orderId;
             string amount = txtamount.Text;
             string requestId = Guid.NewGuid().ToString();
+            _requestIdToCheck = requestId;
             string extraData = "";
 
             string rawHash = $"accessKey={accessKey}&amount={amount}&extraData={extraData}&ipnUrl={ipnUrl}&orderId={orderId}&orderInfo={orderInfo}&partnerCode={partnerCode}&redirectUrl={redirectUrl}&requestId={requestId}&requestType={requestType}";
@@ -102,40 +111,127 @@ namespace WPF.Views.PaymentView
             {
                 Uri uri = new Uri(jmessage.GetValue("payUrl").ToString());
                 Process.Start(new ProcessStartInfo(uri.AbsoluteUri) { UseShellExecute = true });
+                _redirectUrl = uri.AbsoluteUri;
+                TransactionCheck();
 
             }
+        }
+        private async Task WaitForSuccess()
+        {
+            string signatureData = $"accessKey={_accessKey}&orderId={_orderIdToCheck}&partnerCode={_partnerCode}&requestId={_requestIdToCheck}";
+            string signatureCheck = CalculateHmacSHA256Signature(signatureData, _serectkey);
 
-         
+            JObject request = new JObject
+    {
+        { "partnerCode", _partnerCode },
+        { "requestId", _requestIdToCheck },
+        { "orderId", _orderIdToCheck },
+        { "signature", signatureCheck },
+        { "lang", "en" }
+    };
+
+            string responseFromMomo = SendRequestToMomo("https://test-payment.momo.vn/v2/gateway/api/query", request.ToString());
+            JObject jsonResponse = JObject.Parse(responseFromMomo);
+            string resultCode = jsonResponse.GetValue("resultCode").ToString();
+
+
+            // Khi resultCode là "0" (thành công), tiến hành xử lý tiếp
+            MessageBox.Show("Giao dịch thành công!");
         }
 
-        private void btnKiemTraGiaoDich_Click(object sender, RoutedEventArgs e)
+
+
+        private async void TransactionCheck()
         {
-            string orderId = "order_id"; // Thay bằng mã orderId thật
-            string requestId = "request_id"; // Thay bằng mã requestId thật
-            string endpoint = "https://test-payment.momo.vn/v2/gateway/api/query";
-            string accessKey = "F8BBA842ECF85";
-            string secretKey = "K951B6PE1waDMi640xX08PD3vg6EkVlz";
+            string orderId = _orderIdToCheck; // Thay bằng mã orderId thật
+            string requestId = _requestIdToCheck; // Thay bằng mã requestId thật
+            string accessKey = _accessKey;
+            string secretKey = _serectkey;
+            string partnerCode = _partnerCode;
 
-            string rawHash = $"accessKey={accessKey}&orderId={orderId}&requestId={requestId}&partnerCode=MOMO";
-            MomoSecurity crypto = new MomoSecurity();
-            string signature = crypto.signSHA256(rawHash, secretKey);
+            string signatureData = $"accessKey={accessKey}&orderId={orderId}&partnerCode={partnerCode}&requestId={requestId}";
+            string signature = CalculateHmacSHA256Signature(signatureData, secretKey);
 
-            JObject message = new JObject
+            JObject request = new JObject
+    {
+        { "partnerCode", partnerCode },
+        { "requestId", requestId },
+        { "orderId", orderId },
+        { "signature", signature },
+        { "lang", "en" }
+    };
+
+
+            string response = SendRequestToMomo("https://test-payment.momo.vn/v2/gateway/api/query", request.ToString());
+            JObject jmessage = JObject.Parse(response);
+            string resultCode = jmessage.GetValue("resultCode").ToString();
+            string status = jmessage.GetValue("message").ToString();
+
+
+
+
+            while (status == "Transaction is initiated, waiting for user confirmation.")
             {
-                { "partnerCode", "MOMO" },
-                { "orderId", orderId },
-                { "requestId", requestId },
-                { "signature", signature }
-            };
+                response = SendRequestToMomo("https://test-payment.momo.vn/v2/gateway/api/query", request.ToString());
+                jmessage = JObject.Parse(response);
+                resultCode = jmessage.GetValue("resultCode").ToString();
+                status = jmessage.GetValue("message").ToString();
+            }
 
-            string responseFromMomo = PaymentRequest.sendPaymentRequest(endpoint, message.ToString());
-            JObject jmessage = JObject.Parse(responseFromMomo);
-            string kq = jmessage.GetValue("resultCode").ToString();
+            if (resultCode == "0")
+            {
+                MessageBox.Show("Giao dịch thành công!");
 
-            if (kq == "0")
-                System.Windows.MessageBox.Show("Giao dịch thành công!");
+                var transactionHistory = new TransactionHistory
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = App.LoggedInUserId,
+                    Amount = decimal.Parse(txtamount.Text),
+                    CreatedAt = DateTime.Now,
+                    IpnUrl = "https://momo.vn/notify",
+                    OrderId = orderId,
+                    PartnerCode = partnerCode,
+                    OrderInfo = "Thanh toan dich vu tai RMS",
+                    Signature = signature,
+                    RedirectUrl = _redirectUrl,
+                    RequestId = requestId,
+                    Response = response,
+                };
+                 _repository.InsertTransaction(transactionHistory);
+            }
             else
-                System.Windows.MessageBox.Show("Giao dịch thất bại");
+            {
+                MessageBox.Show("Giao dịch thất bại hoặc thời gian giao dịch đã hết hiệu lực");
+            }
+        }
+
+
+
+        private string CalculateHmacSHA256Signature(string data, string key)
+        {
+            using (var hmac = new System.Security.Cryptography.HMACSHA256(Encoding.UTF8.GetBytes(key)))
+            {
+                byte[] hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(data));
+                return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+            }
+        }
+
+        // Hàm gửi request đến Momo và nhận response
+        private string SendRequestToMomo(string url, string requestData)
+        {
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    client.Headers[HttpRequestHeader.ContentType] = "application/json";
+                    return client.UploadString(url, "POST", requestData);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi khi gửi request
+                return ex.Message;
+            }
         }
     }
 

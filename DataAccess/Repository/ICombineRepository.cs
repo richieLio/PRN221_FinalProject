@@ -14,7 +14,8 @@ namespace DataAccess.Repository
         IRoomRepository,
         IServiceFeeRepository,
         IBillRepository,
-        ILocalNotificationRepository
+        ILocalNotificationRepository,
+        ITransactionRepository
     {
       
     }

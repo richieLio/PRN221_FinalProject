@@ -253,8 +253,6 @@ public partial class RmsContext : DbContext
             entity.Property(e => e.RequestId).HasMaxLength(50);
             entity.Property(e => e.RequestType).HasMaxLength(50);
             entity.Property(e => e.Signature).HasMaxLength(255);
-            entity.Property(e => e.StoreId).HasMaxLength(50);
-            entity.Property(e => e.StoreName).HasMaxLength(100);
 
             entity.HasOne(d => d.User).WithMany(p => p.TransactionHistories)
                 .HasForeignKey(d => d.UserId)

@@ -45,6 +45,7 @@ namespace WPF
             services.AddSingleton<IServiceFeeRepository, ServiceFeeRepository>();
             services.AddSingleton<IBillRepository, BillRepository>();
             services.AddSingleton<ILocalNotificationRepository, LocalNotificationRepository>();
+            services.AddSingleton<ITransactionRepository, TransactionRepository>();
             services.AddSingleton<ICombineRepository, CombineRepository>();
 
 
@@ -57,6 +58,7 @@ namespace WPF
             services.AddTransient<IServiceFeeRepository, ServiceFeeRepository>();
             services.AddTransient<IBillRepository, BillRepository>();
             services.AddTransient<ILocalNotificationRepository, LocalNotificationRepository>();
+            services.AddTransient<ITransactionRepository, TransactionRepository>();
             services.AddTransient<ICombineRepository, CombineRepository>();
 
 

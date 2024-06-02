@@ -7,21 +7,17 @@ public partial class TransactionHistory
 {
     public Guid Id { get; set; }
 
-    public string PartnerCode { get; set; } = null!;
+    public string? PartnerCode { get; set; }
 
-    public string MerchantRefId { get; set; } = null!;
+    public string? MerchantRefId { get; set; }
 
-    public decimal Amount { get; set; }
+    public decimal? Amount { get; set; }
 
-    public string PaymentCode { get; set; } = null!;
+    public string? PaymentCode { get; set; }
 
-    public string? StoreId { get; set; }
+    public string? OrderId { get; set; }
 
-    public string? StoreName { get; set; }
-
-    public string OrderId { get; set; } = null!;
-
-    public string RequestId { get; set; } = null!;
+    public string? RequestId { get; set; }
 
     public string? OrderInfo { get; set; }
 
