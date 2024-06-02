@@ -76,8 +76,7 @@ namespace DataAccess.DAO
 
                     if (emailSent)
                     {
-                        NewUser.Otp = OTP;
-                        NewUser.Otpexpiration = expirationTime;
+
                         NewUser.Id = Guid.NewGuid();
                         NewUser.Status = UserStatus.INACTIVE;
                         NewUser.CreatedAt = DateTime.Now;
@@ -85,7 +84,24 @@ namespace DataAccess.DAO
                         var HashedPasswordModel = Encoder.CreateHashPassword(RegisterForm.Password);
                         NewUser.Password = HashedPasswordModel.HashedPassword;
                         NewUser.Salt = HashedPasswordModel.Salt;
+
                         context.Add(NewUser);
+                        context.SaveChanges();
+
+
+
+                        var otp = new Otpverify
+                        {
+                            Id = Guid.NewGuid(),
+                            CreatedAt = DateTime.Now,
+                            ExpiredAt = DateTime.Now.AddMinutes(10),
+                            IsUsed = false,
+                            OtpCode = OTP,
+                            UserId = NewUser.Id,
+                        };
+
+                        context.Otpverifies.Add(otp);
+
                         context.SaveChanges();
                         return new ResultModel { IsSuccess = true, Message = "Account registered IsSuccessfully" };
                     }
@@ -163,27 +179,43 @@ namespace DataAccess.DAO
             try
             {
                 var user = await GetUserByVerificationToken(verificationModel.OTP);
-                if (user != null && user.Otpexpiration > DateTime.Now)
+                if (user == null)
                 {
-
-                    user.Status = UserStatus.ACTIVE;
-                    user.Otp = null;
-                    user.Otpexpiration = null;
-                    context.Update(user);
-                    context.SaveChanges();
-                    return new ResultModel { IsSuccess = true, Message = "Email verified IsSuccessfully" };
+                    return new ResultModel { IsSuccess = false, Message = "Wrong verification OTP." };
                 }
-                else if (user.Otpexpiration < DateTime.Now)
+
+                var otp = await GetOTPByUserId(user.Id);
+                if (otp == null || otp.IsUsed || (DateTime.Now - otp.CreatedAt).TotalMinutes > 10)
                 {
-
-                    return new ResultModel { IsSuccess = false, Message = "Expired verification otp.(10 minutes)" };
-
+                    if (otp == null)
+                    {
+                        return new ResultModel { IsSuccess = false, Message = "OTP not found." };
+                    }
+                    else if (otp.IsUsed)
+                    {
+                        return new ResultModel { IsSuccess = false, Message = "OTP has already been used." };
+                    }
+                    else
+                    {
+                        return new ResultModel { IsSuccess = false, Message = "OTP has expired." };
+                    }
                 }
-                else
-                {
-                    return new ResultModel { IsSuccess = false, Message = "Wrong verification otp." };
 
-                }
+                // If OTP is valid
+                otp.IsUsed = true;  // Mark the OTP as used
+                context.Entry(otp).State = EntityState.Modified;
+
+                user.Status = UserStatus.ACTIVE;
+                context.Entry(user).State = EntityState.Modified;
+
+                // Save the changes first to ensure OTP and user status are updated
+                await context.SaveChangesAsync();
+
+                // Now remove the OTP from the context
+                context.Remove(otp);
+                await context.SaveChangesAsync();
+
+                return new ResultModel { IsSuccess = true, Message = "Email verified successfully" };
             }
             catch (Exception e)
             {
@@ -194,6 +226,9 @@ namespace DataAccess.DAO
                 };
             }
         }
+
+
+
 
 
         public async Task<ResultModel> ResetPassword(UserResetPasswordReqModel resetPasswordReqModel)
@@ -264,9 +299,9 @@ namespace DataAccess.DAO
                 }
 
                 otp.IsUsed = true;
-                context.Update(otp);
+                context.Entry(otp).State = EntityState.Modified;
                 user.Status = UserStatus.RESETPASSWORD;
-                context.Update(user);
+                context.Entry(user).State = EntityState.Modified;
                 context.SaveChanges();
 
                 return new ResultModel { IsSuccess = true, Message = "Account verified successfully." };
@@ -336,7 +371,7 @@ namespace DataAccess.DAO
         public async Task<Otpverify> GetOTPByUserId(Guid UserId)
         {
             using var context = new RmsContext();
-            return await context.Otpverifies.Where(x => x.UserId.Equals(UserId)).OrderByDescending(x => x.CreatedAt).FirstOrDefaultAsync();
+            return await context.Otpverifies.AsNoTracking().Where(x => x.UserId.Equals(UserId)).OrderByDescending(x => x.CreatedAt).FirstOrDefaultAsync();
         }
         public async Task<User> GetUserByEmail(string Email)
         {
@@ -359,7 +394,18 @@ namespace DataAccess.DAO
         public async Task<User> GetUserByVerificationToken(string otp)
         {
             using var context = new RmsContext();
-            return await context.Users.FirstOrDefaultAsync(u => u.Otp == otp);
+
+            var otpverify = await context.Otpverifies
+                 .AsNoTracking()
+                .Include(o => o.User)
+                .FirstOrDefaultAsync(o => o.OtpCode == otp && !o.IsUsed && o.ExpiredAt > DateTime.UtcNow);
+
+            if (otpverify == null)
+            {
+                return null;
+            }
+
+            return otpverify.User;
         }
 
         public async Task<User> GetUserById(Guid id)

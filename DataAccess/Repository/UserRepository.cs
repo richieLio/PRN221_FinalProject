@@ -38,7 +38,7 @@ namespace DataAccess.Repository
 
         public Task<ResultModel> UpdateUserProfile(UserUpdateModel updateModel) => UserDAO.Instance.UpdateUserProfile(updateModel);
 
-        public Task VerifyEmail(EmailVerificationReqModel verificationModel) => UserDAO.Instance.VerifyEmail(verificationModel);
+        public Task<ResultModel> VerifyEmail(EmailVerificationReqModel verificationModel) => UserDAO.Instance.VerifyEmail(verificationModel);
 
         public Task<ResultModel> VerifyOTPCode(string email, string otpCode) =>UserDAO.Instance.VerifyOTPCode(email, otpCode);
     }

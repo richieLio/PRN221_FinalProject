@@ -1,6 +1,7 @@
 ﻿using BusinessObject.Object;
 using DataAccess.Helper;
 using DataAccess.Model.EmailModel;
+using DataAccess.Model.OperationResultModel;
 using DataAccess.Model.UserModel;
 using DataAccess.Repository;
 using Microsoft.Extensions.DependencyInjection;
@@ -98,28 +99,24 @@ namespace WPF
             try
             {
                 var OTPtext = OTPTextBox.Text;
-                var email = EmailTextBox.Text;
                 var user = new EmailVerificationReqModel
                 {
                     OTP = OTPtext,
                 };
-                var userToVerify = await _repository.GetUserByVerificationToken(OTPtext);
-                if (userToVerify != null)
-                {
-                    await _repository.VerifyEmail(user);
-                    MessageBox.Show("Email verified");
-                }
-                else
-                {
-                    MessageBox.Show("Wrong otp");
-                }
 
+                // Verify the user with the OTP
+                var result = await _repository.VerifyEmail(user);
+
+                // Check the result and show a message
+                MessageBox.Show(result.Message);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("An error occurred during registration: " + ex.Message);
+                MessageBox.Show("An error occurred during verification: " + ex.Message);
             }
         }
+
+
         private void Login_Click(object sender, RoutedEventArgs e)
         {
             var loginWindow = _serviceProvider.GetService<WindowLogin>();
