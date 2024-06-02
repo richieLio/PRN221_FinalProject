@@ -12,5 +12,6 @@ namespace DataAccess.Repository
         void InsertLicence(Licence licence);
         Task<Licence> GetLicenceByUserId(Guid loggedInUserId);
         void UpdateLicence(Licence existingLicence);
+        Task<bool> IsUserLicence(Guid userId);
     }
 }

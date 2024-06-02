@@ -11,6 +11,7 @@ using System.Net.Http;
 using static Google.Apis.Requests.BatchRequest;
 using MailKit.Search;
 using DataAccess.Model;
+using System.ComponentModel;
 
 namespace WPF.Views.PaymentView
 {
@@ -42,12 +43,17 @@ namespace WPF.Views.PaymentView
         }
         public async void LoadLicence()
         {
-            var licence = await _repository.GetLicenceByUserId(App.LoggedInUserId);
-            var remainingDays = (licence.ExpiryDate - DateTime.Now)?.Days ?? 0;
-            if (licence.IsLicence == true)
-            {
-                _viewModel.ContractMessage = $"Hợp đồng của bạn còn đến ngày {licence.ExpiryDate}";
-            }
+           
+                var licence = await _repository.GetLicenceByUserId(App.LoggedInUserId);
+                if(licence == null)
+                {
+                    _viewModel.ContractMessage = $"Bạn chưa có giao dịch nào, vui lòng thanh toán để sử dụng dịch vụ của chúng tôi";
+                }
+                if (licence != null && licence.IsLicence == true )
+                {
+                    _viewModel.ContractMessage = $"Hợp đồng của bạn còn đến ngày {licence.ExpiryDate}";
+                }
+            
         }
 
 
@@ -137,35 +143,12 @@ namespace WPF.Views.PaymentView
 
             }
         }
-        private async Task WaitForSuccess()
-        {
-            string signatureData = $"accessKey={_accessKey}&orderId={_orderIdToCheck}&partnerCode={_partnerCode}&requestId={_requestIdToCheck}";
-            string signatureCheck = CalculateHmacSHA256Signature(signatureData, _serectkey);
-
-            JObject request = new JObject
-                                     {
-        { "partnerCode", _partnerCode },
-        { "requestId", _requestIdToCheck },
-        { "orderId", _orderIdToCheck },
-        { "signature", signatureCheck },
-        { "lang", "en" }
-                     };
-
-            string responseFromMomo = SendRequestToMomo("https://test-payment.momo.vn/v2/gateway/api/query", request.ToString());
-            JObject jsonResponse = JObject.Parse(responseFromMomo);
-            string resultCode = jsonResponse.GetValue("resultCode").ToString();
-
-
-            // Khi resultCode là "0" (thành công), tiến hành xử lý tiếp
-            MessageBox.Show("Giao dịch thành công!");
-        }
-
 
 
         private async void TransactionCheck()
         {
-            string orderId = _orderIdToCheck; // Thay bằng mã orderId thật
-            string requestId = _requestIdToCheck; // Thay bằng mã requestId thật
+            string orderId = _orderIdToCheck; 
+            string requestId = _requestIdToCheck; 
             string accessKey = _accessKey;
             string secretKey = _serectkey;
             string partnerCode = _partnerCode;
@@ -226,7 +209,6 @@ namespace WPF.Views.PaymentView
                 {
                     if (existingLicence.IsLicence == true)
                     {
-                        // Trường hợp user vẫn còn hợp đồng thì gia hạn
                         var remainingDays = (existingLicence.ExpiryDate - DateTime.Now)?.Days ?? 0;
                         var newExpiryDate = DateTime.Now.AddDays(remainingDays).AddYears(_selectedYears);
                         existingLicence.ExpiryDate = newExpiryDate;
@@ -235,7 +217,6 @@ namespace WPF.Views.PaymentView
                 }
                 else
                 {
-                    // Trường hợp user chưa có hợp đồng thì tạo hợp đồng mới
                     var newLicence = new Licence
                     {
                         Id = Guid.NewGuid(),
@@ -265,7 +246,6 @@ namespace WPF.Views.PaymentView
             }
         }
 
-        // Hàm gửi request đến Momo và nhận response
         private string SendRequestToMomo(string url, string requestData)
         {
             try
@@ -278,7 +258,6 @@ namespace WPF.Views.PaymentView
             }
             catch (Exception ex)
             {
-                // Xử lý lỗi khi gửi request
                 return ex.Message;
             }
         }
