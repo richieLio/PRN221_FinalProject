@@ -10,6 +10,7 @@ using BusinessObject.Object;
 using System.Net.Http;
 using static Google.Apis.Requests.BatchRequest;
 using MailKit.Search;
+using DataAccess.Model;
 
 namespace WPF.Views.PaymentView
 {
@@ -18,6 +19,8 @@ namespace WPF.Views.PaymentView
     /// </summary>
     public partial class WindowPayment : System.Windows.Controls.UserControl
     {
+        private readonly PaymentViewModel _viewModel;
+
 
         private readonly ICombineRepository _repository;
         private int _selectedYears = 1; // Default to 1 year
@@ -33,7 +36,18 @@ namespace WPF.Views.PaymentView
         {
             InitializeComponent();
             _repository = repository;
-
+            _viewModel = new PaymentViewModel();
+            DataContext = _viewModel;
+            LoadLicence();
+        }
+        public async void LoadLicence()
+        {
+            var licence = await _repository.GetLicenceByUserId(App.LoggedInUserId);
+            var remainingDays = (licence.ExpiryDate - DateTime.Now)?.Days ?? 0;
+            if (licence.IsLicence == true)
+            {
+                _viewModel.ContractMessage = $"Hợp đồng của bạn còn đến ngày {licence.ExpiryDate}";
+            }
         }
 
 
@@ -129,13 +143,13 @@ namespace WPF.Views.PaymentView
             string signatureCheck = CalculateHmacSHA256Signature(signatureData, _serectkey);
 
             JObject request = new JObject
-    {
+                                     {
         { "partnerCode", _partnerCode },
         { "requestId", _requestIdToCheck },
         { "orderId", _orderIdToCheck },
         { "signature", signatureCheck },
         { "lang", "en" }
-    };
+                     };
 
             string responseFromMomo = SendRequestToMomo("https://test-payment.momo.vn/v2/gateway/api/query", request.ToString());
             JObject jsonResponse = JObject.Parse(responseFromMomo);
@@ -210,7 +224,7 @@ namespace WPF.Views.PaymentView
                 var existingLicence = await _repository.GetLicenceByUserId(App.LoggedInUserId);
                 if (existingLicence != null)
                 {
-                    if (existingLicence.IsLicence ==  true)
+                    if (existingLicence.IsLicence == true)
                     {
                         // Trường hợp user vẫn còn hợp đồng thì gia hạn
                         var remainingDays = (existingLicence.ExpiryDate - DateTime.Now)?.Days ?? 0;
@@ -232,7 +246,7 @@ namespace WPF.Views.PaymentView
                     };
                     _repository.InsertLicence(newLicence);
                 }
-                
+
             }
             else
             {

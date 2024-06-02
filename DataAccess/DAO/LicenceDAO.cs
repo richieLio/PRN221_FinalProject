@@ -46,9 +46,7 @@ namespace DataAccess.DAO
         public async Task<Licence> GetLicenceByUserId(Guid loggedInUserId)
         {
             using var context = new RmsContext();
-
             return await context.Licences.Where(l => l.UserId == loggedInUserId).FirstOrDefaultAsync();
-
         }
     }
 }

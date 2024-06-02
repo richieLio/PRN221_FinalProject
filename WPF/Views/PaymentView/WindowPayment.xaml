@@ -7,8 +7,9 @@
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d"
              Height="450" Width="800">
-    <Grid>
+    <Grid Background="White">
         <Label Content="Sản phẩm" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <TextBlock Text="{Binding ContractMessage}" HorizontalAlignment="Left" Margin="390,50,0,0" VerticalAlignment="Top"/>
         <GroupBox Header="Sản phẩm" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top" Width="340" Height="280">
             <Grid>
 
@@ -17,10 +18,10 @@
                 <Label Content="8.000.000/3 Years" HorizontalAlignment="Left" Margin="200,70,0,0" VerticalAlignment="Top"/>
 
 
-                <RadioButton x:Name="radOneYear" Content="1 năm" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" GroupName="YearGroup" Checked="RadioButton_Checked"/>
+                <RadioButton x:Name="radOneYear" Content="1 năm" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" GroupName="YearGroup"  Checked="RadioButton_Checked"/>
                 <RadioButton x:Name="radTwoYears" Content="2 năm" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top" GroupName="YearGroup" Checked="RadioButton_Checked"/>
                 <RadioButton x:Name="radThreeYears" Content="3 năm" HorizontalAlignment="Left" Margin="10,70,0,0" VerticalAlignment="Top" GroupName="YearGroup" Checked="RadioButton_Checked"/>
-
+    
 
             </Grid>
         </GroupBox>
