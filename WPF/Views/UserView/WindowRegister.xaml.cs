@@ -99,9 +99,11 @@ namespace WPF
             try
             {
                 var OTPtext = OTPTextBox.Text;
+                var email = EmailTextBox.Text;
                 var user = new EmailVerificationReqModel
                 {
                     OTP = OTPtext,
+                    Email = email,
                 };
 
                 // Verify the user with the OTP

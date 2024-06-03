@@ -9,5 +9,6 @@ namespace DataAccess.Model.EmailModel
     public class EmailVerificationReqModel
     {
         public string OTP { get; set; }
+        public string Email { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace DataAccess.Repository
         public Task<User> GetUserById(Guid id) => UserDAO.Instance.GetUserById(id);
 
 
-        public Task<User> GetUserByVerificationToken(string otp) => UserDAO.Instance.GetUserByVerificationToken(otp);
+        public Task<User> GetUserByVerificationToken(string otp, string email) => UserDAO.Instance.GetUserByVerificationToken(otp, email);
 
         public string GetUserFullName(Guid id) => UserDAO.Instance.GetUserFullName(id);
 
