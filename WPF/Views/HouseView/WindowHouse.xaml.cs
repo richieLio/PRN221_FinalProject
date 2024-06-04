@@ -29,16 +29,10 @@ namespace WPF
         private async void LoadHouses()
         {
 
-            var user = await _repository.GetUserById(App.LoggedInUserId);
-            if (user.Role == UserEnum.STAFF)
-            {
-                lvHouses.ItemsSource = await _repository.GetAllHouseByStaffId(App.LoggedInUserId);
-            }
-            else
-            {
+            
                 lvHouses.ItemsSource = await _repository.GetHouses(App.LoggedInUserId);
 
-            }
+            
         }
 
         private void Border_Click(object sender, MouseButtonEventArgs e)

@@ -16,7 +16,8 @@ namespace DataAccess.Repository
         IBillRepository,
         ILocalNotificationRepository,
         ITransactionRepository,
-        ILicenceRepository
+        ILicenceRepository,
+        INotificationRepository
     {
        
     }

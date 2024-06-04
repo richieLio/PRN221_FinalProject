@@ -20,6 +20,6 @@ namespace DataAccess.Repository
         Task<bool> RemoveStaffFromHouse(Guid staffId, Guid houseId);
         Task<ResultModel> GetAssignedStaffByHouseId(Guid houseId);
 
-        Task<IEnumerable<House>> GetAllHouseByStaffId(Guid staffId);
+
     }
 }

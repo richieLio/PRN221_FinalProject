@@ -1,6 +1,4 @@
-﻿using DataAccess.Repository;
-using Microsoft.AspNetCore.SignalR.Client;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,29 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WPF
+namespace WPF.Views.NotificationView
 {
     /// <summary>
-    /// Interaction logic for WindowNotification.xaml
+    /// Interaction logic for WindowAddNewNotification.xaml
     /// </summary>
-    public partial class WindowNotification : UserControl
+    public partial class WindowAddNewNotification : UserControl
     {
-        private readonly ICombineRepository _repository;
-
-        public WindowNotification(ICombineRepository repository)
+        public WindowAddNewNotification()
         {
             InitializeComponent();
-            _repository = repository;
-          
         }
-
-  
-
-       
-
-       
-
     }
 }

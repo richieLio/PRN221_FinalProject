@@ -10,8 +10,8 @@ using BusinessObject.Object;
 using System.Net.Http;
 using static Google.Apis.Requests.BatchRequest;
 using MailKit.Search;
-using DataAccess.Model;
 using System.ComponentModel;
+using DataAccess.Model.PaymentModel;
 
 namespace WPF.Views.PaymentView
 {

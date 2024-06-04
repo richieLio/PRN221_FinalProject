@@ -28,11 +28,12 @@ namespace DataAccess.Repository
         private readonly ILocalNotificationRepository _localNotificationRepository;
         private readonly ITransactionRepository _transactionRepository;
         private readonly ILicenceRepository _licenceRepository;
+        private readonly INotificationRepository _notificationRepository;
 
         public CombineRepository(IUserRepository userRepository, IHouseRepository houseRepository,
             IRoomRepository roomRepository, IStaffRepository staffRepository
             , ICustomerRepository customerRepository, IServiceFeeRepository serviceFeeRepository, IBillRepository billRepository
-            , ILocalNotificationRepository localNotificationRepository, ITransactionRepository transactionRepository, ILicenceRepository licenceRepository
+            , ILocalNotificationRepository localNotificationRepository, ITransactionRepository transactionRepository, ILicenceRepository licenceRepository, INotificationRepository notificationRepository
             )
         {
             _userRepository = userRepository;
@@ -45,6 +46,7 @@ namespace DataAccess.Repository
             _localNotificationRepository = localNotificationRepository;
             _transactionRepository = transactionRepository;
             _licenceRepository = licenceRepository;
+            _notificationRepository = notificationRepository;
         }
         public Task<ResultModel> AddCustomerToRoom(Guid userId, AddCustomerToRoomReqModel addCustomerToRoomReqModel)
             => _customerRepository.AddCustomerToRoom(userId, addCustomerToRoomReqModel);
@@ -92,8 +94,9 @@ namespace DataAccess.Repository
     public Task<ResultModel> GetAllBills(Guid userId)
         => _billRepository.GetAllBills(userId);
 
-    public Task<IEnumerable<House>> GetAllHouseByStaffId(Guid staffId)
-        => _staffRepository.GetAllHouseByStaffId(staffId);
+        public Task<IEnumerable<string>> GetAllCustomerEmailByHouseId(Guid houseId)
+        => _customerRepository.GetAllCustomerEmailByHouseId(houseId);
+
 
     public Task<IEnumerable<User>> GetAllStaffByOwnerId(Guid ownerId)
         => _staffRepository.GetAllStaffByOwnerId(ownerId);
@@ -140,6 +143,8 @@ namespace DataAccess.Repository
         public int GetNotificationQuantity(Guid userId)
         => _localNotificationRepository.GetNotificationQuantity(userId);
 
+        public Task<IEnumerable<Notification>> GetNotifications(Guid userId)
+=>  _notificationRepository.GetNotifications(userId);
         public Task<Room> GetRoom(Guid roomId)
 => _roomRepository.GetRoom(roomId);
 

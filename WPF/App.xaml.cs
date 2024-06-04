@@ -5,10 +5,12 @@ using System.Configuration;
 using System.Data;
 using System.Windows;
 using WPF.BillView;
+using WPF.NotificationView;
 using WPF.StaffView;
 using WPF.Views.BillView;
 using WPF.Views.CustomerView;
 using WPF.Views.HouseView;
+using WPF.Views.NotificationView;
 using WPF.Views.PaymentView;
 using WPF.Views.RoomView;
 using WPF.Views.ServiceFeeView;
@@ -48,6 +50,7 @@ namespace WPF
             services.AddSingleton<ITransactionRepository, TransactionRepository>();
             services.AddSingleton<ILicenceRepository, LicenceRepository>();
             services.AddSingleton<ICombineRepository, CombineRepository>();
+            services.AddSingleton<INotificationRepository, NotificationRepository>();
 
 
 
@@ -62,6 +65,7 @@ namespace WPF
             services.AddTransient<ITransactionRepository, TransactionRepository>();
             services.AddTransient<ILicenceRepository, LicenceRepository>();
             services.AddTransient<ICombineRepository, CombineRepository>();
+            services.AddTransient<INotificationRepository, NotificationRepository>();
 
 
 
@@ -70,7 +74,6 @@ namespace WPF
             services.AddSingleton<WindowRegister>();
             services.AddSingleton<WindowHouse>();
             services.AddSingleton<WindowContract>();
-            services.AddSingleton<WindowNotification>();
             services.AddSingleton<WindowStaff>();
             services.AddSingleton<WindowHouseDetails>();
             services.AddSingleton<WindowAddHouse>();
@@ -89,6 +92,9 @@ namespace WPF
             services.AddSingleton<WindowChangePassword>();
             services.AddSingleton<WindowUpdateProfile>();
             services.AddSingleton<WindowPayment>();
+            services.AddSingleton<WindowAddNewNotification>();
+            services.AddSingleton<WindowNotification>();
+
 
 
 
@@ -116,6 +122,7 @@ namespace WPF
             services.AddTransient<WindowChangePassword>();
             services.AddTransient<WindowUpdateProfile>();
             services.AddTransient<WindowPayment>();
+            services.AddTransient<WindowAddNewNotification>();
 
         }
         private void OnStartup(object sender, StartupEventArgs e)
