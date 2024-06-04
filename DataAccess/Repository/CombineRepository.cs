@@ -167,8 +167,8 @@ namespace DataAccess.Repository
     public Task<User> GetUserById(Guid id)
 => _userRepository.GetUserById(id);
 
-    public Task<User> GetUserByVerificationToken(string otp)
-=> _userRepository.GetUserByVerificationToken(otp);
+    public Task<User> GetUserByVerificationToken(string otp, string email)
+=> _userRepository.GetUserByVerificationToken(otp, email);
 
     public string GetUserFullName(Guid id)
         => _userRepository.GetUserFullName(id);

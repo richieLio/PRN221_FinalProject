@@ -178,7 +178,7 @@ namespace DataAccess.DAO
             using var context = new RmsContext();
             try
             {
-                var user = await GetUserByVerificationToken(verificationModel.OTP);
+                var user = await GetUserByVerificationToken(verificationModel.OTP, verificationModel.Email);
                 if (user == null)
                 {
                     return new ResultModel { IsSuccess = false, Message = "Wrong verification OTP." };
@@ -195,10 +195,11 @@ namespace DataAccess.DAO
                     {
                         return new ResultModel { IsSuccess = false, Message = "OTP has already been used." };
                     }
-                    else
+                    else 
                     {
                         return new ResultModel { IsSuccess = false, Message = "OTP has expired." };
-                    }
+                    } 
+                    
                 }
 
                 // If OTP is valid
@@ -391,20 +392,28 @@ namespace DataAccess.DAO
             List<User> list = context.Users.ToList();
             return list;
         }
-        public async Task<User> GetUserByVerificationToken(string otp)
+        public async Task<User> GetUserByVerificationToken(string otp, string email)
         {
             using var context = new RmsContext();
+            var user = await GetUserByEmail(email);
+
 
             var otpverify = await context.Otpverifies
-                 .AsNoTracking()
+                .AsNoTracking()
                 .Include(o => o.User)
                 .FirstOrDefaultAsync(o => o.OtpCode == otp && !o.IsUsed && o.ExpiredAt > DateTime.UtcNow);
+
+           
 
             if (otpverify == null)
             {
                 return null;
             }
 
+            if (user.Id != otpverify.User.Id)
+            {
+                return null;
+            }
             return otpverify.User;
         }
 
