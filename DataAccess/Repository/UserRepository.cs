@@ -26,7 +26,7 @@ namespace DataAccess.Repository
         public Task<User> GetUserById(Guid id) => UserDAO.Instance.GetUserById(id);
 
 
-        public Task<User> GetUserByVerificationToken(string otp) => UserDAO.Instance.GetUserByVerificationToken(otp);
+        public Task<User> GetUserByVerificationToken(string otp, string email) => UserDAO.Instance.GetUserByVerificationToken(otp, email);
 
         public string GetUserFullName(Guid id) => UserDAO.Instance.GetUserFullName(id);
 
@@ -38,7 +38,7 @@ namespace DataAccess.Repository
 
         public Task<ResultModel> UpdateUserProfile(UserUpdateModel updateModel) => UserDAO.Instance.UpdateUserProfile(updateModel);
 
-        public Task VerifyEmail(EmailVerificationReqModel verificationModel) => UserDAO.Instance.VerifyEmail(verificationModel);
+        public Task<ResultModel> VerifyEmail(EmailVerificationReqModel verificationModel) => UserDAO.Instance.VerifyEmail(verificationModel);
 
         public Task<ResultModel> VerifyOTPCode(string email, string otpCode) =>UserDAO.Instance.VerifyOTPCode(email, otpCode);
     }

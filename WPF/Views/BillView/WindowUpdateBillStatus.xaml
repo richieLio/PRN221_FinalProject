@@ -1,0 +1,23 @@
+﻿<Window x:Class="WPF.Views.BillView.WindowUpdateBillStatus"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF.Views.BillView"
+        mc:Ignorable="d"
+        Title="Update Bill Status"  WindowStartupLocation="CenterScreen" Height="300" Width="400">
+    <Grid>
+        <StackPanel Margin="20">
+            <TextBlock Text="Status:" Margin="0,0,0,10"/>
+            <ComboBox x:Name="StatusComboBox" Margin="0,0,0,20">
+                <ComboBoxItem Content="Paid"/>
+                <ComboBoxItem Content="Unpaid"/>
+            </ComboBox>
+
+            <TextBlock Text="Payment Date:" Margin="0,0,0,10"/>
+            <DatePicker x:Name="PaymentDatePicker" Margin="0,0,0,20"/>
+
+            <Button Content="Update Status" Click="UpdateStatusButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
