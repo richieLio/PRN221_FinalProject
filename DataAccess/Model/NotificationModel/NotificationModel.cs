@@ -16,4 +16,13 @@ namespace DataAccess.Model.NotificationModel
 
         public DateTime CreatedAt { get; set; }
     }
+    public class SendNotificationModel
+    {
+        public string? Subject { get; set; }
+        public string? Content { get; set; }
+        public string? HouseName
+        {
+            get; set;
+        }
+    }
 }

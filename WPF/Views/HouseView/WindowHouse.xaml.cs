@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using WPF.Views.HouseView;
+using WPF.Views.NotificationView;
 using WPF.Views.ServiceFeeView;
 
 namespace WPF
@@ -29,10 +30,10 @@ namespace WPF
         private async void LoadHouses()
         {
 
-            
-                lvHouses.ItemsSource = await _repository.GetHouses(App.LoggedInUserId);
 
-            
+            lvHouses.ItemsSource = await _repository.GetHouses(App.LoggedInUserId);
+
+
         }
 
         private void Border_Click(object sender, MouseButtonEventArgs e)
@@ -149,6 +150,23 @@ namespace WPF
                         {
                             mainWindow.MainContentControl.Content = windowServiceFee;
                         }
+                    }
+                }
+            }
+        }
+        private async void SendnNoti_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            if (menuItem != null)
+            {
+                Border border = ((ContextMenu)menuItem.Parent).PlacementTarget as Border;
+                if (border != null)
+                {
+                    var house = border.DataContext as House;
+                    if (house != null)
+                    {
+                        WindowAddNewNotification windowAddNoti = new WindowAddNewNotification(_serviceProvider.GetService<ICombineRepository>(), house);
+                        windowAddNoti.Show();
                     }
                 }
             }

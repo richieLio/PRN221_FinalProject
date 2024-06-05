@@ -18,7 +18,5 @@ namespace DataAccess.Repository
         Task<ResultModel> AddCustomerToRoom(Guid userId, AddCustomerToRoomReqModel addCustomerToRoomReqModel);
         Task<bool> IsUserInRoom(Guid roomId, string email, string phoneNumber, string licensePlates, string citizenIdNumber); // New method
 
-        Task<IEnumerable<string>> GetAllCustomerEmailByHouseId(Guid houseId);
-
     }
 }

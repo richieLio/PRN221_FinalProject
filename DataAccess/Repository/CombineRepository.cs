@@ -3,6 +3,7 @@ using DataAccess.Model.BillModel;
 using DataAccess.Model.CustomerModel;
 using DataAccess.Model.EmailModel;
 using DataAccess.Model.HouseModel;
+using DataAccess.Model.NotificationModel;
 using DataAccess.Model.OperationResultModel;
 using DataAccess.Model.RoomModel;
 using DataAccess.Model.ServiceFeeModel;
@@ -95,7 +96,7 @@ namespace DataAccess.Repository
         => _billRepository.GetAllBills(userId);
 
         public Task<IEnumerable<string>> GetAllCustomerEmailByHouseId(Guid houseId)
-        => _customerRepository.GetAllCustomerEmailByHouseId(houseId);
+        => _notificationRepository.GetAllCustomerEmailByHouseId(houseId);
 
 
     public Task<IEnumerable<User>> GetAllStaffByOwnerId(Guid ownerId)
@@ -208,7 +209,10 @@ namespace DataAccess.Repository
         public Task ResetPassword(UserResetPasswordReqModel ResetPasswordReqModel)
 => _userRepository.ResetPassword(ResetPasswordReqModel);
 
-    public Task<ResultModel> SendOTPEmailRequest(SendOTPReqModel sendOTPReqModel)
+        public Task<ResultModel> SendNotificationByEmail(Guid houseId, SendNotificationModel sendNotificationModel)
+=> _notificationRepository.SendNotificationByEmail(houseId, sendNotificationModel);
+
+        public Task<ResultModel> SendOTPEmailRequest(SendOTPReqModel sendOTPReqModel)
 => _userRepository.SendOTPEmailRequest(sendOTPReqModel);
 
     public Task<ResultModel> UpdateBill(Guid userId, BillUpdateReqModel billUpdateReqModel)

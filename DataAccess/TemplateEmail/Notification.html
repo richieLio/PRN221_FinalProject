@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông báo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .email-container {
+            background-color: #ffffff;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+        }
+
+        .header {
+            background-color: #4CAF50;
+            padding: 10px;
+            color: #ffffff;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .content {
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .footer {
+            padding: 10px;
+            text-align: center;
+            color: #777777;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>Thông báo từ {{HouseName}}</h1>
+        </div>
+        <div class="content">
+            <h2>{{Subject}}</h2>
+            <p>{{Content}}</p>
+        </div>
+        <div class="footer">
+            <p>Đây là email tự động, vui lòng không trả lời.</p>
+        </div>
+    </div>
+</body>
+</html>
