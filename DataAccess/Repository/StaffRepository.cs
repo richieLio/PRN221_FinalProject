@@ -17,7 +17,6 @@ namespace DataAccess.Repository
         public Task<bool> AddStaffToHouse(Guid staffId, Guid houseId) => StaffDAO.Instance.AddStaffToHouse(staffId, houseId);
         public Task<bool> RemoveStaffFromHouse(Guid staffId, Guid houseId) => StaffDAO.Instance.RemoveStaffFromHouse(staffId, houseId);
 
-        public Task<IEnumerable<House>> GetAllHouseByStaffId(Guid staffId) => StaffDAO.Instance.GetAllHouseByStaffId(staffId);
         public Task<IEnumerable<User>> GetAllStaffByOwnerId(Guid ownerId) => StaffDAO.Instance.GetAllStaffByOwnerId(ownerId);
 
         public Task<ResultModel> GetAssignedStaffByHouseId(Guid houseId) => StaffDAO.Instance.GetAssignedStaffByHouseId(houseId);

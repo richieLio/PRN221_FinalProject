@@ -183,15 +183,6 @@ namespace DataAccess.DAO
             }
         }
 
-        public async Task<IEnumerable<House>> GetAllHouseByStaffId(Guid staffId)
-        {
-            using var context = new RmsContext();
-
-            var houses = await context.Houses
-                                      .Where(h => h.Staff.Any(s => s.Id == staffId))
-                                      .ToListAsync();
-            return houses;
-
-        }
+        
     }
 }
