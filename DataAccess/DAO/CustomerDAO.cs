@@ -11,6 +11,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataAccess.Repository.CustomerRepository;
+using DataAccess.Repository.HouseRepository;
+using DataAccess.Repository.UserRepostory;
+using DataAccess.Repository.RoomRepository;
 
 namespace DataAccess.DAO
 {
@@ -357,6 +361,21 @@ namespace DataAccess.DAO
             }
 
             return result;
+        }
+
+        public async Task<IEnumerable<string>> GetAllCustomerEmailByHouseId(Guid houseId)
+        {
+            using var context = new RmsContext();
+
+            var emails = await context.Houses
+                .Where(h => h.Id == houseId)
+                .SelectMany(h => h.Rooms)
+                .SelectMany(r => r.Users)
+                .Where(u => !string.IsNullOrEmpty(u.Email))
+                .Select(u => u.Email)
+                .ToListAsync();
+
+            return emails;
         }
     }
 }

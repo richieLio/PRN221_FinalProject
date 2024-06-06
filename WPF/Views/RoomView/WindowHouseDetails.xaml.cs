@@ -1,7 +1,7 @@
 ﻿using BusinessObject.Object;
 using DataAccess.DAO;
 using DataAccess.Enums;
-using DataAccess.Repository;
+using DataAccess.Repository.CombineRepository;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;

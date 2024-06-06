@@ -1,7 +1,14 @@
-﻿using DataAccess.Repository;
+﻿using DataAccess.Model.ContractModel;
+using DataAccess.Repository;
+using DataAccess.Repository.CombineRepository;
+using DataAccess.Utilities;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,50 +28,91 @@ namespace WPF
     /// </summary>
     public partial class WindowContract : UserControl
     {
-        private readonly HubConnection _connection;
+        private readonly CloudStorage _cloudStorage;
+        private readonly ICombineRepository _repository;
 
-        public WindowContract()
+
+        public WindowContract(CloudStorage cloudStorage, ICombineRepository repository)
         {
             InitializeComponent();
-            _connection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:7259/notihub")
-                .WithAutomaticReconnect()
-                .Build();
-
-            openConnect();
+            _cloudStorage = cloudStorage;
+            _repository = repository;
+            LoadContracts(App.LoggedInUserId);
         }
-        private async void openConnect()
+
+        /*  private async void Button_Click(object sender, RoutedEventArgs e)
+          {
+              OpenFileDialog openFileDialog = new OpenFileDialog();
+              if (openFileDialog.ShowDialog() == true)
+              {
+
+              var form = new ContractReqModel
+              {
+                  Id = Guid.NewGuid(),
+                  ImagesUrl = ConvertToIFormFile(openFileDialog.FileName),
+              };
+
+              string filePath = $"Contract/{form.Id}/images/{form.ImagesUrl.FileName}";
+             var result =  await _cloudStorage.UploadFile(form.ImagesUrl, filePath);
+                  if(result != null)
+                  {
+                      MessageBox.Show($"File uploaded succesfully");
+                  }
+              }
+
+          }*/
+        private async void LoadContracts(Guid userId)
         {
-            try
+            var result = await _repository.GetContractList(userId);
+            if (result.IsSuccess)
             {
-
-
-
-                _connection.On<Guid, string>("ReceiveNotification", (ownerId, message) =>
-                {
-                    this.Dispatcher.Invoke(() =>
-                    {
-                        var newMessage = $"{ownerId}: {message}";
-                        if (App.LoggedInUserId == ownerId)
-                        {
-                            messages.Items.Add(newMessage);
-                        }
-                    });
-                });
-
-                await _connection.StartAsync();
-                messages.Items.Add("Connection started");
+                lvContracts.ItemsSource = result.Data as List<ContractInfoResModel>;
             }
-            catch (Exception ex)
+            else
             {
-                messages.Items.Add($"Error: {ex.Message}");
+                MessageBox.Show(result.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-        private async void openConnection_Click(object sender, RoutedEventArgs e)
+        private IFormFile ConvertToIFormFile(string filePath)
         {
-            openConnect();
+            var fileStream = new FileStream(filePath, FileMode.Open);
+            return new FormFile(fileStream, 0, fileStream.Length, null, System.IO.Path.GetFileName(filePath))
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "application/octet-stream"
+            };
+        }
+        private void DownloadButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is string fileUrl)
+            {
+                // Implement download logic here
+                MessageBox.Show($"Download file from: {fileUrl}");
+            }
         }
 
+        private void UploadButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Implement upload logic here
+            MessageBox.Show("Upload file.");
+        }
+
+        private void EditBill_Click(object sender, RoutedEventArgs e)
+        {
+            // Implement edit bill logic here
+            MessageBox.Show("Edit bill.");
+        }
+
+        private void EditBillStatus_Click(object sender, RoutedEventArgs e)
+        {
+            // Implement edit bill status logic here
+            MessageBox.Show("Edit bill status.");
+        }
+
+        private void DeleteBill_Click(object sender, RoutedEventArgs e)
+        {
+            // Implement delete bill logic here
+            MessageBox.Show("Delete bill.");
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using BusinessObject.Object;
 using DataAccess.Model.BillModel;
 using DataAccess.Model.ServiceFeeModel;
-using DataAccess.Repository;
+using DataAccess.Repository.CombineRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;

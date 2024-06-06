@@ -1,6 +1,6 @@
 ﻿using DataAccess.Helper;
 using DataAccess.Model.UserModel;
-using DataAccess.Repository;
+using DataAccess.Repository.CombineRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;

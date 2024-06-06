@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataAccess.Repository.HouseRepository;
+using DataAccess.Repository.UserRepostory;
 
 namespace DataAccess.DAO
 {
@@ -183,15 +185,6 @@ namespace DataAccess.DAO
             }
         }
 
-        public async Task<IEnumerable<House>> GetAllHouseByStaffId(Guid staffId)
-        {
-            using var context = new RmsContext();
-
-            var houses = await context.Houses
-                                      .Where(h => h.Staff.Any(s => s.Id == staffId))
-                                      .ToListAsync();
-            return houses;
-
-        }
+        
     }
 }

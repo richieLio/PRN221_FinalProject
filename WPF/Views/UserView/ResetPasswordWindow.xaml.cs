@@ -1,7 +1,7 @@
 ﻿using DataAccess.Helper;
 using DataAccess.Model.UserModel;
 using DataAccess.Model.VerifyModel;
-using DataAccess.Repository;
+using DataAccess.Repository.CombineRepository;
 using Microsoft.Identity.Client.NativeInterop;
 using System;
 using System.Collections.Generic;
