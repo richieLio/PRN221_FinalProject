@@ -11,6 +11,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataAccess.Repository.CustomerRepository;
+using DataAccess.Repository.HouseRepository;
+using DataAccess.Repository.UserRepostory;
+using DataAccess.Repository.RoomRepository;
 
 namespace DataAccess.DAO
 {

@@ -5,6 +5,7 @@ using DataAccess.Enums;
 using DataAccess.Model.HouseModel;
 using DataAccess.Model.OperationResultModel;
 using DataAccess.Repository;
+using DataAccess.Repository.UserRepostory;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

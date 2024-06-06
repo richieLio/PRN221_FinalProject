@@ -1,6 +1,6 @@
 ﻿using BusinessObject.Object;
 using DataAccess.Enums;
-using DataAccess.Repository;
+using DataAccess.Repository.CombineRepository;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using System;

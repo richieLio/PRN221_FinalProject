@@ -1,6 +1,6 @@
 ﻿using ControlzEx.Standard;
 using DataAccess.Model.NotificationModel;
-using DataAccess.Repository;
+using DataAccess.Repository.CombineRepository;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
