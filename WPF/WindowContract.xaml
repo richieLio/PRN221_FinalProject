@@ -4,19 +4,83 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Height="450" Width="800">
+        Height="600" Width="900">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
-        <ScrollViewer Grid.Row="2" Margin="20" MaxHeight="200" VerticalScrollBarVisibility="Auto">
-            <ListBox x:Name="messages" HorizontalAlignment="Stretch" Padding="20 10" BorderThickness="0"/>
-        </ScrollViewer>
+        <TextBlock Text="Contract management"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   Margin="16"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Style="{StaticResource MaterialDesignHeadline1TextBlock}"/>
+
+        <materialDesign:Card Grid.Row="1">
+            <ScrollViewer VerticalScrollBarVisibility="Visible">
+                <ListView Name="lvContracts" 
+                          Style="{StaticResource MaterialDesignListView}">
+                    <ListView.Resources>
+                        <DataTemplate x:Key="FileTemplate">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding FileUrl}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <Button Content="Download" Click="DownloadButton_Click" Tag="{Binding FileUrl}" Margin="0,0,10,0"/>
+                            </StackPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="UploadTemplate">
+                            <Button Content="Upload" Click="UploadButton_Click"/>
+                        </DataTemplate>
+                    </ListView.Resources>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="140"/>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="220"/>
+                                    <ColumnDefinition Width="220"/>
+                                    <ColumnDefinition Width="220"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding CustomerName}" Grid.Column="0" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding RoomName}" Grid.Column="1" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding HouseName}" Grid.Column="2" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding StartDate}" Grid.Column="3" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding EndDate}" Grid.Column="4" VerticalAlignment="Center"/>
+                                <ContentControl Grid.Column="5" Content="{Binding}">
+                                    <ContentControl.Style>
+                                        <Style TargetType="ContentControl">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding FileUrl}" Value="{x:Null}">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource UploadTemplate}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding FileUrl}" Value="">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource UploadTemplate}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding FileUrl}">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource FileTemplate}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ContentControl.Style>
+                                </ContentControl>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Edit" Click="EditBill_Click"/>
+                            <MenuItem Header="Edit Status" Click="EditBillStatus_Click"/>
+                            <MenuItem Header="Delete" Click="DeleteBill_Click"/>
+                        </ContextMenu>
+                    </ListView.ContextMenu>
+                </ListView>
+            </ScrollViewer>
+        </materialDesign:Card>
     </Grid>
 </UserControl>

@@ -1,5 +1,5 @@
 ﻿using BusinessObject.Object;
-using DataAccess.Repository;
+using DataAccess.Repository.CombineRepository;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DataAccess.Model.OperationResultModel;
 using DataAccess.Model.NotificationModel;
+using DataAccess.Repository.UserRepostory;
 
 namespace DataAccess.DAO
 {

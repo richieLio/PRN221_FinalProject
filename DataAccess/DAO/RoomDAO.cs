@@ -4,6 +4,8 @@ using Data.Enums;
 using DataAccess.Model.OperationResultModel;
 using DataAccess.Model.RoomModel;
 using DataAccess.Repository;
+using DataAccess.Repository.HouseRepository;
+using DataAccess.Repository.UserRepostory;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;

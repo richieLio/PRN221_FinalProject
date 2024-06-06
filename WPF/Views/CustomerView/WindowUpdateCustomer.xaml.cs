@@ -1,7 +1,7 @@
 ﻿using BusinessObject.Object;
 using DataAccess.Model.CustomerModel;
 using DataAccess.Model.HouseModel;
-using DataAccess.Repository;
+using DataAccess.Repository.CombineRepository;
 using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;

@@ -8,7 +8,7 @@ using DataAccess.DAO;
 using DataAccess.Enums;
 using DataAccess.Model.BillModel;
 using DataAccess.Model.ServiceFeeModel;
-using DataAccess.Repository;
+using DataAccess.Repository.CombineRepository;
 using Microsoft.AspNetCore.SignalR.Client;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 

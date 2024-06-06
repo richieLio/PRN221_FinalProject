@@ -2,7 +2,7 @@
 using DataAccess.Enums;
 using DataAccess.Model.CustomerModel;
 using DataAccess.Model.HouseModel;
-using DataAccess.Repository;
+using DataAccess.Repository.CombineRepository;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.VisualBasic.ApplicationServices;
 using System;

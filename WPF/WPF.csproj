@@ -31,4 +31,10 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="firebaseKey.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
