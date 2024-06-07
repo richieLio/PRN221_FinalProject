@@ -45,7 +45,11 @@ namespace DataAccess.Utilities
                 return memoryStream.ToArray();
             }
         }
-
+        public async Task DeleteFile(string filePath, string fileName)
+        {
+            string objectName = $"{filePath}/{fileName}";
+            await _storage.DeleteObjectAsync(bucketName, objectName);
+        }
 
     }
 }
