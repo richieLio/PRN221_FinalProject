@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using System.Windows.Controls;
 using WPF.BillView;
+using WPF.ContractView;
 using WPF.NotificationView;
 using WPF.StaffView;
 using WPF.Views.PaymentView;

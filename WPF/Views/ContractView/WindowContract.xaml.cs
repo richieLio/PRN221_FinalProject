@@ -1,4 +1,5 @@
-﻿using DataAccess.Model.ContractModel;
+﻿using DataAccess.Model.BillModel;
+using DataAccess.Model.ContractModel;
 using DataAccess.Repository;
 using DataAccess.Repository.CombineRepository;
 using DataAccess.Utilities;
@@ -20,8 +21,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WPF.Views.BillView;
+using WPF.Views.ContractView;
 
-namespace WPF
+namespace WPF.ContractView
 {
     /// <summary>
     /// Interaction logic for WindowContract.xaml
@@ -59,7 +62,15 @@ namespace WPF
                       MessageBox.Show($"File uploaded succesfully");
                   }
               }
-
+          private IFormFile ConvertToIFormFile(string filePath)
+        {
+            var fileStream = new FileStream(filePath, FileMode.Open);
+            return new FormFile(fileStream, 0, fileStream.Length, null, System.IO.Path.GetFileName(filePath))
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "application/octet-stream"
+            };
+        }
           }*/
         private async void LoadContracts(Guid userId)
         {
@@ -73,46 +84,30 @@ namespace WPF
                 MessageBox.Show(result.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        private IFormFile ConvertToIFormFile(string filePath)
+      
+       
+
+       
+        private async void ViewContractDetails_Click(object sender, RoutedEventArgs e)
         {
-            var fileStream = new FileStream(filePath, FileMode.Open);
-            return new FormFile(fileStream, 0, fileStream.Length, null, System.IO.Path.GetFileName(filePath))
+       
+            if (lvContracts.SelectedItem is ContractInfoResModel selectedContract)
             {
-                Headers = new HeaderDictionary(),
-                ContentType = "application/octet-stream"
-            };
-        }
-        private void DownloadButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button button && button.Tag is string fileUrl)
-            {
-                // Implement download logic here
-                MessageBox.Show($"Download file from: {fileUrl}");
+                 var detailsWindow = new WindowContractDetails(_repository, selectedContract, _cloudStorage);
+                detailsWindow.ShowDialog();
             }
-        }
-
-        private void UploadButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Implement upload logic here
-            MessageBox.Show("Upload file.");
-        }
-
-        private void EditBill_Click(object sender, RoutedEventArgs e)
+        }   
+        private void EditContract_Click(object sender, RoutedEventArgs e)
         {
             // Implement edit bill logic here
-            MessageBox.Show("Edit bill.");
+            MessageBox.Show("Edit contract.");
         }
 
-        private void EditBillStatus_Click(object sender, RoutedEventArgs e)
-        {
-            // Implement edit bill status logic here
-            MessageBox.Show("Edit bill status.");
-        }
-
-        private void DeleteBill_Click(object sender, RoutedEventArgs e)
+     
+        private void DeleteContract_Click(object sender, RoutedEventArgs e)
         {
             // Implement delete bill logic here
-            MessageBox.Show("Delete bill.");
+            MessageBox.Show("Delete contract.");
         }
     }
 }

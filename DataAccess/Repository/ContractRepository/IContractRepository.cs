@@ -1,4 +1,6 @@
-﻿using DataAccess.Model.OperationResultModel;
+﻿using BusinessObject.Object;
+using DataAccess.Model.ContractModel;
+using DataAccess.Model.OperationResultModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +12,7 @@ namespace DataAccess.Repository.ContractRepository
     public interface IContractRepository
     {
         Task<ResultModel> GetContractList(Guid userId);
+        Task<Contract> GetContract(Guid contractId);
+        Task UpdateContract(ContractUpdateModel contract);
     }
 }
