@@ -1,14 +1,12 @@
 ﻿using BusinessObject.Object;
-using ControlzEx.Standard;
 using DataAccess.Enums;
-using DataAccess.Model.BillModel;
 using DataAccess.Model.UserModel;
 using DataAccess.Repository.CombineRepository;
-using Google.Apis.Storage.v1.Data;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using WPF.BillView;
 using WPF.ContractView;
 using WPF.NotificationView;
@@ -32,14 +30,13 @@ namespace WPF
             InitializeComponent();
             _serviceProvider = serviceProvider;
 
-
+            MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
+            houseRadioButton.IsChecked = true;
             UpdateStaffButtonVisibility();
 
             var staffWindow = _serviceProvider.GetService<WindowStaff>();
             staffWindow.LoadStaffs();
 
-
-            MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
 
             _connection = new HubConnectionBuilder()
                .WithUrl("https://localhost:7259/notihub")
@@ -48,7 +45,7 @@ namespace WPF
 
             openConnect();
 
-           LoadUserFullName();
+            LoadUserFullName();
 
         }
 
@@ -150,7 +147,7 @@ namespace WPF
             var user = await _repository.GetUserById(App.LoggedInUserId);
 
             var isUserLicene = await _repository.IsUserLicence(App.LoggedInUserId);
-            if(!isUserLicene)
+            if (!isUserLicene)
             {
                 houseRadioButton.Visibility = Visibility.Collapsed;
                 staffRadioButton.Visibility = Visibility.Collapsed;
@@ -165,7 +162,7 @@ namespace WPF
                 NotificationButton.Visibility = user.Role == UserEnum.OWNER ? Visibility.Visible : Visibility.Collapsed;
                 BadgedNotiCount.Visibility = user.Role == UserEnum.OWNER ? Visibility.Visible : Visibility.Collapsed;
             }
-            
+
         }
         private async void NotificationButton_Click(object sender, RoutedEventArgs e)
         {
@@ -190,7 +187,7 @@ namespace WPF
             }
         }
 
-       
+
 
         private async void FetchNotifications()
         {
@@ -234,7 +231,7 @@ namespace WPF
                         var notification = await _repository.GetLocalNotificationByMessage(message);
                         if (notification != null)
                         {
-                           await _repository.DeleteLocalNotifications(notification.Id);
+                            await _repository.DeleteLocalNotifications(notification.Id);
                         }
                     }
                 }
@@ -261,5 +258,32 @@ namespace WPF
             var windowUpdateProfile = new WindowUpdateProfile(_repository, user);
             windowUpdateProfile.Show();
         }
+        private void Border_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
+        }
+        bool IsMaximized = false;
+        private void Border_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if(e.ClickCount== 2)
+            {
+                if(IsMaximized)
+                {
+                    this.WindowState = WindowState.Normal;
+                    this.Width = 1280;
+                    this.Height = 780;
+                    IsMaximized = false;
+                } else
+                {
+                    this.WindowState = WindowState.Maximized;
+                    
+                    IsMaximized = true;
+                }
+            }
+        }
+        
     }
 }

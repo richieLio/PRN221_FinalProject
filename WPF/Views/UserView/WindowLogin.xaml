@@ -33,7 +33,7 @@
 
         <!-- Login Button -->
         <Button Grid.Row="2" Margin="0,20,0,0"
-                Style="{StaticResource MaterialDesignRaisedButton}"
+                Style="{StaticResource commonButton}"
                 Content="Login" Width="300" Height="40" Click="btnLogin_Click"
                 HorizontalAlignment="Center"
                 materialDesign:ButtonProgressAssist.IsIndeterminate="True"
