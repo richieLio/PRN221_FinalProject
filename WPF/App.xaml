@@ -41,17 +41,23 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
+            
+            
             <Style x:Key="menuButtonIcon" TargetType="Icon:PackIconMaterial">
                 <Setter Property="Margin" Value="25 0 0 0"/>
                 <Setter Property="Width" Value="18"/>
                 <Setter Property="Height" Value="18"/>
                 <Setter Property="Foreground" Value="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type RadioButton}}}"/>
             </Style>
+            
+            
             <Style x:Key="menuButtonText" TargetType="TextBlock">
                 <Setter Property="Margin" Value="20 0 0 2"/>
                 <Setter Property="FontSize" Value="14"/>
                 <Setter Property="Foreground" Value="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type RadioButton}}}"/>
             </Style>
+            
+            
             <Style x:Key="commonButton" TargetType="Button">
                 <Setter Property="Background" Value="#f7f6f4"/>
                 <Setter Property="Foreground" Value="#fb7657"/>
@@ -90,6 +96,24 @@
                         <DropShadowEffect ShadowDepth="2" BlurRadius="5" Opacity="0.5" Color="Black"/>
                     </Setter.Value>
                 </Setter>
+            </Style>
+
+            <Style x:Key="whiteBorder" TargetType="Border">
+                <Setter Property="Background" Value="#ffffff"/>
+                <Setter Property="CornerRadius" Value="15"/>
+                <Setter Property="Padding" Value="15"/>
+            </Style>
+
+
+            <Style x:Key="titleText" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="28"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Foreground" Value="#083353"/>
+            </Style>
+            <Style x:Key="secondaryText" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="28"/>
+                <Setter Property="Margin" Value="0 5"/>
+                <Setter Property="Foreground" Value="#b7b7b7"/>
             </Style>
 
 
