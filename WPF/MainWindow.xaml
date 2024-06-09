@@ -82,6 +82,12 @@
                             <Icon:PackIconMaterial Kind="InvoiceText" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Bill" Style="{StaticResource menuButtonText}"/>
                         </StackPanel>
+                    </RadioButton>     
+                    <RadioButton Style="{StaticResource menuButton}" x:Name="serviceRadioButton" GroupName="Views" Checked="RadioButton_Checked" Tag="serviceWindow">
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="RoomService" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Services" Style="{StaticResource menuButtonText}"/>
+                        </StackPanel>
                     </RadioButton>
                     <RadioButton Style="{StaticResource menuButton}" x:Name="paymentRadioButton" GroupName="Views" Checked="RadioButton_Checked" Tag="paymentWindow">
                         <StackPanel Orientation="Horizontal">

@@ -5,100 +5,74 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using WPF.Views.CustomerView;
-using WPF.Views.RoomView;
 
 namespace WPF.Views.ServiceFeeView
 {
-    /// <summary>
-    /// Interaction logic for WindowServiceFee.xaml
-    /// </summary>
     public partial class WindowServiceFee : UserControl
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ICombineRepository _repository;
-        private readonly House _house;
-        public WindowServiceFee(ICombineRepository repository, IServiceProvider serviceProvider, House house)
+
+        public WindowServiceFee(ICombineRepository repository, IServiceProvider serviceProvider)
         {
             _repository = repository;
             InitializeComponent();
             _serviceProvider = serviceProvider;
-            _house = house;
+            LoadHouses();
         }
 
-        public async void LoadService()
+        public async void LoadHouses()
         {
-            lvServices.ItemsSource = await _repository.GetServicesList(_house.Id);
-        }
-        private void BackToHouseManagement_Click(object sender, RoutedEventArgs e)
-        {
-            MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
-            if (mainWindow != null)
+            var houses = await _repository.GetHouses(App.LoggedInUserId);
+            cbHouses.ItemsSource = houses;
+            if (houses.Any())
             {
-                WindowHouse houseWindow = new WindowHouse(_serviceProvider, _repository);
-                mainWindow.MainContentControl.Content = houseWindow;
+                cbHouses.SelectedIndex = 0;
             }
         }
 
+        public async void LoadService(Guid houseId)
+        {
+            lvServices.ItemsSource = await _repository.GetServicesList(houseId);
+        }
+
+
         private void AddService_Click(object sender, RoutedEventArgs e)
         {
-            var windowAddService = new WindowAddServiceFee(_serviceProvider.GetService<ICombineRepository>(), _house);
-            windowAddService.ServiceAdded += (s, args) =>
+            if (cbHouses.SelectedItem is House selectedHouse)
             {
-                LoadService();
-            };
-            windowAddService.Show();
+                var windowAddService = new WindowAddServiceFee(_serviceProvider.GetService<ICombineRepository>(), selectedHouse);
+                windowAddService.ServiceAdded += (s, args) =>
+                {
+                    LoadService(selectedHouse.Id);
+                };
+                windowAddService.Show();
+            }
+            else
+            {
+                MessageBox.Show("Please select a house first.");
+            }
         }
+
         private void EditService_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                MenuItem menuItem = sender as MenuItem;
-                if (menuItem != null)
+                if (lvServices.SelectedItem is Service selectedService && cbHouses.SelectedItem is House selectedHouse)
                 {
-                    ContextMenu contextMenu = menuItem.Parent as ContextMenu;
-                    if (contextMenu != null)
+                    var updateServiceWindow = new WindowUpdateServiceFee(_serviceProvider.GetService<ICombineRepository>(), selectedService, selectedHouse);
+                    updateServiceWindow.ServiceUpdated += (s, args) =>
                     {
-                        ListView listView = contextMenu.PlacementTarget as ListView;
-                        if (listView != null)
-                        {
-                            if (listView.SelectedItem is Service selectedService)
-                            {
-                                var updateServiceWindow = new WindowUpdateServiceFee(_serviceProvider.GetService<ICombineRepository>(), selectedService, _house);
-                                updateServiceWindow.ServiceUpdated += (s, args) =>
-                                {
-                                    LoadService();
-                                };
-                                updateServiceWindow.ShowDialog();
-                            }
-                            else
-                            {
-                                MessageBox.Show("No service selected.");
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show("ListView is null.");
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("ContextMenu is null.");
-                    }
+                        LoadService(selectedHouse.Id);
+                    };
+                    updateServiceWindow.ShowDialog();
                 }
                 else
                 {
-                    MessageBox.Show("MenuItem is null.");
+                    MessageBox.Show("No service selected or no house selected.");
                 }
             }
             catch (Exception ex)
@@ -106,25 +80,34 @@ namespace WPF.Views.ServiceFeeView
                 MessageBox.Show($"An error occurred: {ex.Message}");
             }
         }
+
         private async void DeleteService_Click(object sender, RoutedEventArgs e)
         {
-            if (lvServices.SelectedItem is Service selectedService)
+            if (lvServices.SelectedItem is Service selectedService && cbHouses.SelectedItem is House selectedHouse)
             {
                 MessageBoxResult confirm = MessageBox.Show($"Are you sure to delete {selectedService.Name}?", "Warning", MessageBoxButton.OKCancel);
 
                 if (confirm == MessageBoxResult.OK)
                 {
-                  var result = await _repository.RemoveService(App.LoggedInUserId ,selectedService.Id, _house.Id);
+                    var result = await _repository.RemoveService(App.LoggedInUserId, selectedService.Id, selectedHouse.Id);
                     if (result.IsSuccess)
                     {
-                        MessageBox.Show("Service deleted sucessfully");
+                        MessageBox.Show("Service deleted successfully");
                     }
                     else
                     {
-                        MessageBox.Show(result.Message, "Erorr");
+                        MessageBox.Show(result.Message, "Error");
                     }
-                    LoadService();
+                    LoadService(selectedHouse.Id);
                 }
+            }
+        }
+
+        private void cbHouses_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbHouses.SelectedItem is House selectedHouse)
+            {
+                LoadService(selectedHouse.Id);
             }
         }
     }

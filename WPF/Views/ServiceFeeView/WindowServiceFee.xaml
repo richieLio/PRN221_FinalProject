@@ -11,8 +11,10 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+
         <TextBlock Text="Services in House"
            FontSize="24"
            FontWeight="Bold"
@@ -21,12 +23,20 @@
            VerticalAlignment="Center"
            Style="{StaticResource MaterialDesignHeadline1TextBlock}"/>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10" Width="780">
-            <Button Content="Back" Click="BackToHouseManagement_Click" Margin="0,10,10,0" RenderTransformOrigin="0.269,1.091" Style="{StaticResource MaterialDesignFlatButton}"/>
+        <ComboBox x:Name="cbHouses" 
+                  Width="200" 
+                  Margin="16"
+                  VerticalAlignment="Center"
+                  HorizontalAlignment="Left"
+                  SelectionChanged="cbHouses_SelectionChanged"
+                  DisplayMemberPath="Name"
+                  SelectedValuePath="Id"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10" Width="780" Grid.Row="1">
             <Button Content="Add new service" Click="AddService_Click" Margin="0,10,0,0" RenderTransformOrigin="0,0" Style="{StaticResource MaterialDesignFlatButton}"/>
         </StackPanel>
 
-        <materialDesign:Card Grid.Row="1">
+        <materialDesign:Card Grid.Row="2">
             <ListView Name="lvServices" 
                       Style="{StaticResource MaterialDesignListView}">
                 <ListView.View>

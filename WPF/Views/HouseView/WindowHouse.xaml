@@ -36,7 +36,6 @@
                             <ContextMenu>
                                 <MenuItem Header="Update House" Click="UpdateHouse_Click"/>
                                 <MenuItem Header="Delete House" Click="DeleteHouse_Click"/>
-                                <MenuItem Header="Services" Click="ServiceHouse_Click"/>
                                 <MenuItem Header="Send Notification" Click="SendnNoti_Click"/>
                             </ContextMenu>
                         </Border.ContextMenu>
