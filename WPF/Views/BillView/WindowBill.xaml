@@ -6,11 +6,12 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:WPF.BillView"
              mc:Ignorable="d"
-             Height="600" Width="900">
+             Height="Auto" Width="Auto">
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="70" />
+            <RowDefinition Height="50" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <TextBlock Text="Bill management"
@@ -20,8 +21,27 @@
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    Style="{StaticResource MaterialDesignHeadline1TextBlock}"/>
-
-        <materialDesign:Card Grid.Row="1">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Width="180" Grid.Row="1">
+            <Button Content="Add bill for this room" Click="AddBill_Click" RenderTransformOrigin="0,0" Style="{StaticResource MaterialDesignFlatButton}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="35 0 0 0">
+            <ComboBox x:Name="cbHouses" 
+                      Width="200" 
+                      Margin="0,0,16,0"
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Left"
+                      SelectionChanged="cbHouses_SelectionChanged"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Id"/>
+            <ComboBox x:Name="cbRooms" 
+                      Width="200" 
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Left"
+                      SelectionChanged="cbRooms_SelectionChanged"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Id"/>
+        </StackPanel>
+        <materialDesign:Card Grid.Row="2" Margin="35 0 0 0">
             <ScrollViewer VerticalScrollBarVisibility="Visible">
                 <ListView Name="lvBills" 
                           Style="{StaticResource MaterialDesignListView}">

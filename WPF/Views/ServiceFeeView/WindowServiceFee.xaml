@@ -6,37 +6,36 @@
         xmlns:local="clr-namespace:WPF.Views.ServiceFeeView"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Height="500" Width="900">
+        Height="Auto" Width="Auto">
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="70" />
+            <RowDefinition Height="50" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <TextBlock Text="Services in House"
            FontSize="24"
            FontWeight="Bold"
-           Margin="16"
            HorizontalAlignment="Center"
            VerticalAlignment="Center"
-           Style="{StaticResource MaterialDesignHeadline1TextBlock}"/>
+           Style="{StaticResource MaterialDesignHeadline1TextBlock}" Grid.Row="0"/>
 
         <ComboBox x:Name="cbHouses" 
                   Width="200" 
-                  Margin="16"
+                  Margin="35 0 0 0"
                   VerticalAlignment="Center"
                   HorizontalAlignment="Left"
                   SelectionChanged="cbHouses_SelectionChanged"
                   DisplayMemberPath="Name"
-                  SelectedValuePath="Id"/>
+                  SelectedValuePath="Id" Grid.Row="1"/>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10" Width="780" Grid.Row="1">
-            <Button Content="Add new service" Click="AddService_Click" Margin="0,10,0,0" RenderTransformOrigin="0,0" Style="{StaticResource MaterialDesignFlatButton}"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Width="180" Grid.Row="1">
+            <Button Content="Add new service" Click="AddService_Click" RenderTransformOrigin="0,0" Style="{StaticResource MaterialDesignFlatButton}"/>
         </StackPanel>
 
-        <materialDesign:Card Grid.Row="2">
+        <materialDesign:Card Grid.Row="2" Margin="35 0 0 0">
             <ListView Name="lvServices" 
                       Style="{StaticResource MaterialDesignListView}">
                 <ListView.View>

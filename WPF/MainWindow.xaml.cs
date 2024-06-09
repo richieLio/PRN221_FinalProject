@@ -132,9 +132,7 @@ namespace WPF
                         MainContentControl.Content = _serviceProvider.GetService<WindowNotification>();
                         break;
                     case "billWindow":
-                        var windowBill = _serviceProvider.GetService<WindowBill>();
-                        MainContentControl.Content = windowBill;
-                        windowBill.LoadAllBill();
+                        MainContentControl.Content = _serviceProvider.GetService<WindowBill>();
                         break;
                     case "serviceWindow":
                         MainContentControl.Content = _serviceProvider.GetService<WindowServiceFee>(); ;

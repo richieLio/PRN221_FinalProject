@@ -1,6 +1,8 @@
 ﻿using BusinessObject.Object;
 using DataAccess.Model.BillModel;
 using DataAccess.Repository.CombineRepository;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using WPF.Views.BillView;
+using WPF.Views.ServiceFeeView;
 
 namespace WPF.BillView
 {
@@ -25,19 +28,80 @@ namespace WPF.BillView
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ICombineRepository _repository;
+        private Guid _houseId;
         private Guid _roomId;
         public WindowBill(IServiceProvider serviceProvider, ICombineRepository repository)
         {
             _repository = repository;
             InitializeComponent();
             _serviceProvider = serviceProvider;
+            LoadHouses();
         }
 
-        public async void LoadAllBill()
+        public async void LoadHouses()
+        {
+            var houses = await _repository.GetHouses(App.LoggedInUserId);
+            cbHouses.ItemsSource = houses;
+            if (houses.Any())
+            {
+                cbHouses.SelectedIndex = 0;
+            }
+        }
+        private void cbHouses_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbHouses.SelectedItem is House selectedHouse)
+            {
+                LoadRooms(selectedHouse.Id);
+                _houseId = selectedHouse.Id;
+            }
+        }
+        private async void AddBill_Click(object sender, RoutedEventArgs e)
+        {
+            if (cbHouses.SelectedItem is House selectedHouse && cbRooms.SelectedItem is Room selectedRoom)
+            {
+                var windowAddBill = new WindowAddBill(_serviceProvider.GetService<ICombineRepository>(), selectedRoom, selectedHouse);
+                windowAddBill.BillAdded += (s, args) =>
+                {
+                    LoadAllBill(App.LoggedInUserId, _houseId, _roomId);
+                };
+                windowAddBill.Show();
+            }
+            else
+            {
+                MessageBox.Show("Please select a house first.");
+            }
+        }
+
+        private async Task LoadRooms(Guid houseId)
         {
             try
             {
-                var result = await _repository.GetAllBills(App.LoggedInUserId);
+                var rooms = await _repository.GetRooms(houseId);
+                if (rooms != null)
+                {
+                    cbRooms.ItemsSource = rooms;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while loading rooms: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void cbRooms_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbRooms.SelectedItem is Room selectedRoom)
+            {
+                _roomId = selectedRoom.Id;
+                LoadAllBill(App.LoggedInUserId, _houseId, _roomId);
+            }
+        }
+
+        public async void LoadAllBill(Guid userId, Guid houseId, Guid roomId)
+        {
+            try
+            {
+                var result = await _repository.GetAllBills(userId, houseId, roomId);
 
                 if (result.IsSuccess)
                 {
@@ -118,7 +182,7 @@ namespace WPF.BillView
                 }
                 else
                 {
-                    LoadAllBill();
+                    LoadAllBill(App.LoggedInUserId, _houseId, _roomId);
                 }
             }
         }
@@ -143,7 +207,7 @@ namespace WPF.BillView
                 }
                 else
                 {
-                    LoadAllBill();
+                    LoadAllBill(App.LoggedInUserId, _houseId, _roomId);
                 }
             }
         }
@@ -168,7 +232,7 @@ namespace WPF.BillView
                             }
                             else
                             {
-                                LoadAllBill();
+                                LoadAllBill(App.LoggedInUserId, _houseId, _roomId);
                             }
                         }
                         else

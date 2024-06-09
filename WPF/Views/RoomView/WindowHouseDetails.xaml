@@ -6,45 +6,38 @@
              xmlns:local="clr-namespace:WPF"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             Height="550" Width="800">
+             Height="Auto" Width="Auto">
     <Grid Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="160"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
         <!-- Header Section -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10" Width="780">
-            <Button Content="Back" Click="BackToHouseManagement_Click" Margin="0,10,10,0" RenderTransformOrigin="0.269,1.091" Style="{StaticResource MaterialDesignFlatButton}"/>
-            <Button Content="Add new room" Click="AddNewRoom_Click" Margin="0,10,0,0" RenderTransformOrigin="0,0" Style="{StaticResource MaterialDesignFlatButton}"/>
-
-            <!-- Staff Display and Assignment Section -->
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <!-- TextBlock for displaying the staff name -->
-                <TextBlock x:Name="txtStaffName" Margin="10" VerticalAlignment="Center" Visibility="Collapsed"/>
-
-                <!-- ComboBox for selecting unassigned staff -->
-                <ComboBox x:Name="cmbStaffList" Width="200" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed"/>
-
-                <!-- Assign Button -->
-                <Button x:Name="AssignStaffButton" Content="Assign Staff" Click="AssignStaff_Click" Width="120" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed"/>
-                <Button x:Name="UnAssignStaffButton" Content="UnAssign Staff" Click="UnAssignStaff_Click" Width="120" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed"/>
-            </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1">
+            <Button Content="Back" Click="BackToHouseManagement_Click" Style="{StaticResource commonButton}"  Width="100" Height="40"/>
+            <Button Content="Add new room" Click="AddNewRoom_Click" Style="{StaticResource commonButton}"  Width="160" Height="40"/>
         </StackPanel>
 
         <!-- House Name -->
-        <TextBlock x:Name="HouseNameTextBlock" Text="{Binding Name}" FontSize="24" FontWeight="Bold" Margin="0,10,0,10" Grid.Row="1" HorizontalAlignment="Center"/>
+        <TextBlock x:Name="HouseNameTextBlock" Text="{Binding Name}" FontSize="24" FontWeight="Bold" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center"/>
 
         <!-- House Details Section -->
-        <Grid Grid.Row="1" Margin="20,0,20,10">
+        <Grid Grid.Row="0" Margin="20,0,120,10" Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="150"/>
                 <ColumnDefinition Width="150"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
@@ -57,10 +50,26 @@
 
             <TextBlock Grid.Row="2" Grid.Column="0" Text="Available Room:" FontWeight="Bold"/>
             <TextBlock x:Name="AvailableRoomTextBlock" Grid.Row="2" Grid.Column="1" Text="{Binding AvailableRoom}" Margin="10,0,0,10"/>
+
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Manage by:" FontWeight="Bold" x:Name="manageBy" Visibility="Collapsed"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" x:Name="txtStaffName" Visibility="Collapsed" Margin="10,0,0,10"/>
+
+            <!-- ComboBox for selecting unassigned staff -->
+            <ComboBox Grid.Row="3" Grid.Column="1" x:Name="cmbStaffList" Visibility="Collapsed" Width="110"/>
+
+            <!-- Assign Button -->
+            
+
         </Grid>
+        <Button Grid.Column="1" x:Name="AssignStaffButton" Content="Assign"
+        Click="AssignStaff_Click"
+        Visibility="Collapsed" Style="{StaticResource commonButton}"  Width="100" Height="40" HorizontalAlignment="Left"/>
+        <Button Grid.Column="1" x:Name="UnAssignStaffButton" Content="UnAssign"
+        Click="UnAssignStaff_Click" 
+        Visibility="Collapsed" Style="{StaticResource commonButton}"  Width="100" Height="40" HorizontalAlignment="Left"/>
 
         <!-- Rooms List Section -->
-        <ListView Grid.Row="2" x:Name="lvRooms" Margin="10">
+        <ListView Grid.Row="1" Grid.ColumnSpan="2" x:Name="lvRooms">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel/>
@@ -79,7 +88,6 @@
                             <ContextMenu>
                                 <MenuItem Header="Update Room" Click="UpdateRoom_Click"/>
                                 <MenuItem Header="Delete Room" Click="DeleteRoom_Click"/>
-                                <MenuItem Header="Bill" Click="ViewListBill_Click"/>
                                 <MenuItem Header="Add bill for this room" Click="AddBill_Click"/>
                             </ContextMenu>
                         </Border.ContextMenu>

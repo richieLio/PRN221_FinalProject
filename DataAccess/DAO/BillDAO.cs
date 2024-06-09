@@ -136,7 +136,7 @@ namespace DataAccess.DAO
             return billDetails;
         }
 
-        public async Task<ResultModel> GetAllBills(Guid userId)
+        public async Task<ResultModel> GetAllBills(Guid userId, Guid houseId, Guid roomId)
         {
             using var context = new RmsContext();
             IUserRepository _userRepository = new UserRepository();
@@ -168,8 +168,8 @@ namespace DataAccess.DAO
 
                 foreach (var bill in bills)
                 {
-                    var room = await _roomRepository.GetRoom(bill.RoomId.Value);
-                    var house = await _houseRepository.GetHouse(room.HouseId.Value);
+                    var room = await _roomRepository.GetRoom(roomId);
+                    var house = await _houseRepository.GetHouse(houseId);
                     string houseName = house.Name;
                     string roomName = room.Name;
                     BillResModel bl = new BillResModel()
