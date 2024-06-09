@@ -6,44 +6,46 @@
                 xmlns:local="clr-namespace:WPF.Views.CustomerView"
                 xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                 mc:Ignorable="d"
-                Height="500" Width="900">
-
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <TextBlock Text="Customers in Room"
+                Height="Auto" Width="Auto">
+    <Border CornerRadius="25" Padding="10" Background="White" 
+         HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20 0 20 0">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="70" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock Text="Customers in Room"
                    FontSize="24"
                    FontWeight="Bold"
-                   Margin="16"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    Style="{StaticResource MaterialDesignHeadline1TextBlock}"/>
 
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10" Width="780">
-                    <Button Content="Back" Click="BackToRoomManagement_Click" Margin="0,10,10,0" RenderTransformOrigin="0.269,1.091" Style="{StaticResource MaterialDesignFlatButton}"/>
-                    <Button Content="Add new customer to room" Click="AddCustomer_Click" Margin="0,10,0,0" RenderTransformOrigin="0,0" Style="{StaticResource MaterialDesignFlatButton}"/>
-                </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10" Grid.Row="1" >
+                <Button Content="Back" Click="BackToRoomManagement_Click" Style="{StaticResource commonButton}" Width="40" Height="40"/>
+                <Button Content="Add new customer to room" Click="AddCustomer_Click" Style="{StaticResource commonButton}" Width="180" Height="40"/>
+            </StackPanel>
 
-                <materialDesign:Card Grid.Row="1">
-                    <ListView Name="lvCustomers" 
+            <materialDesign:Card  Grid.Row="2">
+                <ListView Name="lvCustomers" 
                               Style="{StaticResource MaterialDesignListView}">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="FullName" DisplayMemberBinding="{Binding FullName}" Width="140"/>
-                                <GridViewColumn Header="Email" DisplayMemberBinding="{Binding Email}" Width="170"/>
-                                <GridViewColumn Header="PhoneNumber" DisplayMemberBinding="{Binding PhoneNumber}" Width="160"/>
-                                <GridViewColumn Header="Address" DisplayMemberBinding="{Binding Address}" Width="300"/>
-                            </GridView>
-                        </ListView.View>
-                        <ListView.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Edit" Click="EditCustomer_Click"/>
-                                <MenuItem Header="Delete" Click="DeleteCustomer_Click"/>
-                            </ContextMenu>
-                        </ListView.ContextMenu>
-                    </ListView>
-                </materialDesign:Card>
-            </Grid>
-        </UserControl>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="FullName" DisplayMemberBinding="{Binding FullName}" Width="140"/>
+                            <GridViewColumn Header="Email" DisplayMemberBinding="{Binding Email}" Width="170"/>
+                            <GridViewColumn Header="PhoneNumber" DisplayMemberBinding="{Binding PhoneNumber}" Width="160"/>
+                            <GridViewColumn Header="Address" DisplayMemberBinding="{Binding Address}" Width="300"/>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Edit" Click="EditCustomer_Click"/>
+                            <MenuItem Header="Delete" Click="DeleteCustomer_Click"/>
+                        </ContextMenu>
+                    </ListView.ContextMenu>
+                </ListView>
+            </materialDesign:Card>
+        </Grid>
+    </Border>
+</UserControl>

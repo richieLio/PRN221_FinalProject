@@ -6,102 +6,113 @@
              xmlns:local="clr-namespace:WPF"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             Height="550" Width="800">
-    <Grid Background="White">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <!-- Header Section -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10" Width="780">
-            <Button Content="Back" Click="BackToHouseManagement_Click" Margin="0,10,10,0" RenderTransformOrigin="0.269,1.091" Style="{StaticResource MaterialDesignFlatButton}"/>
-            <Button Content="Add new room" Click="AddNewRoom_Click" Margin="0,10,0,0" RenderTransformOrigin="0,0" Style="{StaticResource MaterialDesignFlatButton}"/>
-
-            <!-- Staff Display and Assignment Section -->
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <!-- TextBlock for displaying the staff name -->
-                <TextBlock x:Name="txtStaffName" Margin="10" VerticalAlignment="Center" Visibility="Collapsed"/>
-
-                <!-- ComboBox for selecting unassigned staff -->
-                <ComboBox x:Name="cmbStaffList" Width="200" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed"/>
-
-                <!-- Assign Button -->
-                <Button x:Name="AssignStaffButton" Content="Assign Staff" Click="AssignStaff_Click" Width="120" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed"/>
-                <Button x:Name="UnAssignStaffButton" Content="UnAssign Staff" Click="UnAssignStaff_Click" Width="120" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed"/>
-            </StackPanel>
-        </StackPanel>
-
-        <!-- House Name -->
-        <TextBlock x:Name="HouseNameTextBlock" Text="{Binding Name}" FontSize="24" FontWeight="Bold" Margin="0,10,0,10" Grid.Row="1" HorizontalAlignment="Center"/>
-
-        <!-- House Details Section -->
-        <Grid Grid.Row="1" Margin="20,0,20,10">
+             Height="Auto" Width="Auto">
+    <Border CornerRadius="25" Padding="10" Background="White" 
+         HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20 0 20 0">
+        <Grid Background="White">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="160"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="300"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Address:" FontWeight="Bold"/>
-            <TextBlock x:Name="AddressTextBlock" Grid.Row="0" Grid.Column="1" Text="{Binding Address}" Margin="10,0,0,10"/>
+            <!-- Header Section -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1">
+                <Button Content="Back" Click="BackToHouseManagement_Click" Style="{StaticResource commonButton}"  Width="100" Height="40"/>
+                <Button Content="Add new room" Click="AddNewRoom_Click" Style="{StaticResource commonButton}"  Width="160" Height="40"/>
+            </StackPanel>
 
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Room Quantity:" FontWeight="Bold"/>
-            <TextBlock x:Name="RoomQuantityTextBlock" Grid.Row="1" Grid.Column="1" Text="{Binding RoomQuantity}" Margin="10,0,0,10"/>
+            <!-- House Name -->
+            <TextBlock x:Name="HouseNameTextBlock" Text="{Binding Name}" FontSize="24" FontWeight="Bold" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center"/>
 
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="Available Room:" FontWeight="Bold"/>
-            <TextBlock x:Name="AvailableRoomTextBlock" Grid.Row="2" Grid.Column="1" Text="{Binding AvailableRoom}" Margin="10,0,0,10"/>
-        </Grid>
+            <!-- House Details Section -->
+            <Grid Grid.Row="0" Margin="20,0,120,10" Grid.ColumnSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-        <!-- Rooms List Section -->
-        <ListView Grid.Row="2" x:Name="lvRooms" Margin="10">
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel/>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Padding="10" CornerRadius="5" Background="LightGray"
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Address:" FontWeight="Bold"/>
+                <TextBlock x:Name="AddressTextBlock" Grid.Row="0" Grid.Column="1" Text="{Binding Address}" Margin="10,0,0,10"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Room Quantity:" FontWeight="Bold"/>
+                <TextBlock x:Name="RoomQuantityTextBlock" Grid.Row="1" Grid.Column="1" Text="{Binding RoomQuantity}" Margin="10,0,0,10"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Available Room:" FontWeight="Bold"/>
+                <TextBlock x:Name="AvailableRoomTextBlock" Grid.Row="2" Grid.Column="1" Text="{Binding AvailableRoom}" Margin="10,0,0,10"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Manage by:" FontWeight="Bold" x:Name="manageBy" Visibility="Collapsed"/>
+                <TextBlock Grid.Row="3" Grid.Column="1" x:Name="txtStaffName" Visibility="Collapsed" Margin="10,0,0,10"/>
+
+                <!-- ComboBox for selecting unassigned staff -->
+                <ComboBox Grid.Row="3" Grid.Column="1" x:Name="cmbStaffList" Visibility="Collapsed" Width="110"/>
+
+                <!-- Assign Button -->
+
+
+            </Grid>
+            <Button Grid.Column="1" x:Name="AssignStaffButton" Content="Assign"
+        Click="AssignStaff_Click"
+        Visibility="Collapsed" Style="{StaticResource commonButton}"  Width="100" Height="40" HorizontalAlignment="Left"/>
+            <Button Grid.Column="1" x:Name="UnAssignStaffButton" Content="UnAssign"
+        Click="UnAssignStaff_Click" 
+        Visibility="Collapsed" Style="{StaticResource commonButton}"  Width="100" Height="40" HorizontalAlignment="Left"/>
+
+            <!-- Rooms List Section -->
+            <ListView Grid.Row="1" Grid.ColumnSpan="2" x:Name="lvRooms">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Padding="10" CornerRadius="5" Background="LightGray"
                             MouseEnter="RoomBorder_MouseEnter" MouseLeave="RoomBorder_MouseLeave">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <EventSetter Event="MouseLeftButtonUp" Handler="Border_Click"/>
-                            </Style>
-                        </Border.Style>
-                        <Border.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Update Room" Click="UpdateRoom_Click"/>
-                                <MenuItem Header="Delete Room" Click="DeleteRoom_Click"/>
-                                <MenuItem Header="Bill" Click="ViewListBill_Click"/>
-                                <MenuItem Header="Add bill for this room" Click="AddBill_Click"/>
-                            </ContextMenu>
-                        </Border.ContextMenu>
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <EventSetter Event="MouseLeftButtonUp" Handler="Border_Click"/>
+                                </Style>
+                            </Border.Style>
+                            <Border.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Update Room" Click="UpdateRoom_Click"/>
+                                    <MenuItem Header="Delete Room" Click="DeleteRoom_Click"/>
+                                    <MenuItem Header="Add bill for this room" Click="AddBill_Click"/>
+                                </ContextMenu>
+                            </Border.ContextMenu>
 
-                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                            <Image Source="/Images/houseIcon.png" Width="105" Height="85"/>
-                            <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" Margin="0,10,0,0"/>
-                            <TextBlock Text="{Binding Status}" HorizontalAlignment="Center" Margin="0,10,0,0"/>
-                        </StackPanel>
-                    </Border>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <Popup x:Name="RoomDetailsPopup" Placement="Mouse" StaysOpen="True">
-            <Border Background="White" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Padding="10">
-                <StackPanel>
-                    <TextBlock x:Name="PopupRoomName" FontWeight="Bold" FontSize="16"/>
-                    <TextBlock x:Name="PopupRoomPrice"/>
-                    <TextBlock x:Name="PopupListCustomers"/>
-                    <TextBlock x:Name="PopupStatus"/>
-                </StackPanel>
-            </Border>
-        </Popup>
-    </Grid>
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                                <Image Source="/Images/houseIcon.png" Width="105" Height="85"/>
+                                <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                                <TextBlock Text="{Binding Status}" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Popup x:Name="RoomDetailsPopup" Placement="Mouse" StaysOpen="True">
+                <Border Background="White" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Padding="10">
+                    <StackPanel>
+                        <TextBlock x:Name="PopupRoomName" FontWeight="Bold" FontSize="16"/>
+                        <TextBlock x:Name="PopupRoomPrice"/>
+                        <TextBlock x:Name="PopupListCustomers"/>
+                        <TextBlock x:Name="PopupStatus"/>
+                    </StackPanel>
+                </Border>
+            </Popup>
+        </Grid>
+    </Border>
 </UserControl>

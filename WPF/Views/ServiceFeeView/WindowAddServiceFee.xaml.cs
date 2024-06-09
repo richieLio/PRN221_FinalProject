@@ -31,6 +31,7 @@ namespace WPF.Views.ServiceFeeView
             InitializeComponent();
             _house = house;
         }
+       
 
         private async void btnAddNewService_Click(object sender, RoutedEventArgs e)
         {

@@ -15,8 +15,8 @@ namespace DataAccess.Repository.BillRepository
         public Task<ResultModel> CreateBill(Guid userId, BillCreateReqModel billCreateReqModel)
             => BillDAO.Instance.CreateBill(userId, billCreateReqModel);
 
-        public Task<ResultModel> GetAllBills(Guid userId)
-            => BillDAO.Instance.GetAllBills(userId);
+        public Task<ResultModel> GetAllBills(Guid userId, Guid houseId, Guid roomId)
+            => BillDAO.Instance.GetAllBills(userId, houseId, roomId);
 
         public Task<Bill> getBillById(Guid billId)
             => BillDAO.Instance.GetBillById(billId);

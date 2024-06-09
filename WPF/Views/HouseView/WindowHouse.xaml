@@ -6,25 +6,24 @@
              xmlns:local="clr-namespace:WPF"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             Height="625" Width="1025">
+             Height="Auto" Width="Auto">
+    <Border CornerRadius="25" Padding="10" Background="White" 
+            HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20 0 20 0">
+        
     <Grid Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="70"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="850"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Column="1" >
-            <Button Content="Add new house" Click="AddNewHouse_Click"/>
+       
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1" Margin="0 0 30 0">
+            <Button Content="Add new house" Click="AddNewHouse_Click" Style="{StaticResource commonButton}" Width="160" Height="40"/>
         </StackPanel>
         <TextBlock Text="House Management" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
-
-        <ListView Grid.Row="1" x:Name="lvHouses" HorizontalAlignment="Left" Grid.ColumnSpan="2">
+        <ListView Grid.Row="1" x:Name="lvHouses" Grid.ColumnSpan="2" Margin="0 0 25 0">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <UniformGrid Columns="5"/>
+                    <WrapPanel/>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
@@ -36,7 +35,6 @@
                             <ContextMenu>
                                 <MenuItem Header="Update House" Click="UpdateHouse_Click"/>
                                 <MenuItem Header="Delete House" Click="DeleteHouse_Click"/>
-                                <MenuItem Header="Services" Click="ServiceHouse_Click"/>
                                 <MenuItem Header="Send Notification" Click="SendnNoti_Click"/>
                             </ContextMenu>
                         </Border.ContextMenu>
@@ -65,4 +63,5 @@
             </Border>
         </Popup>
     </Grid>
+    </Border>
 </UserControl>

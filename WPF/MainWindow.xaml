@@ -9,7 +9,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="MainWindow" Height="780" Width="1280"
         WindowStartupLocation="CenterScreen" Background="Transparent">
-    <Border CornerRadius="25" Padding="20" Background="#f7f6f4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown">
+    <Border CornerRadius="25" Padding="20" Background="#FFD2D2DC" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="220"/>
@@ -81,6 +81,12 @@
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="InvoiceText" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Bill" Style="{StaticResource menuButtonText}"/>
+                        </StackPanel>
+                    </RadioButton>     
+                    <RadioButton Style="{StaticResource menuButton}" x:Name="serviceRadioButton" GroupName="Views" Checked="RadioButton_Checked" Tag="serviceWindow">
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="RoomService" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Services" Style="{StaticResource menuButtonText}"/>
                         </StackPanel>
                     </RadioButton>
                     <RadioButton Style="{StaticResource menuButton}" x:Name="paymentRadioButton" GroupName="Views" Checked="RadioButton_Checked" Tag="paymentWindow">
