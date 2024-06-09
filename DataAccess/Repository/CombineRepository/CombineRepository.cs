@@ -108,8 +108,8 @@ namespace DataAccess.Repository.CombineRepository
         public Task<ResultModel> DeleteRoom(Guid houseId, Guid roomId)
         => _roomRepository.DeleteRoom(houseId, roomId);
 
-        public Task<ResultModel> GetAllBills(Guid userId)
-            => _billRepository.GetAllBills(userId);
+        public Task<ResultModel> GetAllBills(Guid userId, Guid houseId, Guid roomId)
+            => _billRepository.GetAllBills(userId, houseId, roomId);
 
         public Task<IEnumerable<string>> GetAllCustomerEmailByHouseId(Guid houseId)
         => _notificationRepository.GetAllCustomerEmailByHouseId(houseId);

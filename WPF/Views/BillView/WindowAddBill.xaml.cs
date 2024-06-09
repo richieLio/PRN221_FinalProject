@@ -17,6 +17,7 @@ namespace WPF.Views.BillView
     public partial class WindowAddBill : Window
     {
         private readonly ICombineRepository _repository;
+        public event EventHandler BillAdded;
         private readonly Room _room;
         private readonly House _house;
         private IEnumerable<ServiceViewModel> _services;
@@ -92,6 +93,7 @@ namespace WPF.Views.BillView
                         await _repository.InsertLocalNotifications(App.LoggedInUserId, localNotification);
 
 
+
                         var unReadNoti = _repository.GetNotificationQuantity(user.OwnerId.Value);
 
                         //send signal R
@@ -101,6 +103,8 @@ namespace WPF.Views.BillView
                             await App.SignalRConnection.InvokeAsync("NotifyBillCreated", _house.OwnerId, bill.Id,
                                 message, unReadNoti);
                         }
+                        BillAdded?.Invoke(this, EventArgs.Empty);
+                        Close();
                     }
                     catch (Exception ex)
                     {

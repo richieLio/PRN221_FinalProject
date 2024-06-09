@@ -12,6 +12,7 @@ using WPF.ContractView;
 using WPF.NotificationView;
 using WPF.StaffView;
 using WPF.Views.PaymentView;
+using WPF.Views.ServiceFeeView;
 using WPF.Views.UserView;
 
 namespace WPF
@@ -131,9 +132,10 @@ namespace WPF
                         MainContentControl.Content = _serviceProvider.GetService<WindowNotification>();
                         break;
                     case "billWindow":
-                        var windowBill = _serviceProvider.GetService<WindowBill>();
-                        MainContentControl.Content = windowBill;
-                        windowBill.LoadAllBill();
+                        MainContentControl.Content = _serviceProvider.GetService<WindowBill>();
+                        break;
+                    case "serviceWindow":
+                        MainContentControl.Content = _serviceProvider.GetService<WindowServiceFee>(); ;
                         break;
                     case "paymentWindow":
                         MainContentControl.Content = _serviceProvider.GetService<WindowPayment>();

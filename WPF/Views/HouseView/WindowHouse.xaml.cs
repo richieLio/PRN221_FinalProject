@@ -128,28 +128,6 @@ namespace WPF
                 }
             }
         }
-        private async void ServiceHouse_Click(object sender, RoutedEventArgs e)
-        {
-            MenuItem menuItem = sender as MenuItem;
-            if (menuItem != null)
-            {
-                Border border = ((ContextMenu)menuItem.Parent).PlacementTarget as Border;
-                if (border != null)
-                {
-                    var house = border.DataContext as House;
-                    if (house != null)
-                    {
-                        WindowServiceFee windowServiceFee = new WindowServiceFee(_serviceProvider.GetService<ICombineRepository>(), _serviceProvider, house);
-                        windowServiceFee.LoadService();
-                        MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
-                        if (mainWindow != null)
-                        {
-                            mainWindow.MainContentControl.Content = windowServiceFee;
-                        }
-                    }
-                }
-            }
-        }
         private async void SendnNoti_Click(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = sender as MenuItem;
