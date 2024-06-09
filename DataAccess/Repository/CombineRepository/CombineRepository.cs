@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Object;
 using DataAccess.Model.BillModel;
+using DataAccess.Model.ContractModel;
 using DataAccess.Model.CustomerModel;
 using DataAccess.Model.EmailModel;
 using DataAccess.Model.HouseModel;
@@ -132,6 +133,9 @@ namespace DataAccess.Repository.CombineRepository
         public Task<ResultModel> getBillDetails(Guid userId, Guid billId)
              => _billRepository.getBillDetails(userId, billId);
 
+        public Task<Contract> GetContract(Guid contractId)
+            => _contractRepository.GetContract(contractId);
+
         public Task<ResultModel> GetContractList(Guid userId)
             => _contractRepository.GetContractList(userId);
 
@@ -238,6 +242,9 @@ namespace DataAccess.Repository.CombineRepository
 
         public Task<ResultModel> UpdateBillStatus(Guid userId, BillUpdateStatusReqModel billUpdateStatusReqModel)
          => _billRepository.UpdateBillStatus(userId, billUpdateStatusReqModel);
+
+        public Task UpdateContract(ContractUpdateModel contract)
+            => _contractRepository.UpdateContract(contract);
 
         public Task<ResultModel> UpdateHouse(Guid OwnerId, HouseUpdateReqModel houseUpdateReqModel)
 => _houseRepository.UpdateHouse(OwnerId, houseUpdateReqModel);

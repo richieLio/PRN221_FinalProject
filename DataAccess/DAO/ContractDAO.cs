@@ -73,8 +73,8 @@ namespace DataAccess.DAO
                         CustomerName = customer.FullName,
                         RoomName = room.Name,
                         HouseName = house.Name,
-                        StartDate = contract.StartDate?.ToString("dd/MM/yyyy"),
-                        EndDate = contract.EndDate?.ToString("dd/MM/yyyy"),
+                        StartDate = contract.StartDate,
+                        EndDate = contract.EndDate,
                         FileUrl = contract.FileUrl,
                     };
 
@@ -113,6 +113,28 @@ namespace DataAccess.DAO
             return user;
         }
 
+        public async Task<Contract> GetContract(Guid contractId)
+        {
+            using var context = new RmsContext();
+            return await context.Contracts.FindAsync(contractId);
+        }
+
+        public async Task UpdateContract(ContractUpdateModel contractModel)
+        {
+            using var context = new RmsContext();
+
+            var contract = await context.Contracts.FindAsync(contractModel.Id);
+            if (contract == null)
+            {
+                throw new Exception("Contract not found");
+            }
+
+            contract.EndDate = contractModel.EndDate;
+            contract.FileUrl = contractModel.FileUrl;
+
+            // Lưu thay đổi
+            await context.SaveChangesAsync();
+        }
 
     }
 }

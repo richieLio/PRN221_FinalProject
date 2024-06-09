@@ -29,11 +29,7 @@ namespace WPF
 
         private async void LoadHouses()
         {
-
-
             lvHouses.ItemsSource = await _repository.GetHouses(App.LoggedInUserId);
-
-
         }
 
         private void Border_Click(object sender, MouseButtonEventArgs e)

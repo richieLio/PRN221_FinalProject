@@ -19,9 +19,11 @@ using System.Configuration;
 using System.Data;
 using System.Windows;
 using WPF.BillView;
+using WPF.ContractView;
 using WPF.NotificationView;
 using WPF.StaffView;
 using WPF.Views.BillView;
+using WPF.Views.ContractView;
 using WPF.Views.CustomerView;
 using WPF.Views.HouseView;
 using WPF.Views.NotificationView;
@@ -110,6 +112,7 @@ namespace WPF
             services.AddSingleton<WindowPayment>();
             services.AddSingleton<WindowAddNewNotification>();
             services.AddSingleton<WindowNotification>();
+            services.AddSingleton<WindowContractDetails>();
             services.AddSingleton<CloudStorage>(_ =>
        new CloudStorage("firebaseKey.Json"));
 
@@ -141,6 +144,7 @@ namespace WPF
             services.AddTransient<WindowUpdateProfile>();
             services.AddTransient<WindowPayment>();
             services.AddTransient<WindowAddNewNotification>();
+            services.AddTransient<WindowContractDetails>();
 
         }
         private void OnStartup(object sender, StartupEventArgs e)
