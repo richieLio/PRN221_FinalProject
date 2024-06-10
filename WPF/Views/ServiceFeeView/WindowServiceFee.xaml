@@ -7,22 +7,23 @@
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Height="Auto" Width="Auto">
+    <Border CornerRadius="25" Padding="10" Background="White" 
+     HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20 0 20 0">
+        <Grid Background="White">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="70" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="70" />
-            <RowDefinition Height="50" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <TextBlock Text="Services in House"
+            <TextBlock Text="Services in House"
            FontSize="24"
            FontWeight="Bold"
            HorizontalAlignment="Center"
            VerticalAlignment="Center"
            Style="{StaticResource MaterialDesignHeadline1TextBlock}" Grid.Row="0"/>
 
-        <ComboBox x:Name="cbHouses" 
+            <ComboBox x:Name="cbHouses" 
                   Width="200" 
                   Margin="35 0 0 0"
                   VerticalAlignment="Center"
@@ -31,26 +32,27 @@
                   DisplayMemberPath="Name"
                   SelectedValuePath="Id" Grid.Row="1"/>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Width="180" Grid.Row="1">
-            <Button Content="Add new service" Click="AddService_Click" RenderTransformOrigin="0,0" Style="{StaticResource MaterialDesignFlatButton}"/>
-        </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Width="180" Grid.Row="1">
+                <Button Content="Add new service" Click="AddService_Click" RenderTransformOrigin="0,0" Style="{StaticResource MaterialDesignFlatButton}"/>
+            </StackPanel>
 
-        <materialDesign:Card Grid.Row="2" Margin="35 0 0 0">
-            <ListView Name="lvServices" 
+            <materialDesign:Card Grid.Row="2" Margin="35 0 0 0">
+                <ListView Name="lvServices" 
                       Style="{StaticResource MaterialDesignListView}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" Width="140"/>
-                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="170"/>
-                    </GridView>
-                </ListView.View>
-                <ListView.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Edit" Click="EditService_Click"/>
-                        <MenuItem Header="Delete" Click="DeleteService_Click"/>
-                    </ContextMenu>
-                </ListView.ContextMenu>
-            </ListView>
-        </materialDesign:Card>
-    </Grid>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" Width="140"/>
+                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="170"/>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Edit" Click="EditService_Click"/>
+                            <MenuItem Header="Delete" Click="DeleteService_Click"/>
+                        </ContextMenu>
+                    </ListView.ContextMenu>
+                </ListView>
+            </materialDesign:Card>
+        </Grid>
+    </Border>
 </UserControl>

@@ -23,8 +23,24 @@
                    Style="{StaticResource MaterialDesignHeadline1TextBlock}"/>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10" Grid.Row="1" >
-                <Button Content="Back" Click="BackToRoomManagement_Click" Style="{StaticResource commonButton}" Width="40" Height="40"/>
                 <Button Content="Add new customer to room" Click="AddCustomer_Click" Style="{StaticResource commonButton}" Width="180" Height="40"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="35 0 0 0">
+                <ComboBox x:Name="cbHouses" 
+          Width="200" 
+          Margin="0,0,16,0"
+          VerticalAlignment="Center"
+          HorizontalAlignment="Left"
+          SelectionChanged="cbHouses_SelectionChanged"
+          DisplayMemberPath="Name"
+          SelectedValuePath="Id"/>
+                <ComboBox x:Name="cbRooms" 
+          Width="200" 
+          VerticalAlignment="Center"
+          HorizontalAlignment="Left"
+          SelectionChanged="cbRooms_SelectionChanged"
+          DisplayMemberPath="Name"
+          SelectedValuePath="Id"/>
             </StackPanel>
 
             <materialDesign:Card  Grid.Row="2">

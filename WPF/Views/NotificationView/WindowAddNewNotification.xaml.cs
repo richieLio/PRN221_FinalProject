@@ -24,6 +24,8 @@ namespace WPF.Views.NotificationView
     public partial class WindowAddNewNotification : Window
     {
         private readonly ICombineRepository _repository;
+        public event EventHandler NotiAdded;
+
         private readonly House _house;
         public WindowAddNewNotification(ICombineRepository repository,  House house)
         {
@@ -45,6 +47,8 @@ namespace WPF.Views.NotificationView
             if ( result.IsSuccess)
             {
                 MessageBox.Show(result.Message);
+                NotiAdded?.Invoke(this, EventArgs.Empty);
+                Close();
             }
             else
             {

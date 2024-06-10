@@ -11,7 +11,7 @@ namespace DataAccess.Repository.ContractRepository
 {
     public interface IContractRepository
     {
-        Task<ResultModel> GetContractList(Guid userId);
+        Task<ResultModel> GetContractList(Guid userId, Guid houseId);
         Task<Contract> GetContract(Guid contractId);
         Task UpdateContract(ContractUpdateModel contract);
     }

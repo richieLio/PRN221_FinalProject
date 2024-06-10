@@ -136,8 +136,8 @@ namespace DataAccess.Repository.CombineRepository
         public Task<Contract> GetContract(Guid contractId)
             => _contractRepository.GetContract(contractId);
 
-        public Task<ResultModel> GetContractList(Guid userId)
-            => _contractRepository.GetContractList(userId);
+        public Task<ResultModel> GetContractList(Guid userId, Guid houseId)
+            => _contractRepository.GetContractList(userId, houseId);
 
         public Task<ResultModel> GetCustomerByRoomId(Guid roomId)
             => _customerRepository.GetCustomerByRoomId(roomId);

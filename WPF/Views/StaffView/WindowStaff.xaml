@@ -6,43 +6,45 @@
         xmlns:local="clr-namespace:WPF.StaffView"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Height="500" Width="900">
-
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <TextBlock Text="Staff Management"
+        Height="Auto" Width="Auto">
+    <Border CornerRadius="25" Padding="10" Background="White" 
+     HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20 0 20 0">
+        <Grid Background="White">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock Text="Staff Management"
        FontSize="24"
        FontWeight="Bold"
-       Margin="16"
        HorizontalAlignment="Center"
        VerticalAlignment="Center"
-       Style="{StaticResource MaterialDesignHeadline1TextBlock}"/>
+       Style="{StaticResource MaterialDesignHeadline1TextBlock}" Grid.Row="0"/>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10" Width="780">
-            <Button Content="Add new staff to room" Click="AddStaff_Click" Margin="0,10,0,0" RenderTransformOrigin="0,0" Style="{StaticResource MaterialDesignFlatButton}"/>
-        </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1" >
+                <Button Content="Add new staff" Click="AddStaff_Click" Width="110" Height="40" Style="{StaticResource commonButton}"/>
+            </StackPanel>
 
-        <materialDesign:Card Grid.Row="1">
-            <ListView Name="lvStaffs" 
+            <materialDesign:Card Grid.Row="2">
+                <ListView Name="lvStaffs" 
                   Style="{StaticResource MaterialDesignListView}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="FullName" DisplayMemberBinding="{Binding FullName}" Width="140"/>
-                        <GridViewColumn Header="Email" DisplayMemberBinding="{Binding Email}" Width="170"/>
-                        <GridViewColumn Header="PhoneNumber" DisplayMemberBinding="{Binding PhoneNumber}" Width="160"/>
-                        <GridViewColumn Header="Address" DisplayMemberBinding="{Binding Address}" Width="300"/>
-                    </GridView>
-                </ListView.View>
-                <ListView.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Edit" Click="EditStaff_Click"/>
-                        <MenuItem Header="Delete" Click="DeleteStaff_Click"/>
-                    </ContextMenu>
-                </ListView.ContextMenu>
-            </ListView>
-        </materialDesign:Card>
-    </Grid>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="FullName" DisplayMemberBinding="{Binding FullName}" Width="140"/>
+                            <GridViewColumn Header="Email" DisplayMemberBinding="{Binding Email}" Width="170"/>
+                            <GridViewColumn Header="PhoneNumber" DisplayMemberBinding="{Binding PhoneNumber}" Width="160"/>
+                            <GridViewColumn Header="Address" DisplayMemberBinding="{Binding Address}" Width="300"/>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Edit" Click="EditStaff_Click"/>
+                            <MenuItem Header="Delete" Click="DeleteStaff_Click"/>
+                        </ContextMenu>
+                    </ListView.ContextMenu>
+                </ListView>
+            </materialDesign:Card>
+        </Grid>
+    </Border>
 </UserControl>

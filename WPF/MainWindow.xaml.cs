@@ -11,6 +11,7 @@ using WPF.BillView;
 using WPF.ContractView;
 using WPF.NotificationView;
 using WPF.StaffView;
+using WPF.Views.CustomerView;
 using WPF.Views.PaymentView;
 using WPF.Views.ServiceFeeView;
 using WPF.Views.UserView;
@@ -124,6 +125,9 @@ namespace WPF
                         break;
                     case "staffWindow":
                         MainContentControl.Content = _serviceProvider.GetService<WindowStaff>();
+                        break;
+                    case "customerWindow":
+                        MainContentControl.Content = _serviceProvider.GetService<WindowCustomersInRoom>();
                         break;
                     case "contractWindow":
                         MainContentControl.Content = _serviceProvider.GetService<WindowContract>();
@@ -270,22 +274,23 @@ namespace WPF
         bool IsMaximized = false;
         private void Border_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if(e.ClickCount== 2)
+            if (e.ClickCount == 2)
             {
-                if(IsMaximized)
+                if (IsMaximized)
                 {
                     this.WindowState = WindowState.Normal;
                     this.Width = 1280;
                     this.Height = 780;
                     IsMaximized = false;
-                } else
+                }
+                else
                 {
                     this.WindowState = WindowState.Maximized;
-                    
+
                     IsMaximized = true;
                 }
             }
         }
-        
+
     }
 }
