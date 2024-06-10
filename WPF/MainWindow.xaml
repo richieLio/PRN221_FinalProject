@@ -65,6 +65,12 @@
                             <TextBlock Text="Staff" Style="{StaticResource menuButtonText}"/>
                         </StackPanel>
                     </RadioButton>
+                    <RadioButton Style="{StaticResource menuButton}" x:Name="customerRadioButton" GroupName="Views" Checked="RadioButton_Checked" Tag="customerWindow">
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="AccountMultipleOutline" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Customer" Style="{StaticResource menuButtonText}"/>
+                        </StackPanel>
+                    </RadioButton>
                     <RadioButton Style="{StaticResource menuButton}" x:Name="contractRadioButton" GroupName="Views" Checked="RadioButton_Checked" Tag="contractWindow">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="TagTextOutline" Style="{StaticResource menuButtonIcon}"/>

@@ -19,16 +19,54 @@ namespace WPF.Views.CustomerView
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ICombineRepository _repository;
-        private readonly Guid _roomId;
-        private readonly Guid _houseId;
-        public WindowCustomersInRoom( IServiceProvider serviceProvider,ICombineRepository repository, Guid houseId, Guid roomId)
+        private  Guid _roomId;
+        private  Guid _houseId;
+        public WindowCustomersInRoom( IServiceProvider serviceProvider,ICombineRepository repository)
         {
             _repository = repository;
             InitializeComponent();
-            LoadCustomers(roomId);
-            _roomId = roomId;
             _serviceProvider = serviceProvider;
-            _houseId = houseId;
+            LoadHouses();
+        }
+        public async void LoadHouses()
+        {
+            var houses = await _repository.GetHouses(App.LoggedInUserId);
+            cbHouses.ItemsSource = houses;
+            if (houses.Any())
+            {
+                cbHouses.SelectedIndex = 0;
+            }
+        }
+        private void cbHouses_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbHouses.SelectedItem is House selectedHouse)
+            {
+                LoadRooms(selectedHouse.Id);
+                _houseId = selectedHouse.Id;
+            }
+        }
+        private async void cbRooms_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbRooms.SelectedItem is Room selectedRoom)
+            {
+                _roomId = selectedRoom.Id;
+                LoadCustomers(_roomId);
+            }
+        }
+        private async Task LoadRooms(Guid houseId)
+        {
+            try
+            {
+                var rooms = await _repository.GetRooms(houseId);
+                if (rooms != null)
+                {
+                    cbRooms.ItemsSource = rooms;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while loading rooms: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         public async void LoadCustomers(Guid roomId)
@@ -60,24 +98,7 @@ namespace WPF.Views.CustomerView
             }
         }
 
-        private async void BackToRoomManagement_Click(object sender, RoutedEventArgs e)
-        {
-             
-            var house = await _repository.GetHouse(_houseId);
-            // Get the main window
-            MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
-            if (mainWindow != null)
-            {
-                // Create a new instance of WindowHouse
-                WindowHouseDetails houseWindowDetails = new WindowHouseDetails(_serviceProvider, _repository,
-                    house);
-                houseWindowDetails.LoadRooms(_houseId);
-                // Set the MainContentControl content to the new WindowHouse instance
-                mainWindow.MainContentControl.Content = houseWindowDetails;
-            }
-
-        }
-
+       
         private void AddCustomer_Click(object sender, RoutedEventArgs e)
         {
             var addCustomerWindow = new WindowAddCustomer(_serviceProvider.GetService<ICombineRepository>(), _houseId, _roomId);

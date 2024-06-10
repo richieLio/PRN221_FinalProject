@@ -1,4 +1,5 @@
-﻿using DataAccess.Model.BillModel;
+﻿using BusinessObject.Object;
+using DataAccess.Model.BillModel;
 using DataAccess.Model.ContractModel;
 using DataAccess.Repository;
 using DataAccess.Repository.CombineRepository;
@@ -34,47 +35,33 @@ namespace WPF.ContractView
         private readonly CloudStorage _cloudStorage;
         private readonly ICombineRepository _repository;
 
-
         public WindowContract(CloudStorage cloudStorage, ICombineRepository repository)
         {
             InitializeComponent();
             _cloudStorage = cloudStorage;
             _repository = repository;
-            LoadContracts(App.LoggedInUserId);
+            LoadHouses();
         }
 
-        /*  private async void Button_Click(object sender, RoutedEventArgs e)
-          {
-              OpenFileDialog openFileDialog = new OpenFileDialog();
-              if (openFileDialog.ShowDialog() == true)
-              {
-
-              var form = new ContractReqModel
-              {
-                  Id = Guid.NewGuid(),
-                  ImagesUrl = ConvertToIFormFile(openFileDialog.FileName),
-              };
-
-              string filePath = $"Contract/{form.Id}/images/{form.ImagesUrl.FileName}";
-             var result =  await _cloudStorage.UploadFile(form.ImagesUrl, filePath);
-                  if(result != null)
-                  {
-                      MessageBox.Show($"File uploaded succesfully");
-                  }
-              }
-          private IFormFile ConvertToIFormFile(string filePath)
+        public async void LoadHouses()
         {
-            var fileStream = new FileStream(filePath, FileMode.Open);
-            return new FormFile(fileStream, 0, fileStream.Length, null, System.IO.Path.GetFileName(filePath))
+            var houses = await _repository.GetHouses(App.LoggedInUserId);
+            cbHouses.ItemsSource = houses;
+            if (houses.Any())
             {
-                Headers = new HeaderDictionary(),
-                ContentType = "application/octet-stream"
-            };
+                cbHouses.SelectedIndex = 0;
+            }
         }
-          }*/
-        private async void LoadContracts(Guid userId)
+        private void cbHouses_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var result = await _repository.GetContractList(userId);
+            if (cbHouses.SelectedItem is House selectedHouse)
+            {
+                LoadContracts(App.LoggedInUserId ,selectedHouse.Id);
+            }
+        }
+        private async void LoadContracts(Guid userId, Guid houseId)
+        {
+            var result = await _repository.GetContractList(userId, houseId);
             if (result.IsSuccess)
             {
                 lvContracts.ItemsSource = result.Data as List<ContractInfoResModel>;
@@ -97,12 +84,6 @@ namespace WPF.ContractView
                 detailsWindow.ShowDialog();
             }
         }   
-        private void EditContract_Click(object sender, RoutedEventArgs e)
-        {
-            // Implement edit bill logic here
-            MessageBox.Show("Edit contract.");
-        }
-
      
         private void DeleteContract_Click(object sender, RoutedEventArgs e)
         {

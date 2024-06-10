@@ -14,7 +14,7 @@ namespace DataAccess.Repository.ContractRepository
     {
         public Task<Contract> GetContract(Guid contractId) => ContractDAO.Instance.GetContract(contractId);
 
-        public Task<ResultModel> GetContractList(Guid userId) => ContractDAO.Instance.GetContractList(userId);
+        public Task<ResultModel> GetContractList(Guid userId, Guid houseId) => ContractDAO.Instance.GetContractList(userId, houseId);
 
         public Task UpdateContract(ContractUpdateModel contract) => ContractDAO.Instance.UpdateContract(contract);
     }
