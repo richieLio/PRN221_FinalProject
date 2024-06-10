@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Object;
 using Data.Enums;
+using DataAccess.Enums;
 using DataAccess.Model.ContractModel;
 using DataAccess.Model.OperationResultModel;
 using DataAccess.Repository.HouseRepository;
@@ -33,13 +34,37 @@ namespace DataAccess.DAO
                 }
             }
         }
-        public async Task<IEnumerable<Contract>> GetContracts(Guid onwerId)
+        public async Task<IEnumerable<Contract>> GetContracts(Guid userId, Guid houseId)
         {
             using var context = new RmsContext();
-            return await context.Contracts.Where(x => x.OwnerId == onwerId).OrderByDescending(b=> b.CreatedAt).ToListAsync();
+            IUserRepository userRepository = new UserRepository();
+            var user = await userRepository.GetUserById(userId);
+
+            List<Contract> contracts = new List<Contract>();
+
+            if (user.Role == UserEnum.OWNER)
+            {
+                contracts = await context.Contracts
+                    .Where(c => c.OwnerId == userId && c.Room.HouseId == houseId)
+                    .OrderByDescending(h => h.CreatedAt)
+                    .ToListAsync();
+            }
+            else if (user.Role == UserEnum.STAFF)
+            {
+                contracts = await context.Contracts
+                    .Include(c => c.Room)
+                    .ThenInclude(r => r.House)
+                    .Where(c => c.Room.HouseId == houseId && c.Room.House.Staff.Any(s => s.Id == userId))
+                    .OrderByDescending(c => c.CreatedAt)
+                    .ToListAsync();
+            }
+            return contracts;
         }
 
-        public async Task<ResultModel> GetContractList(Guid userId)
+
+
+
+        public async Task<ResultModel> GetContractList(Guid userId, Guid houseId)
         {
             IUserRepository _userRepository = new UserRepository();
             IRoomRepository _roomRepository = new RoomRepository();
@@ -57,7 +82,7 @@ namespace DataAccess.DAO
                 }
                
 
-                var contracts = await GetContracts(userId);
+                var contracts = await GetContracts(userId, houseId);
                 List<ContractInfoResModel> contractList = new List<ContractInfoResModel>();
 
                 foreach (var contract in contracts)
@@ -107,7 +132,7 @@ namespace DataAccess.DAO
                 return null;
 
             var user = await context.Users
-                                    .Where(u => u.Id == contract.CustomerId) // Assuming CustomerId is the correct foreign key in the Contract entity
+                                    .Where(u => u.Id == contract.CustomerId)
                                     .FirstOrDefaultAsync();
 
             return user;

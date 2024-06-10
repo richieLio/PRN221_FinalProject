@@ -6,39 +6,55 @@
         xmlns:local="clr-namespace:WPF.NotificationView"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-       Height="500" Width="900">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <TextBlock Text="Notifications"
+           Height="Auto" Width="Auto">
+    <Border CornerRadius="25" Padding="10" Background="White" 
+ HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20 0 20 0">
+        <Grid Background="White">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60" />
+                <RowDefinition Height="80" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock Text="Notifications"
          FontSize="24"
          FontWeight="Bold"
-         Margin="16"
          HorizontalAlignment="Center"
          VerticalAlignment="Center"
-         Style="{StaticResource MaterialDesignHeadline1TextBlock}"/>
+         Style="{StaticResource MaterialDesignHeadline1TextBlock}" Grid.Row="0"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Width="180" Grid.Row="1">
+                <Button Content="Send notification" Click="sendNoti_Click" RenderTransformOrigin="0,0" Style="{StaticResource commonButton}" Width="170" Height="40"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="35 0 0 0">
+                <ComboBox x:Name="cbHouses" 
+          Width="200" 
+          Margin="0,0,16,0"
+          VerticalAlignment="Center"
+          HorizontalAlignment="Left"
+          SelectionChanged="cbHouses_SelectionChanged"
+          DisplayMemberPath="Name"
+          SelectedValuePath="Id"/>
 
-     
+            </StackPanel>
 
-        <materialDesign:Card Grid.Row="1">
-            <ListView Name="lvNotifications" 
+
+            <materialDesign:Card Grid.Row="2">
+                <ListView Name="lvNotifications" 
                     Style="{StaticResource MaterialDesignListView}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Subject" DisplayMemberBinding="{Binding Subject}" Width="140"/>
-                        <GridViewColumn Header="Content" DisplayMemberBinding="{Binding Content}" Width="370"/>
-                        <GridViewColumn Header="House" DisplayMemberBinding="{Binding HouseName}" Width="200"/>
-                        <GridViewColumn Header="CreatedAt" DisplayMemberBinding="{Binding CreatedAt}" Width="130"/>
-                    </GridView>
-                </ListView.View>
-                <ListView.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Delete" Click="DeleteNotification_Click"/>
-                    </ContextMenu>
-                </ListView.ContextMenu>
-            </ListView>
-        </materialDesign:Card>
-    </Grid>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Subject" DisplayMemberBinding="{Binding Subject}" Width="140"/>
+                            <GridViewColumn Header="Content" DisplayMemberBinding="{Binding Content}" Width="370"/>
+                            <GridViewColumn Header="House" DisplayMemberBinding="{Binding HouseName}" Width="200"/>
+                            <GridViewColumn Header="CreatedAt" DisplayMemberBinding="{Binding CreatedAt}" Width="130"/>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Delete" Click="DeleteNotification_Click"/>
+                        </ContextMenu>
+                    </ListView.ContextMenu>
+                </ListView>
+            </materialDesign:Card>
+        </Grid>
+    </Border>
 </UserControl>

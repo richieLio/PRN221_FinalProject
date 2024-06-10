@@ -51,7 +51,7 @@ namespace WPF
             var selectedRoom = (sender as Border)?.DataContext as Room;
             if (selectedRoom != null)
             {
-                WindowCustomersInRoom customersWindow = new WindowCustomersInRoom(_serviceProvider, _repository, _house.Id, selectedRoom.Id);
+                WindowCustomersInRoom customersWindow = new WindowCustomersInRoom(_serviceProvider, _repository);
                 customersWindow.LoadCustomers(selectedRoom.Id);
 
                 MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
