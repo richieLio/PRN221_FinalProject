@@ -33,7 +33,7 @@
                   SelectedValuePath="Id" Grid.Row="1"/>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Width="180" Grid.Row="1">
-                <Button Content="Add new service" Click="AddService_Click" RenderTransformOrigin="0,0" Style="{StaticResource MaterialDesignFlatButton}"/>
+                <Button Content="Add new service" Click="AddService_Click" RenderTransformOrigin="0,0" Style="{StaticResource commonButton}" Width="160" Height="40"/>
             </StackPanel>
 
             <materialDesign:Card Grid.Row="2" Margin="35 0 0 0">

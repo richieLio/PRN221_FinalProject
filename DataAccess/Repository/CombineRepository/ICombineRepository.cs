@@ -1,4 +1,5 @@
-﻿using DataAccess.Repository.BillRepository;
+﻿using BusinessObject.Object;
+using DataAccess.Repository.BillRepository;
 using DataAccess.Repository.CombineRepository;
 using DataAccess.Repository.ContractRepository;
 using DataAccess.Repository.CustomerRepository;
@@ -34,6 +35,5 @@ namespace DataAccess.Repository.CombineRepository
         INotificationRepository,
         IContractRepository
     {
-
     }
 }

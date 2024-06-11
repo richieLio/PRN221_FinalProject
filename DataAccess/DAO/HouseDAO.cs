@@ -200,5 +200,24 @@ namespace DataAccess.DAO
             var house = await context.Houses.FindAsync(houseId);
             return house?.AvailableRoom;
         }
+
+        public async Task<Dictionary<House, List<decimal>>> GetMonthlyRevenueByHouse(DateTime startDate, DateTime endDate)
+        {
+            using var context = new RmsContext();
+
+            var monthlyRevenueByHouse = await context.Bills
+                .Include(b => b.Room)
+                .ThenInclude(r => r.House)
+                .Where(b => b.PaymentDate >= startDate && b.PaymentDate <= endDate)
+                .GroupBy(b => b.Room.House)
+                .ToDictionaryAsync(
+                    group => group.Key,
+                    group => group
+                        .GroupBy(b => new { Year = b.PaymentDate.Value.Year, Month = b.PaymentDate.Value.Month })
+                        .Select(g => g.Sum(b => b.TotalPrice ?? 0))  
+                        .ToList());
+            return monthlyRevenueByHouse;
+        }
+
     }
 }
