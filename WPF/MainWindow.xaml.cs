@@ -33,8 +33,8 @@ namespace WPF
             InitializeComponent();
             _serviceProvider = serviceProvider;
 
-            MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
-            houseRadioButton.IsChecked = true;
+            MainContentControl.Content = _serviceProvider.GetService<WindowReport>();
+            dashboardRadioButton.IsChecked = true;
             UpdateStaffButtonVisibility();
 
             var staffWindow = _serviceProvider.GetService<WindowStaff>();
