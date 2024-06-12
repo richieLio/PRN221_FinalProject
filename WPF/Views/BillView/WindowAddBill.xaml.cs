@@ -91,8 +91,8 @@ namespace WPF.Views.BillView
                             IsRead = false,
                         };
                         await _repository.InsertLocalNotifications(App.LoggedInUserId, localNotification);
-
-
+                        BillAdded?.Invoke(this, EventArgs.Empty);
+                        Close();
 
                         var unReadNoti = _repository.GetNotificationQuantity(user.OwnerId.Value);
 
@@ -103,8 +103,7 @@ namespace WPF.Views.BillView
                             await App.SignalRConnection.InvokeAsync("NotifyBillCreated", _house.OwnerId, bill.Id,
                                 message, unReadNoti);
                         }
-                        BillAdded?.Invoke(this, EventArgs.Empty);
-                        Close();
+                       
                     }
                     catch (Exception ex)
                     {

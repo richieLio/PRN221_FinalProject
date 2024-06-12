@@ -26,6 +26,7 @@ namespace DataAccess.Repository.HouseRepository
 
         public Task<int?> GetAvailableRoomByHouseId(Guid houseId) => HouseDAO.Instance.GetAvailableRoomByHouseId(houseId);
 
-
+        public Task<Dictionary<House, List<(DateTime PaymentDate, decimal Revenue)>>> GetMonthlyRevenueByHouse(DateTime startDate, DateTime endDate)
+        => HouseDAO.Instance.GetMonthlyRevenueByHouse(startDate, endDate);
     }
 }

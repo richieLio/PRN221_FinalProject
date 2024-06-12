@@ -158,11 +158,11 @@ namespace DataAccess.DAO
 
                 if (user.Role == UserEnum.STAFF)
                 {
-                    bills = await GetBillsByStaffUserId(userId);
+                    bills = await GetBillsByStaffUserId(userId, roomId);
                 }
                 else
                 {
-                    bills = await GetAllBillsByOwnerUserId(userId);
+                    bills = await GetAllBillsByOwnerUserId(userId, roomId);
                 }
                 List<BillResModel> billList = new List<BillResModel>();
 
@@ -389,7 +389,7 @@ namespace DataAccess.DAO
                 .Include(bs => bs.Service)
                 .ToListAsync();
         }
-        public async Task<IEnumerable<Bill>> GetBillsByStaffUserId(Guid staffUserId)
+        public async Task<IEnumerable<Bill>> GetBillsByStaffUserId(Guid staffUserId, Guid roomId)
         {
             using var context = new RmsContext();
 
@@ -402,10 +402,11 @@ namespace DataAccess.DAO
                 .Include(b => b.Room)
                 .ThenInclude(r => r.House)
                 .Where(b => b.Room.HouseId != null && staffHouses.Contains(b.Room.HouseId.Value))
+                .Where(b => b.RoomId == roomId)
                 .OrderByDescending(b => b.Month)
                 .ToListAsync();
         }
-        public async Task<IEnumerable<Bill>> GetAllBillsByOwnerUserId(Guid ownerId)
+        public async Task<IEnumerable<Bill>> GetAllBillsByOwnerUserId(Guid ownerId,Guid roomId)
         {
             using var context = new RmsContext();
             var staffIds = await context.Users
@@ -415,6 +416,7 @@ namespace DataAccess.DAO
 
             return await context.Bills
                                 .Where(b => b.CreateBy == ownerId || staffIds.Contains(b.CreateBy.Value))
+                                .Where(b => b.RoomId == roomId)
                                 .OrderByDescending(b => b.Month)
                                 .ToListAsync();
         }
