@@ -47,12 +47,20 @@ namespace WPF.BillView
                 cbHouses.SelectedIndex = 0;
             }
         }
-        private void cbHouses_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void cbHouses_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cbHouses.SelectedItem is House selectedHouse)
             {
-                LoadRooms(selectedHouse.Id);
+                await LoadRooms(selectedHouse.Id);
                 _houseId = selectedHouse.Id;
+            }
+        }
+        private async void cbRooms_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbRooms.SelectedItem is Room selectedRoom)
+            {
+                _roomId = selectedRoom.Id;
+                LoadAllBill(App.LoggedInUserId, _houseId, _roomId);
             }
         }
         private async void AddBill_Click(object sender, RoutedEventArgs e)
@@ -88,14 +96,7 @@ namespace WPF.BillView
             }
         }
 
-        private async void cbRooms_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (cbRooms.SelectedItem is Room selectedRoom)
-            {
-                _roomId = selectedRoom.Id;
-                LoadAllBill(App.LoggedInUserId, _houseId, _roomId);
-            }
-        }
+       
 
         public async void LoadAllBill(Guid userId, Guid houseId, Guid roomId)
         {

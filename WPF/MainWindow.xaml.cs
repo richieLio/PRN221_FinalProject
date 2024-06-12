@@ -13,6 +13,7 @@ using WPF.NotificationView;
 using WPF.StaffView;
 using WPF.Views.CustomerView;
 using WPF.Views.PaymentView;
+using WPF.Views.ReportView;
 using WPF.Views.ServiceFeeView;
 using WPF.Views.UserView;
 
@@ -32,8 +33,8 @@ namespace WPF
             InitializeComponent();
             _serviceProvider = serviceProvider;
 
-            MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
-            houseRadioButton.IsChecked = true;
+            MainContentControl.Content = _serviceProvider.GetService<WindowReport>();
+            dashboardRadioButton.IsChecked = true;
             UpdateStaffButtonVisibility();
 
             var staffWindow = _serviceProvider.GetService<WindowStaff>();
@@ -120,6 +121,9 @@ namespace WPF
             {
                 switch (radioButton.Tag.ToString())
                 {
+                    case "dashboardWindow":
+                        MainContentControl.Content = _serviceProvider.GetService<WindowReport>();
+                        break;
                     case "houseWindow":
                         MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
                         break;

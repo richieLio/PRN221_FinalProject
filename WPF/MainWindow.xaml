@@ -8,7 +8,8 @@
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="MainWindow" Height="780" Width="1280"
-        WindowStartupLocation="CenterScreen" Background="Transparent">
+        WindowStartupLocation="CenterScreen" Background="Transparent"
+        >
     <Border CornerRadius="25" Padding="20" Background="#FFD2D2DC" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -53,6 +54,12 @@
 
                     <TextBlock Text="Main" Style="{StaticResource menuTitle}"/>
 
+                    <RadioButton Style="{StaticResource menuButton}" x:Name="dashboardRadioButton" GroupName="Views" Checked="RadioButton_Checked" Tag="dashboardWindow">
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="MonitorDashboard" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Dashboard" Style="{StaticResource menuButtonText}"/>
+                        </StackPanel>
+                    </RadioButton>
                     <RadioButton Style="{StaticResource menuButton}" x:Name="houseRadioButton" GroupName="Views" Checked="RadioButton_Checked" Tag="houseWindow">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="Home" Style="{StaticResource menuButtonIcon}"/>
