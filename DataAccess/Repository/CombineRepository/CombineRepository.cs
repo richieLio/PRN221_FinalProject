@@ -163,7 +163,7 @@ namespace DataAccess.Repository.CombineRepository
         public Task<ResultModel> GetLocalNotifications(Guid userId)
         => _localNotificationRepository.GetLocalNotifications(userId);
 
-        public Task<Dictionary<House, List<decimal>>> GetMonthlyRevenueByHouse(DateTime startDate, DateTime endDate)
+        public Task<Dictionary<House, List<(DateTime PaymentDate, decimal Revenue)>>> GetMonthlyRevenueByHouse(DateTime startDate, DateTime endDate)
 => _houseRepository.GetMonthlyRevenueByHouse(startDate, endDate);
         public int GetNotificationQuantity(Guid userId)
         => _localNotificationRepository.GetNotificationQuantity(userId);

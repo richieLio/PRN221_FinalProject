@@ -15,6 +15,9 @@ namespace WPF.Views.ReportView
 {
     public partial class WindowReport : UserControl
     {
+        private readonly SolidColorBrush[] seriesColors = { Brushes.Blue, Brushes.Orange, Brushes.Green };
+
+
         private readonly ICombineRepository _repository;
         private IEnumerable<House> _houses;
 
@@ -34,7 +37,8 @@ namespace WPF.Views.ReportView
             try
             {
                 _houses = await _repository.GetHouses(userId);
-                UpdateUI();
+                await UpdateChartData();
+
             }
             catch (Exception ex)
             {
@@ -42,36 +46,6 @@ namespace WPF.Views.ReportView
             }
         }
 
-        private async Task UpdateUI()
-        {
-            ColorPanel.Children.Clear();
-            HousePanel.Children.Clear();
-            ReportChart.Series.Clear();
-
-            foreach (var house in _houses)
-            {
-                var colorBorder = new Border
-                {
-                    Width = 12,
-                    Height = 12,
-                    Background = GetColorFromChart("Blue"),
-                    CornerRadius = new CornerRadius(3),
-                    Margin = new Thickness(0, 3, 0, 0)
-                };
-                var textBlock = new TextBlock
-                {
-                    Text = house.Name,
-                };
-
-                ColorPanel.Children.Add(colorBorder);
-                HousePanel.Children.Add(textBlock);
-            }
-        }
-
-        private async void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
-        {
-            await UpdateChartData();
-        }
 
         private async Task UpdateChartData()
         {
@@ -79,8 +53,8 @@ namespace WPF.Views.ReportView
                 return;
 
             // Lấy giá trị start date và end date từ date picker
-            DateTime startDate = StartDatePicker.SelectedDate ?? DateTime.MinValue;
-            DateTime endDate = EndDatePicker.SelectedDate ?? DateTime.MaxValue;
+            DateTime startDate = DateTime.Now.AddYears(-1);
+            DateTime endDate = DateTime.Now;
 
             // Thực hiện truy vấn cơ sở dữ liệu để lấy dữ liệu từng tháng của từng nhà
             var monthlyData = await _repository.GetMonthlyRevenueByHouse(startDate, endDate);
@@ -89,14 +63,18 @@ namespace WPF.Views.ReportView
             await UpdateChart(monthlyData);
         }
 
-        private async Task UpdateChart(Dictionary<House, List<decimal>> monthlyData)
+
+        private async Task UpdateChart(Dictionary<House, List<(DateTime PaymentDate, decimal Revenue)>> monthlyData)
         {
             // Xóa các series hiện có trên biểu đồ
             ReportChart.Series.Clear();
+            HousePanel.Children.Clear();
+            ColorPanel.Children.Clear();
 
             // Tạo một series mới cho mỗi nhà và thêm dữ liệu từ monthlyData
-            foreach (var houseData in monthlyData)
+            for (int i = 0; i < monthlyData.Count; i++)
             {
+                var houseData = monthlyData.ElementAt(i);
                 var house = houseData.Key;
                 var monthlyRevenue = houseData.Value;
 
@@ -104,30 +82,44 @@ namespace WPF.Views.ReportView
                 {
                     Title = house.Name,
                     Values = new ChartValues<decimal>(),
-                    LineSmoothness = 0
+                    PointGeometrySize = 5,
+                    StrokeThickness = 5,
+                    Stroke = seriesColors[i],
+                    LabelPoint = (point) =>
+                    {
+                        var index = (int)point.X;
+                        if (index >= 0 && index < monthlyRevenue.Count)
+                        {
+                            var monthName = monthlyRevenue[index].PaymentDate.ToString("MMMM");
+                            return $"{monthName}";
+                        }
+                        return "";
+                    }
                 };
 
                 // Thêm series vào biểu đồ
                 ReportChart.Series.Add(series);
 
                 // Thêm dữ liệu vào Values của series
-                foreach (var revenue in monthlyRevenue)
+                foreach (var dataPoint in monthlyRevenue)
                 {
-                    series.Values.Add(revenue);
+                    series.Values.Add(dataPoint.Revenue);
                 }
+
+                // Tạo Border với cùng màu của LineSeries
+                var colorBorder = new Border
+                {
+                    Width = 12,
+                    Height = 12,
+                    Background = seriesColors[i],
+                    CornerRadius = new CornerRadius(3),
+                    Margin = new Thickness(0, 3, 0, 0)
+                };
+
+                // Thêm Border và TextBlock vào ColorPanel và HousePanel
+                ColorPanel.Children.Add(colorBorder);
+                HousePanel.Children.Add(new TextBlock { Text = house.Name });
             }
-        }
-
-        private SolidColorBrush GetColorFromChart(string colorName)
-        {
-            if (colorName == "Blue")
-                return Brushes.Blue;
-            else if (colorName == "Red")
-                return Brushes.Red;
-            else if (colorName == "Green")
-                return Brushes.Green;
-
-            return Brushes.Black;
         }
     }
 }
