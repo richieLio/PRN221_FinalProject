@@ -10,13 +10,16 @@ using System.Windows.Media;
 using Microsoft.VisualBasic.ApplicationServices;
 using DataAccess.Model.HouseModel;
 using System.Globalization;
+using System.Threading.Tasks;
+using System.Linq;
+using System;
+using System.Collections.Generic;
 
 namespace WPF.Views.ReportView
 {
     public partial class WindowReport : UserControl
     {
         private readonly SolidColorBrush[] seriesColors = { Brushes.Blue, Brushes.Orange, Brushes.Green };
-
 
         private readonly ICombineRepository _repository;
         private IEnumerable<House> _houses;
@@ -38,14 +41,12 @@ namespace WPF.Views.ReportView
             {
                 _houses = await _repository.GetHouses(userId);
                 await UpdateChartData();
-
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error retrieving houses: {ex.Message}");
             }
         }
-
 
         private async Task UpdateChartData()
         {
@@ -63,15 +64,23 @@ namespace WPF.Views.ReportView
             await UpdateChart(monthlyData);
         }
 
-
         private async Task UpdateChart(Dictionary<House, List<(DateTime PaymentDate, decimal Revenue)>> monthlyData)
         {
-            // Xóa các series hiện có trên biểu đồ
+            // Clear existing series and panels
             ReportChart.Series.Clear();
-            HousePanel.Children.Clear();
-            ColorPanel.Children.Clear();
+            TitleColorHousePanel.Children.Clear();
 
-            // Tạo một series mới cho mỗi nhà và thêm dữ liệu từ monthlyData
+            // Add the title first
+            var titleTextBlock = new TextBlock
+            {
+                Text = "Revenue report",
+                VerticalAlignment = VerticalAlignment.Center,
+                Style = (Style)FindResource("titleText"),
+                Margin = new Thickness(0, 0, 10, 0)
+            };
+            TitleColorHousePanel.Children.Add(titleTextBlock);
+
+            // Create new series and add data from monthlyData
             for (int i = 0; i < monthlyData.Count; i++)
             {
                 var houseData = monthlyData.ElementAt(i);
@@ -83,8 +92,8 @@ namespace WPF.Views.ReportView
                     Title = house.Name,
                     Values = new ChartValues<decimal>(),
                     PointGeometrySize = 5,
-                    StrokeThickness = 5,
-                    Stroke = seriesColors[i],
+                    StrokeThickness = 2,
+                    Stroke = seriesColors[i % seriesColors.Length],
                     LabelPoint = (point) =>
                     {
                         var index = (int)point.X;
@@ -97,29 +106,30 @@ namespace WPF.Views.ReportView
                     }
                 };
 
-                // Thêm series vào biểu đồ
+                // Add series to the chart
                 ReportChart.Series.Add(series);
 
-                // Thêm dữ liệu vào Values của series
+                // Add data points to the series
                 foreach (var dataPoint in monthlyRevenue)
                 {
                     series.Values.Add(dataPoint.Revenue);
                 }
 
-                // Tạo Border với cùng màu của LineSeries
+                // Create Border with the same color as the LineSeries
                 var colorBorder = new Border
                 {
                     Width = 12,
                     Height = 12,
-                    Background = seriesColors[i],
+                    Background = seriesColors[i % seriesColors.Length],
                     CornerRadius = new CornerRadius(3),
-                    Margin = new Thickness(0, 3, 0, 0)
+                    Margin = new Thickness(5, 4, 0, 0)
                 };
 
-                // Thêm Border và TextBlock vào ColorPanel và HousePanel
-                ColorPanel.Children.Add(colorBorder);
-                HousePanel.Children.Add(new TextBlock { Text = house.Name });
+                // Add Border and TextBlock to TitleColorHousePanel in the specified alternating pattern
+                TitleColorHousePanel.Children.Add(colorBorder);
+                TitleColorHousePanel.Children.Add(new TextBlock { Text = house.Name, Margin = new Thickness(10, 12, 0, 0) });
             }
         }
+
     }
 }
