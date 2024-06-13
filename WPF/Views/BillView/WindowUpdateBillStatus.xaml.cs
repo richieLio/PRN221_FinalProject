@@ -49,10 +49,15 @@ namespace WPF.Views.BillView
 
         private async void UpdateStatusButton_Click(object sender, RoutedEventArgs e)
         {
-
             string statusText = (StatusComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
             bool isPaid = statusText == "Paid";
             DateTime? paymentDate = PaymentDatePicker.SelectedDate;
+
+            // If "Unpaid" is selected, set paymentDate to null
+            if (statusText == "Unpaid")
+            {
+                paymentDate = null;
+            }
 
             var billUpdateStatusReqModel = new BillUpdateStatusReqModel
             {

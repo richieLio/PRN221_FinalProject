@@ -3,20 +3,12 @@ using AutoMapper.Execution;
 using BusinessObject.Object;
 using DataAccess.Enums;
 using DataAccess.Model.UserModel;
-using Org.BouncyCastle.Pqc.Crypto.Lms;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Encoder = DataAccess.Utilities.Encoder;
 using EmailUltilities = DataAccess.Utilities.Email;
-using DataAccess.Enums;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Model.EmailModel;
 using DataAccess.Model.OperationResultModel;
 using DataAccess.Model.VerifyModel;
-using DataAccess.Utilities;
 
 namespace DataAccess.DAO
 {
@@ -523,7 +515,7 @@ namespace DataAccess.DAO
             {
                 Result.IsSuccess = false;
                 Result.Code = 400;
-                Result.Message = "User doesn't have the required roles";
+                Result.Message = ex.Message;
 
             }
             return Result;
