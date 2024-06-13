@@ -20,7 +20,7 @@ namespace DataAccess.Repository.HouseRepository
 
         Task<int?> GetRoomQuantityByHouseId(Guid houseId);
         Task<int?> GetAvailableRoomByHouseId(Guid houseId);
-        Task<Dictionary<House, List<(DateTime PaymentDate, decimal Revenue)>>> GetMonthlyRevenueByHouse(DateTime startDate, DateTime endDate);
+        Task<Dictionary<House, List<(DateTime PaymentDate, decimal Revenue, bool IsPaid)>>> GetMonthlyRevenueByHouseWithPaidStatus(DateTime startDate, DateTime endDate);
        
 
     }
