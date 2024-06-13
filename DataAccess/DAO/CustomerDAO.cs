@@ -123,7 +123,7 @@ namespace DataAccess.DAO
             {
                 Result.IsSuccess = false;
                 Result.Code = 400;
-                Result.Message = "User doesn't have the required roles";
+                Result.Message = ex.Message;
 
             }
             return Result;

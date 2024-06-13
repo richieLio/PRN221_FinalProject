@@ -55,7 +55,7 @@ namespace WPF.BillView
                 _houseId = selectedHouse.Id;
             }
         }
-        private async void cbRooms_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cbRooms_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cbRooms.SelectedItem is Room selectedRoom)
             {
@@ -63,7 +63,7 @@ namespace WPF.BillView
                 LoadAllBill(App.LoggedInUserId, _houseId, _roomId);
             }
         }
-        private async void AddBill_Click(object sender, RoutedEventArgs e)
+        private void AddBill_Click(object sender, RoutedEventArgs e)
         {
             if (cbHouses.SelectedItem is House selectedHouse && cbRooms.SelectedItem is Room selectedRoom)
             {

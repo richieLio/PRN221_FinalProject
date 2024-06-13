@@ -201,24 +201,49 @@ namespace DataAccess.DAO
             return house?.AvailableRoom;
         }
 
-        public async Task<Dictionary<House, List<(DateTime PaymentDate, decimal Revenue)>>> GetMonthlyRevenueByHouse(DateTime startDate, DateTime endDate)
+        public async Task<Dictionary<House, List<(DateTime? PaymentDate, decimal Revenue, bool IsPaid)>>> GetMonthlyRevenueByHouseWithPaidStatus(Guid userId, DateTime startDate, DateTime endDate)
         {
             using var context = new RmsContext();
 
-            var monthlyRevenueByHouse = await context.Bills
+            var user = await context.Users
+                .Include(u => u.Houses)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            IQueryable<Bill> query = context.Bills
                 .Include(b => b.Room)
                 .ThenInclude(r => r.House)
-                .Where(b => b.PaymentDate >= startDate && b.PaymentDate <= endDate)
+                .Where(b => (b.PaymentDate == null || (b.PaymentDate >= startDate && b.PaymentDate <= endDate)));
+
+            if (user.Role == UserEnum.STAFF)
+            {
+                query = query.Where(b => b.Room.House.Staff.Any(s => s.Id == userId));
+            }
+            else
+            {
+                query = query.Where(b => b.Room.House.OwnerId == userId);
+            }
+
+            var monthlyRevenueByHouse = await query
                 .GroupBy(b => b.Room.House)
                 .ToDictionaryAsync(
                     group => group.Key,
                     group => group
-                        .GroupBy(b => new { PaymentDate = new DateTime(b.PaymentDate.Value.Year, b.PaymentDate.Value.Month, 1) }) 
-                        .Select(g => (g.Key.PaymentDate, Revenue: g.Sum(b => b.TotalPrice ?? 0)))
+                        .GroupBy(b => b.PaymentDate.HasValue ? new DateTime(b.PaymentDate.Value.Year, b.PaymentDate.Value.Month, 1) : (DateTime?)null)
+                        .Select(g => (
+                            PaymentDate: g.Key,
+                            Revenue: g.Sum(b => b.TotalPrice ?? 0),
+                            IsPaid: g.All(b => b.IsPaid.HasValue && b.IsPaid.Value) 
+                        ))
                         .ToList());
 
             return monthlyRevenueByHouse;
         }
+
 
 
     }

@@ -19,8 +19,7 @@ namespace WPF.Views.ReportView
 {
     public partial class WindowReport : UserControl
     {
-        private readonly SolidColorBrush[] seriesColors = { Brushes.Blue, Brushes.Orange, Brushes.Green };
-
+        private readonly SolidColorBrush[] seriesColors = { Brushes.Green, Brushes.OrangeRed, Brushes.Pink };
         private readonly ICombineRepository _repository;
         private IEnumerable<House> _houses;
 
@@ -30,8 +29,8 @@ namespace WPF.Views.ReportView
         {
             InitializeComponent();
             _repository = repository;
-            Formatter = value => value.ToString("N0", CultureInfo.InvariantCulture); // Định dạng giá trị lớn thành định dạng ngắn gọn
-            DataContext = this; // Đặt DataContext để Binding hoạt động
+            Formatter = value => value.ToString("N0", CultureInfo.InvariantCulture);
+            DataContext = this;
             LoadHouses(App.LoggedInUserId);
         }
 
@@ -50,27 +49,95 @@ namespace WPF.Views.ReportView
 
         private async Task UpdateChartData()
         {
-            if (_houses == null || !_houses.Any())
-                return;
+            if (_houses == null || !_houses.Any()) return;
 
-            // Lấy giá trị start date và end date từ date picker
             DateTime startDate = DateTime.Now.AddYears(-1);
-            DateTime endDate = DateTime.Now;
+            DateTime endDate = DateTime.Now.AddMinutes(30);
+            var monthlyData = await _repository.GetMonthlyRevenueByHouseWithPaidStatus(App.LoggedInUserId, startDate, endDate);
 
-            // Thực hiện truy vấn cơ sở dữ liệu để lấy dữ liệu từng tháng của từng nhà
-            var monthlyData = await _repository.GetMonthlyRevenueByHouse(startDate, endDate);
+            var totalRevenues = monthlyData.ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value.Sum(data => data.Revenue)
+            );
 
-            // Cập nhật giao diện người dùng với dữ liệu mới
-            await UpdateChart(monthlyData);
+            var topHouses = totalRevenues.OrderByDescending(kvp => kvp.Value)
+                                         .Take(5)
+                                         .Select(kvp => kvp.Key)
+                                         .ToList();
+
+            TopHousesGrid.Children.Clear();
+
+            for (int i = 0; i < topHouses.Count; i++)
+            {
+                var house = topHouses[i];
+                var label = new Label
+                {
+                    Content = $"Top {i + 1}: {house.Name}",
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Margin = new Thickness(0, 10 + (i * 25), 0, 0)
+                };
+                TopHousesGrid.Children.Add(label);
+            }
+
+            var topMonthlyData = monthlyData.Where(kvp => topHouses.Contains(kvp.Key))
+                                            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            await UpdatePieChart(topMonthlyData);
+            await UpdateChart(topMonthlyData);
         }
 
-        private async Task UpdateChart(Dictionary<House, List<(DateTime PaymentDate, decimal Revenue)>> monthlyData)
+        private async Task UpdatePieChart(Dictionary<House, List<(DateTime? PaymentDate, decimal Revenue, bool IsPaid)>> monthlyData)
         {
-            // Clear existing series and panels
+            PieChart.Series.Clear();
+
+            var paidCounts = new ChartValues<int>();
+            var unpaidCounts = new ChartValues<int>();
+            var houseNames = new List<string>();
+
+            foreach (var houseData in monthlyData)
+            {
+                var house = houseData.Key;
+                var data = houseData.Value;
+
+                int countPaid = data.Count(d => d.IsPaid);
+                int countUnpaid = data.Count(d => !d.IsPaid);
+
+                paidCounts.Add(countPaid);
+                unpaidCounts.Add(countUnpaid);
+                houseNames.Add(house.Name);
+            }
+
+            PieChart.Series.Add(CreatePieSeries("Paid", paidCounts, houseNames, Brushes.Green));
+            PieChart.Series.Add(CreatePieSeries("Unpaid", unpaidCounts, houseNames, Brushes.Red));
+
+            PieChart.DataContext = this;
+        }
+
+        private PieSeries CreatePieSeries(string title, ChartValues<int> values, List<string> houseNames, SolidColorBrush color)
+        {
+            return new PieSeries
+            {
+                Title = title,
+                Values = values,
+                DataLabels = true,
+                Fill = color,
+                LabelPoint = chartPoint =>
+                {
+                    var index = (int)chartPoint.X;
+                    if (index >= 0 && index < houseNames.Count)
+                    {
+                        return $"{houseNames[index]}: {chartPoint.Y}";
+                    }
+                    return "";
+                }
+            };
+        }
+
+        private async Task UpdateChart(Dictionary<House, List<(DateTime? PaymentDate, decimal Revenue, bool IsPaid)>> monthlyData)
+        {
             ReportChart.Series.Clear();
             TitleColorHousePanel.Children.Clear();
 
-            // Add the title first
             var titleTextBlock = new TextBlock
             {
                 Text = "Revenue report",
@@ -80,7 +147,6 @@ namespace WPF.Views.ReportView
             };
             TitleColorHousePanel.Children.Add(titleTextBlock);
 
-            // Create new series and add data from monthlyData
             for (int i = 0; i < monthlyData.Count; i++)
             {
                 var houseData = monthlyData.ElementAt(i);
@@ -99,37 +165,36 @@ namespace WPF.Views.ReportView
                         var index = (int)point.X;
                         if (index >= 0 && index < monthlyRevenue.Count)
                         {
-                            var monthName = monthlyRevenue[index].PaymentDate.ToString("MMMM");
+                            var paymentDate = monthlyRevenue[index].PaymentDate;
+                            var monthName = paymentDate.HasValue ? paymentDate.Value.ToString("MMMM") : "No Date";
                             return $"{monthName}";
                         }
                         return "";
                     }
                 };
 
-                // Add series to the chart
                 ReportChart.Series.Add(series);
 
-                // Add data points to the series
                 foreach (var dataPoint in monthlyRevenue)
                 {
                     series.Values.Add(dataPoint.Revenue);
                 }
 
-                // Create Border with the same color as the LineSeries
-                var colorBorder = new Border
-                {
-                    Width = 12,
-                    Height = 12,
-                    Background = seriesColors[i % seriesColors.Length],
-                    CornerRadius = new CornerRadius(3),
-                    Margin = new Thickness(5, 4, 0, 0)
-                };
-
-                // Add Border and TextBlock to TitleColorHousePanel in the specified alternating pattern
-                TitleColorHousePanel.Children.Add(colorBorder);
+                TitleColorHousePanel.Children.Add(CreateColorBorder(i));
                 TitleColorHousePanel.Children.Add(new TextBlock { Text = house.Name, Margin = new Thickness(10, 12, 0, 0) });
             }
         }
 
+        private Border CreateColorBorder(int index)
+        {
+            return new Border
+            {
+                Width = 12,
+                Height = 12,
+                Background = seriesColors[index % seriesColors.Length],
+                CornerRadius = new CornerRadius(3),
+                Margin = new Thickness(5, 4, 0, 0)
+            };
+        }
     }
 }
