@@ -228,20 +228,23 @@ namespace DataAccess.DAO
                 query = query.Where(b => b.Room.House.OwnerId == userId);
             }
 
-            var monthlyRevenueByHouse = await query
+            var bills = await query.ToListAsync();
+
+        
+
+            var revenueByHouse = bills
                 .GroupBy(b => b.Room.House)
-                .ToDictionaryAsync(
+                .ToDictionary(
                     group => group.Key,
                     group => group
-                        .GroupBy(b => b.PaymentDate.HasValue ? new DateTime(b.PaymentDate.Value.Year, b.PaymentDate.Value.Month, 1) : (DateTime?)null)
-                        .Select(g => (
-                            PaymentDate: g.Key,
-                            Revenue: g.Sum(b => b.TotalPrice ?? 0),
-                            IsPaid: g.All(b => b.IsPaid.HasValue && b.IsPaid.Value) 
+                        .Select(b => (
+                            PaymentDate: b.PaymentDate,
+                            Revenue: b.TotalPrice ?? 0,
+                            IsPaid: b.IsPaid
                         ))
                         .ToList());
 
-            return monthlyRevenueByHouse;
+            return revenueByHouse;
         }
 
 

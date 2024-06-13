@@ -34,7 +34,7 @@ namespace WPF.Views.BillView
 
         private void InitializeBillData()
         {
-            if (_bill.IsPaid.Value)
+            if (_bill.IsPaid)
             {
                 StatusComboBox.SelectedIndex = 0; 
             }
