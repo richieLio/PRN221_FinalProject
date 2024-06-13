@@ -81,7 +81,6 @@ public partial class RmsContext : DbContext
 
             entity.HasOne(d => d.Service).WithMany(p => p.BillServices)
                 .HasForeignKey(d => d.ServiceId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("BillService_ibfk_2");
         });
 
@@ -233,6 +232,7 @@ public partial class RmsContext : DbContext
 
             entity.HasOne(d => d.House).WithMany(p => p.Services)
                 .HasForeignKey(d => d.HouseId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Service_House");
         });
 

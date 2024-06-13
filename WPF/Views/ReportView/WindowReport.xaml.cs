@@ -47,7 +47,7 @@ namespace WPF.Views.ReportView
             }
         }
 
-        private async Task UpdateChartData()
+        public async Task UpdateChartData()
         {
             if (_houses == null || !_houses.Any()) return;
 
@@ -153,6 +153,12 @@ namespace WPF.Views.ReportView
                 var house = houseData.Key;
                 var monthlyRevenue = houseData.Value;
 
+                // Sắp xếp dữ liệu theo tháng
+                var sortedMonthlyRevenue = monthlyRevenue
+                    .OrderBy(data => data.PaymentDate?.Year)
+                    .ThenBy(data => data.PaymentDate?.Month)
+                    .ToList();
+
                 var series = new LineSeries
                 {
                     Title = house.Name,
@@ -163,11 +169,11 @@ namespace WPF.Views.ReportView
                     LabelPoint = (point) =>
                     {
                         var index = (int)point.X;
-                        if (index >= 0 && index < monthlyRevenue.Count)
+                        if (index >= 0 && index < sortedMonthlyRevenue.Count)
                         {
-                            var paymentDate = monthlyRevenue[index].PaymentDate;
+                            var paymentDate = sortedMonthlyRevenue[index].PaymentDate;
                             var monthName = paymentDate.HasValue ? paymentDate.Value.ToString("MMMM") : "No Date";
-                            return $"{monthName}";
+                            return $"{monthName}: {point.Y}";
                         }
                         return "";
                     }
@@ -175,7 +181,7 @@ namespace WPF.Views.ReportView
 
                 ReportChart.Series.Add(series);
 
-                foreach (var dataPoint in monthlyRevenue)
+                foreach (var dataPoint in sortedMonthlyRevenue)
                 {
                     series.Values.Add(dataPoint.Revenue);
                 }
@@ -184,6 +190,7 @@ namespace WPF.Views.ReportView
                 TitleColorHousePanel.Children.Add(new TextBlock { Text = house.Name, Margin = new Thickness(10, 12, 0, 0) });
             }
         }
+
 
         private Border CreateColorBorder(int index)
         {
