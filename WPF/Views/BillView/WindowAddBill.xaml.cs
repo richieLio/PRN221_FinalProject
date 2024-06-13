@@ -10,6 +10,7 @@ using DataAccess.Model.BillModel;
 using DataAccess.Model.ServiceFeeModel;
 using DataAccess.Repository.CombineRepository;
 using Microsoft.AspNetCore.SignalR.Client;
+using WPF.Views.ReportView;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace WPF.Views.BillView
@@ -92,6 +93,7 @@ namespace WPF.Views.BillView
                         };
                         await _repository.InsertLocalNotifications(App.LoggedInUserId, localNotification);
                         BillAdded?.Invoke(this, EventArgs.Empty);
+                       
                         Close();
 
                         var unReadNoti = _repository.GetNotificationQuantity(user.OwnerId.Value);

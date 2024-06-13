@@ -11,7 +11,7 @@ public partial class Bill
 
     public DateTime? Month { get; set; }
 
-    public bool? IsPaid { get; set; }
+    public bool IsPaid { get; set; }
 
     public DateTime? PaymentDate { get; set; }
 
