@@ -156,12 +156,13 @@ namespace WPF
             loginWindow.Show();
         }
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-     Host.CreateDefaultBuilder(args)
-         .ConfigureWebHostDefaults(webBuilder =>
-         {
-             webBuilder.UseStartup<Startup>()
-                       .UseUrls("http://0.0.0.0:5157", "https://0.0.0.0:7259"); // Lắng nghe từ mọi IP
-         });
+      Host.CreateDefaultBuilder(args)
+          .ConfigureWebHostDefaults(webBuilder =>
+          {
+              webBuilder.UseStartup<Startup>()
+                        .UseUrls("http://54.254.183.128:5157", "https://54.254.183.128:7259"); // Thay đổi để lắng nghe từ IP công khai
+          });
+
 
     }
 }
