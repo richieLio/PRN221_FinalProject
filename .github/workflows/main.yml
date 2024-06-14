@@ -10,45 +10,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Setup .NET Core SDK
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '8.0.x'  # Update to the latest .NET 8.0 SDK
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '8.0.x'  # Update to the latest .NET 8.0 SDK
 
-    - name: Restore dependencies
-      run: dotnet restore SignalRServer/SignalRServer.csproj
+      - name: Restore dependencies
+        run: dotnet restore SignalRServer/SignalRServer.csproj
 
-    - name: Build
-      run: dotnet build --configuration Release --no-restore SignalRServer/SignalRServer.csproj
+      - name: Build
+        run: dotnet build --configuration Release --no-restore SignalRServer/SignalRServer.csproj
 
-    - name: Publish
-      run: dotnet publish --configuration Release --output ./publish SignalRServer/SignalRServer.csproj
+      - name: Publish
+        run: dotnet publish --configuration Release --output ./publish SignalRServer/SignalRServer.csproj
 
-    - name: Copy files to EC2 instance
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ec2-user
-        key: ${{ secrets.EC2_SSH_KEY }}
-        source: "./SignalRServer/publish/*"
-        target: "/home/ec2-user/your-signalr-server-directory"
+      - name: List publish directory contents
+        run: ls -l ./SignalRServer/publish/
 
-    - name: Copy deployment script to EC2 instance
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ec2-user
-        key: ${{ secrets.EC2_SSH_KEY }}
-        source: "./SignalRServer/deploy.sh"
-        target: "/home/ec2-user/your-signalr-server-directory/deploy.sh"
+      - name: Copy files to EC2 instance
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "./SignalRServer/publish/*"
+          target: "/home/ec2-user/your-signalr-server-directory"
 
-    - name: Execute deployment script on EC2 instance
-      uses: appleboy/ssh-action@v0.1.6
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ec2-user
-        key: ${{ secrets.EC2_SSH_KEY }}
-        script: "/home/ec2-user/your-signalr-server-directory/deploy.sh"
+      - name: Copy deployment script to EC2 instance
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "./SignalRServer/deploy.sh"
+          target: "/home/ec2-user/your-signalr-server-directory/deploy.sh"
+
+      - name: Execute deployment script on EC2 instance
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: "/home/ec2-user/your-signalr-server-directory/deploy.sh"
