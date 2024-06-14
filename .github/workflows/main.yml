@@ -1,4 +1,4 @@
-name: Build and Deploy to EC2
+name: Deploy SignalR Server
 
 on:
   push:
@@ -16,16 +16,16 @@ jobs:
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '8.0.x'  # Update to the latest .NET 8.0 SDK version
+        dotnet-version: '8.0.x'  # Cập nhật phiên bản .NET 8.0 SDK mới nhất
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore SignalRServer/SignalRServer.csproj  # Điều chỉnh đường dẫn đến file .csproj của SignalR Server
 
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build --configuration Release --no-restore SignalRServer/SignalRServer.csproj  # Điều chỉnh đường dẫn đến file .csproj của SignalR Server
 
     - name: Publish
-      run: dotnet publish --configuration Release --output ./publish
+      run: dotnet publish --configuration Release --output ./publish SignalRServer/SignalRServer.csproj  # Điều chỉnh đường dẫn đến file .csproj của SignalR Server
 
     - name: Copy files to EC2 instance
       uses: appleboy/scp-action@v0.1.4
@@ -33,8 +33,8 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ec2-user
         key: ${{ secrets.EC2_SSH_KEY }}
-        source: "./publish/*"
-        target: "/home/ec2-user/your-application-directory"
+        source: "./SignalRServer/publish/*"  # Điều chỉnh đường dẫn dựa trên cấu trúc dự án của bạn
+        target: "/home/ec2-user/your-signalr-server-directory"  # Điều chỉnh đường dẫn đích trên EC2
 
     - name: Copy deployment script to EC2 instance
       uses: appleboy/scp-action@v0.1.4
@@ -42,8 +42,8 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ec2-user
         key: ${{ secrets.EC2_SSH_KEY }}
-        source: "./deploy.sh"
-        target: "/home/ec2-user/your-application-directory/deploy.sh"
+        source: "./SignalRServer/deploy.sh"  # Điều chỉnh đường dẫn dựa trên cấu trúc dự án của bạn
+        target: "/home/ec2-user/your-signalr-server-directory/deploy.sh"  # Điều chỉnh đường dẫn đích trên EC2
 
     - name: Execute deployment script on EC2 instance
       uses: appleboy/ssh-action@v0.1.6
@@ -51,4 +51,4 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ec2-user
         key: ${{ secrets.EC2_SSH_KEY }}
-        script: "/home/ec2-user/your-application-directory/deploy.sh"
+        script: "/home/ec2-user/your-signalr-server-directory/deploy.sh"
