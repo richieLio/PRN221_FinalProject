@@ -155,21 +155,14 @@ namespace WPF
             var loginWindow = serviceProvider.GetService<WindowLogin>();
             loginWindow.Show();
         }
-        private async void SetupSignalR()
-        {
-            SignalRConnection = new HubConnectionBuilder()
-                .WithUrl("https://signalrserver20240614155050.azurewebsites.net/notihub")
-                .WithAutomaticReconnect()
-                .Build();
-            try
-            {
-                await SignalRConnection.StartAsync();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"SignalR connection error: {ex.Message}");
-            }
-        }
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+     Host.CreateDefaultBuilder(args)
+         .ConfigureWebHostDefaults(webBuilder =>
+         {
+             webBuilder.UseStartup<Startup>()
+                       .UseUrls("http://0.0.0.0:5157", "https://0.0.0.0:7259"); // Lắng nghe từ mọi IP
+         });
+
     }
 }
 
