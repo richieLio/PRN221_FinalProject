@@ -41,7 +41,7 @@ public partial class RmsContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("server =(local); database = RMS;uid=sa;pwd=DLY#5572;TrustServerCertificate=true;");
+        => optionsBuilder.UseSqlServer("server =rms.clm6s6e4yupq.ap-southeast-1.rds.amazonaws.com,1433; database = RMS;uid=admin;pwd=12345678;TrustServerCertificate=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -68,7 +68,7 @@ public partial class RmsContext : DbContext
 
         modelBuilder.Entity<BillService>(entity =>
         {
-            entity.HasKey(e => new { e.BillId, e.ServiceId }).HasName("PK__BillServ__ADA3476A2D4C5D4D");
+            entity.HasKey(e => new { e.BillId, e.ServiceId }).HasName("PK__BillServ__ADA3476A06665DDD");
 
             entity.ToTable("BillService");
 
@@ -265,7 +265,7 @@ public partial class RmsContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__User__3214EC070498EB7B");
+            entity.HasKey(e => e.Id).HasName("PK__User__3214EC0742FDA466");
 
             entity.ToTable("User");
 
@@ -299,7 +299,7 @@ public partial class RmsContext : DbContext
                         .HasConstraintName("FK_UserRoom_User"),
                     j =>
                     {
-                        j.HasKey("UserId", "RoomId").HasName("PK__UserRoom__94A0AFDF37A6551B");
+                        j.HasKey("UserId", "RoomId").HasName("PK__UserRoom__94A0AFDFEBD2BC0F");
                         j.ToTable("UserRoom");
                     });
         });

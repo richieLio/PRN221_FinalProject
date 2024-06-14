@@ -42,7 +42,7 @@ namespace WPF
 
 
             _connection = new HubConnectionBuilder()
-               .WithUrl("https://localhost:7259/notihub")
+               .WithUrl("https://signalrserver20240614155050.azurewebsites.net/notihub")
                .WithAutomaticReconnect()
                .Build();
 
