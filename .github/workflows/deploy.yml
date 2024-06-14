@@ -13,10 +13,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Setup .NET Core
+    - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '8.0.x'  # Update to the latest .NET 8.0 SDK
+        dotnet-version: '8.0.x'  # Update to the latest .NET 8.0 SDK version
 
     - name: Restore dependencies
       run: dotnet restore
@@ -27,7 +27,7 @@ jobs:
     - name: Publish
       run: dotnet publish --configuration Release --output ./publish
 
-    - name: Copy files to EC2
+    - name: Copy files to EC2 instance
       uses: appleboy/scp-action@v0.1.4
       with:
         host: ${{ secrets.EC2_HOST }}
@@ -36,7 +36,7 @@ jobs:
         source: "./publish/*"
         target: "/home/ec2-user/your-application-directory"
 
-    - name: Copy deployment script to EC2
+    - name: Copy deployment script to EC2 instance
       uses: appleboy/scp-action@v0.1.4
       with:
         host: ${{ secrets.EC2_HOST }}
@@ -45,7 +45,7 @@ jobs:
         source: "./deploy.sh"
         target: "/home/ec2-user/your-application-directory/deploy.sh"
 
-    - name: Deploy on EC2
+    - name: Execute deployment script on EC2 instance
       uses: appleboy/ssh-action@v0.1.6
       with:
         host: ${{ secrets.EC2_HOST }}
