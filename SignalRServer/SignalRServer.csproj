@@ -7,11 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="publish\**" />
+    <Content Remove="publish\**" />
+    <EmbeddedResource Remove="publish\**" />
+    <None Remove="publish\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.5" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="publish\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
 
