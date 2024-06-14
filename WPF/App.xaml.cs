@@ -51,7 +51,7 @@ namespace WPF
             serviceProvider = services.BuildServiceProvider();
             LoggedInUserId = Guid.Empty;
 
-          //  SetupSignalR();
+           SetupSignalR();
 
         }
         private void ConfigureServices(ServiceCollection services)
@@ -158,7 +158,7 @@ namespace WPF
         private async void SetupSignalR()
         {
             SignalRConnection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:7259/notihub")
+                .WithUrl("https://signalrserver20240614155050.azurewebsites.net/notihub")
                 .WithAutomaticReconnect()
                 .Build();
             try

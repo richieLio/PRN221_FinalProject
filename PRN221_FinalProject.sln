@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalRServer", "SignalRServer\SignalRServer.csproj", "{47CA9718-FB54-479B-985E-98812A76C0E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MomoPayment", "MomoPayment\MomoPayment.csproj", "{E9104980-1319-4B4E-8F58-B0222E844206}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MomoPayment", "MomoPayment\MomoPayment.csproj", "{E9104980-1319-4B4E-8F58-B0222E844206}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
