@@ -158,7 +158,7 @@ namespace WPF
         private async void SetupSignalR()
         {
             SignalRConnection = new HubConnectionBuilder()
-                .WithUrl("https://signalrserver20240614155050.azurewebsites.net/notihub")
+                .WithUrl("https://localhost:7259/notihub")
                 .WithAutomaticReconnect()
                 .Build();
             try
