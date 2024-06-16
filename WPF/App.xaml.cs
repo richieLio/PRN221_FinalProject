@@ -1,15 +1,34 @@
-﻿using DataAccess.Repository;
+﻿
+using DataAccess.Repository.BillRepository;
+using DataAccess.Repository.CombineRepository;
+using DataAccess.Repository.ContractRepository;
+using DataAccess.Repository.CustomerRepository;
+using DataAccess.Repository.HouseRepository;
+using DataAccess.Repository.LicenceRepository;
+using DataAccess.Repository.LocalNotificationRepository;
+using DataAccess.Repository.NotificationRepository;
+using DataAccess.Repository.RoomRepository;
+using DataAccess.Repository.ServiceRepository;
+using DataAccess.Repository.StaffRepository;
+using DataAccess.Repository.TransactionRepository;
+using DataAccess.Repository.UserRepostory;
+using DataAccess.Utilities;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using System.Data;
 using System.Windows;
 using WPF.BillView;
+using WPF.ContractView;
+using WPF.NotificationView;
 using WPF.StaffView;
 using WPF.Views.BillView;
+using WPF.Views.ContractView;
 using WPF.Views.CustomerView;
 using WPF.Views.HouseView;
+using WPF.Views.NotificationView;
 using WPF.Views.PaymentView;
+using WPF.Views.ReportView;
 using WPF.Views.RoomView;
 using WPF.Views.ServiceFeeView;
 using WPF.Views.UserView;
@@ -23,7 +42,7 @@ namespace WPF
     {
         private ServiceProvider serviceProvider;
         public static Guid LoggedInUserId { get; set; }
-        public static HubConnection SignalRConnection { get;  set; }
+        public static HubConnection SignalRConnection { get; set; }
 
         public App()
         {
@@ -32,7 +51,7 @@ namespace WPF
             serviceProvider = services.BuildServiceProvider();
             LoggedInUserId = Guid.Empty;
 
-            SetupSignalR();
+          //  SetupSignalR();
 
         }
         private void ConfigureServices(ServiceCollection services)
@@ -48,6 +67,8 @@ namespace WPF
             services.AddSingleton<ITransactionRepository, TransactionRepository>();
             services.AddSingleton<ILicenceRepository, LicenceRepository>();
             services.AddSingleton<ICombineRepository, CombineRepository>();
+            services.AddSingleton<INotificationRepository, NotificationRepository>();
+            services.AddSingleton<IContractRepository, ContractRepository>();
 
 
 
@@ -62,6 +83,8 @@ namespace WPF
             services.AddTransient<ITransactionRepository, TransactionRepository>();
             services.AddTransient<ILicenceRepository, LicenceRepository>();
             services.AddTransient<ICombineRepository, CombineRepository>();
+            services.AddTransient<INotificationRepository, NotificationRepository>();
+            services.AddTransient<IContractRepository, ContractRepository>();
 
 
 
@@ -70,7 +93,6 @@ namespace WPF
             services.AddSingleton<WindowRegister>();
             services.AddSingleton<WindowHouse>();
             services.AddSingleton<WindowContract>();
-            services.AddSingleton<WindowNotification>();
             services.AddSingleton<WindowStaff>();
             services.AddSingleton<WindowHouseDetails>();
             services.AddSingleton<WindowAddHouse>();
@@ -89,6 +111,13 @@ namespace WPF
             services.AddSingleton<WindowChangePassword>();
             services.AddSingleton<WindowUpdateProfile>();
             services.AddSingleton<WindowPayment>();
+            services.AddSingleton<WindowAddNewNotification>();
+            services.AddSingleton<WindowNotification>();
+            services.AddSingleton<WindowContractDetails>();
+            services.AddSingleton<WindowReport>();
+            services.AddSingleton<CloudStorage>(_ =>
+       new CloudStorage("firebaseKey.Json"));
+
 
 
 
@@ -96,7 +125,7 @@ namespace WPF
             services.AddTransient<WindowLogin>();
             services.AddTransient<WindowRegister>();
             services.AddTransient<ResetPasswordWindow>();
-            services.AddTransient<MainWindow>(); 
+            services.AddTransient<MainWindow>();
             services.AddTransient<WindowHouse>();
             services.AddTransient<WindowContract>();
             services.AddTransient<WindowNotification>();
@@ -116,6 +145,9 @@ namespace WPF
             services.AddTransient<WindowChangePassword>();
             services.AddTransient<WindowUpdateProfile>();
             services.AddTransient<WindowPayment>();
+            services.AddTransient<WindowAddNewNotification>();
+            services.AddTransient<WindowContractDetails>();
+            services.AddTransient<WindowReport>();
 
         }
         private void OnStartup(object sender, StartupEventArgs e)

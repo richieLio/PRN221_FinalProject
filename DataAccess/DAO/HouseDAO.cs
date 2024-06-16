@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using BusinessObject.Object;
 using Data.Enums;
+using DataAccess.Enums;
 using DataAccess.Model.HouseModel;
 using DataAccess.Model.OperationResultModel;
 using DataAccess.Repository;
+using DataAccess.Repository.UserRepostory;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -38,7 +40,19 @@ namespace DataAccess.DAO
         public async Task<IEnumerable<House>> GetHouses(Guid userId)
         {
             using var context = new RmsContext();
-            List<House> userHouses = context.Houses.Where(h => h.OwnerId == userId).OrderBy(h => h.CreatedAt).ToList();
+            IUserRepository userRepository = new UserRepository();
+            var user = await userRepository.GetUserById(userId);
+
+            List<House> userHouses = new List<House>();
+
+            if (user.Role == UserEnum.OWNER)
+            {
+                userHouses = await context.Houses.Where(h => h.OwnerId == userId).OrderByDescending(h => h.CreatedAt).ToListAsync();
+            }
+            else if (user.Role == UserEnum.STAFF)
+            {
+                userHouses = await context.Houses.Where(h => h.Staff.Any(s => s.Id == userId)).OrderByDescending(h => h.CreatedAt).ToListAsync();
+            }
             return userHouses;
         }
 
@@ -186,5 +200,54 @@ namespace DataAccess.DAO
             var house = await context.Houses.FindAsync(houseId);
             return house?.AvailableRoom;
         }
+
+        public async Task<Dictionary<House, List<(DateTime? PaymentDate, decimal Revenue, bool IsPaid)>>> GetMonthlyRevenueByHouseWithPaidStatus(Guid userId, DateTime startDate, DateTime endDate)
+        {
+            using var context = new RmsContext();
+
+            var user = await context.Users
+                .Include(u => u.Houses)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            IQueryable<Bill> query = context.Bills
+                .Include(b => b.Room)
+                .ThenInclude(r => r.House)
+                .Where(b => (b.PaymentDate == null || (b.PaymentDate >= startDate && b.PaymentDate <= endDate)));
+
+            if (user.Role == UserEnum.STAFF)
+            {
+                query = query.Where(b => b.Room.House.Staff.Any(s => s.Id == userId));
+            }
+            else
+            {
+                query = query.Where(b => b.Room.House.OwnerId == userId);
+            }
+
+            var bills = await query.ToListAsync();
+
+        
+
+            var revenueByHouse = bills
+                .GroupBy(b => b.Room.House)
+                .ToDictionary(
+                    group => group.Key,
+                    group => group
+                        .Select(b => (
+                            PaymentDate: b.PaymentDate,
+                            Revenue: b.TotalPrice ?? 0,
+                            IsPaid: b.IsPaid
+                        ))
+                        .ToList());
+
+            return revenueByHouse;
+        }
+
+
+
     }
 }

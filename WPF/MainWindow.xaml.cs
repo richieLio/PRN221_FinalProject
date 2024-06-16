@@ -1,17 +1,20 @@
 ﻿using BusinessObject.Object;
-using ControlzEx.Standard;
 using DataAccess.Enums;
-using DataAccess.Model.BillModel;
 using DataAccess.Model.UserModel;
-using DataAccess.Repository;
-using Google.Apis.Storage.v1.Data;
+using DataAccess.Repository.CombineRepository;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using WPF.BillView;
+using WPF.ContractView;
+using WPF.NotificationView;
 using WPF.StaffView;
+using WPF.Views.CustomerView;
 using WPF.Views.PaymentView;
+using WPF.Views.ReportView;
+using WPF.Views.ServiceFeeView;
 using WPF.Views.UserView;
 
 namespace WPF
@@ -30,14 +33,13 @@ namespace WPF
             InitializeComponent();
             _serviceProvider = serviceProvider;
 
-
+            MainContentControl.Content = _serviceProvider.GetService<WindowReport>();
+            dashboardRadioButton.IsChecked = true;
             UpdateStaffButtonVisibility();
 
             var staffWindow = _serviceProvider.GetService<WindowStaff>();
             staffWindow.LoadStaffs();
 
-
-            MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
 
             _connection = new HubConnectionBuilder()
                .WithUrl("https://localhost:7259/notihub")
@@ -46,7 +48,7 @@ namespace WPF
 
             openConnect();
 
-           LoadUserFullName();
+            LoadUserFullName();
 
         }
 
@@ -119,11 +121,17 @@ namespace WPF
             {
                 switch (radioButton.Tag.ToString())
                 {
+                    case "dashboardWindow":
+                        MainContentControl.Content = _serviceProvider.GetService<WindowReport>();
+                        break;
                     case "houseWindow":
                         MainContentControl.Content = _serviceProvider.GetService<WindowHouse>();
                         break;
                     case "staffWindow":
                         MainContentControl.Content = _serviceProvider.GetService<WindowStaff>();
+                        break;
+                    case "customerWindow":
+                        MainContentControl.Content = _serviceProvider.GetService<WindowCustomersInRoom>();
                         break;
                     case "contractWindow":
                         MainContentControl.Content = _serviceProvider.GetService<WindowContract>();
@@ -132,9 +140,10 @@ namespace WPF
                         MainContentControl.Content = _serviceProvider.GetService<WindowNotification>();
                         break;
                     case "billWindow":
-                        var windowBill = _serviceProvider.GetService<WindowBill>();
-                        MainContentControl.Content = windowBill;
-                        windowBill.LoadAllBill();
+                        MainContentControl.Content = _serviceProvider.GetService<WindowBill>();
+                        break;
+                    case "serviceWindow":
+                        MainContentControl.Content = _serviceProvider.GetService<WindowServiceFee>(); ;
                         break;
                     case "paymentWindow":
                         MainContentControl.Content = _serviceProvider.GetService<WindowPayment>();
@@ -148,7 +157,7 @@ namespace WPF
             var user = await _repository.GetUserById(App.LoggedInUserId);
 
             var isUserLicene = await _repository.IsUserLicence(App.LoggedInUserId);
-            if(!isUserLicene)
+            if (!isUserLicene)
             {
                 houseRadioButton.Visibility = Visibility.Collapsed;
                 staffRadioButton.Visibility = Visibility.Collapsed;
@@ -163,7 +172,7 @@ namespace WPF
                 NotificationButton.Visibility = user.Role == UserEnum.OWNER ? Visibility.Visible : Visibility.Collapsed;
                 BadgedNotiCount.Visibility = user.Role == UserEnum.OWNER ? Visibility.Visible : Visibility.Collapsed;
             }
-            
+
         }
         private async void NotificationButton_Click(object sender, RoutedEventArgs e)
         {
@@ -188,7 +197,7 @@ namespace WPF
             }
         }
 
-       
+
 
         private async void FetchNotifications()
         {
@@ -232,7 +241,7 @@ namespace WPF
                         var notification = await _repository.GetLocalNotificationByMessage(message);
                         if (notification != null)
                         {
-                           await _repository.DeleteLocalNotifications(notification.Id);
+                            await _repository.DeleteLocalNotifications(notification.Id);
                         }
                     }
                 }
@@ -259,5 +268,33 @@ namespace WPF
             var windowUpdateProfile = new WindowUpdateProfile(_repository, user);
             windowUpdateProfile.Show();
         }
+        private void Border_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
+        }
+        bool IsMaximized = false;
+        private void Border_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2)
+            {
+                if (IsMaximized)
+                {
+                    this.WindowState = WindowState.Normal;
+                    this.Width = 1280;
+                    this.Height = 780;
+                    IsMaximized = false;
+                }
+                else
+                {
+                    this.WindowState = WindowState.Maximized;
+
+                    IsMaximized = true;
+                }
+            }
+        }
+
     }
 }

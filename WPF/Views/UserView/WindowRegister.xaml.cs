@@ -3,7 +3,7 @@ using DataAccess.Helper;
 using DataAccess.Model.EmailModel;
 using DataAccess.Model.OperationResultModel;
 using DataAccess.Model.UserModel;
-using DataAccess.Repository;
+using DataAccess.Repository.CombineRepository;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Client.NativeInterop;
 using System;

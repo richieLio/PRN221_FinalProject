@@ -3,15 +3,15 @@ using Newtonsoft.Json.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Diagnostics;
 using System.Windows;
-using DataAccess.Repository;
 using System.Net;
 using System.Text;
 using BusinessObject.Object;
 using System.Net.Http;
 using static Google.Apis.Requests.BatchRequest;
 using MailKit.Search;
-using DataAccess.Model;
 using System.ComponentModel;
+using DataAccess.Model.PaymentModel;
+using DataAccess.Repository.CombineRepository;
 
 namespace WPF.Views.PaymentView
 {

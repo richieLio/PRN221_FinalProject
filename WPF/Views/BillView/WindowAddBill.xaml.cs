@@ -8,8 +8,9 @@ using DataAccess.DAO;
 using DataAccess.Enums;
 using DataAccess.Model.BillModel;
 using DataAccess.Model.ServiceFeeModel;
-using DataAccess.Repository;
+using DataAccess.Repository.CombineRepository;
 using Microsoft.AspNetCore.SignalR.Client;
+using WPF.Views.ReportView;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace WPF.Views.BillView
@@ -17,6 +18,7 @@ namespace WPF.Views.BillView
     public partial class WindowAddBill : Window
     {
         private readonly ICombineRepository _repository;
+        public event EventHandler BillAdded;
         private readonly Room _room;
         private readonly House _house;
         private IEnumerable<ServiceViewModel> _services;
@@ -90,7 +92,9 @@ namespace WPF.Views.BillView
                             IsRead = false,
                         };
                         await _repository.InsertLocalNotifications(App.LoggedInUserId, localNotification);
-
+                        BillAdded?.Invoke(this, EventArgs.Empty);
+                       
+                        Close();
 
                         var unReadNoti = _repository.GetNotificationQuantity(user.OwnerId.Value);
 
@@ -101,6 +105,7 @@ namespace WPF.Views.BillView
                             await App.SignalRConnection.InvokeAsync("NotifyBillCreated", _house.OwnerId, bill.Id,
                                 message, unReadNoti);
                         }
+                       
                     }
                     catch (Exception ex)
                     {

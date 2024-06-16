@@ -1,6 +1,6 @@
 ﻿using BusinessObject.Object;
 using DataAccess.Model.ServiceFeeModel;
-using DataAccess.Repository;
+using DataAccess.Repository.CombineRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +31,7 @@ namespace WPF.Views.ServiceFeeView
             InitializeComponent();
             _house = house;
         }
+       
 
         private async void btnAddNewService_Click(object sender, RoutedEventArgs e)
         {

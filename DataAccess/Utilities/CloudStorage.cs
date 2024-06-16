@@ -12,7 +12,7 @@ namespace DataAccess.Utilities
     public class CloudStorage
     {
         private readonly StorageClient _storage;
-        private string bucketName = "fir-3ad0b.appspot.com";
+        private string bucketName = "rms-prn221.appspot.com";
 
 
         public CloudStorage(string serviceAccountKeyPath)
@@ -45,7 +45,11 @@ namespace DataAccess.Utilities
                 return memoryStream.ToArray();
             }
         }
-
+        public async Task DeleteFile(string filePath, string fileName)
+        {
+            string objectName = $"{filePath}/{fileName}";
+            await _storage.DeleteObjectAsync(bucketName, objectName);
+        }
 
     }
 }

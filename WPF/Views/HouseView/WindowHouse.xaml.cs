@@ -1,6 +1,6 @@
 ﻿using BusinessObject.Object;
 using DataAccess.Enums;
-using DataAccess.Repository;
+using DataAccess.Repository.CombineRepository;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using WPF.Views.HouseView;
+using WPF.Views.NotificationView;
 using WPF.Views.ServiceFeeView;
 
 namespace WPF
@@ -28,17 +29,7 @@ namespace WPF
 
         private async void LoadHouses()
         {
-
-            var user = await _repository.GetUserById(App.LoggedInUserId);
-            if (user.Role == UserEnum.STAFF)
-            {
-                lvHouses.ItemsSource = await _repository.GetAllHouseByStaffId(App.LoggedInUserId);
-            }
-            else
-            {
-                lvHouses.ItemsSource = await _repository.GetHouses(App.LoggedInUserId);
-
-            }
+            lvHouses.ItemsSource = await _repository.GetHouses(App.LoggedInUserId);
         }
 
         private void Border_Click(object sender, MouseButtonEventArgs e)
@@ -137,7 +128,7 @@ namespace WPF
                 }
             }
         }
-        private async void ServiceHouse_Click(object sender, RoutedEventArgs e)
+        private async void SendnNoti_Click(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = sender as MenuItem;
             if (menuItem != null)
@@ -148,13 +139,8 @@ namespace WPF
                     var house = border.DataContext as House;
                     if (house != null)
                     {
-                        WindowServiceFee windowServiceFee = new WindowServiceFee(_serviceProvider.GetService<ICombineRepository>(), _serviceProvider, house);
-                        windowServiceFee.LoadService();
-                        MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
-                        if (mainWindow != null)
-                        {
-                            mainWindow.MainContentControl.Content = windowServiceFee;
-                        }
+                        WindowAddNewNotification windowAddNoti = new WindowAddNewNotification(_serviceProvider.GetService<ICombineRepository>(), house);
+                        windowAddNoti.Show();
                     }
                 }
             }

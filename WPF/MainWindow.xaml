@@ -1,82 +1,182 @@
 ﻿<Window x:Class="WPF.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="MainWindow" Height="650" Width="1100"
-        WindowStartupLocation="CenterScreen">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="5"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        Title="MainWindow" Height="780" Width="1280"
+        WindowStartupLocation="CenterScreen" Background="Transparent"
+        >
+    <Border CornerRadius="25" Padding="20" Background="#FFD2D2DC" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="220"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="110"/>
+                <RowDefinition Height="130"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <StackPanel  Grid.Column="0" Orientation="Vertical" Margin="10">
-            <TextBlock Text="Menu" FontWeight="Bold" FontSize="16" Margin="5"/>
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <StackPanel Orientation="Vertical">
-                    <RadioButton x:Name="houseRadioButton" Content="Houses" GroupName="Views" Checked="RadioButton_Checked" Tag="houseWindow" Margin="5,10,5,0"/>
-                    <RadioButton x:Name="staffRadioButton" Content="Staffs" GroupName="Views" Checked="RadioButton_Checked" Tag="staffWindow" Margin="5,10,5,0" />
-                    <RadioButton x:Name="contractRadioButton" Content="Contracts" GroupName="Views" Checked="RadioButton_Checked" Tag="contractWindow" Margin="5,10,5,0"/>
-                    <RadioButton x:Name="notificationRadioButton" Content="Notifications" GroupName="Views" Checked="RadioButton_Checked" Tag="notificationWindow" Margin="5,10,5,0"/>
-                    <RadioButton x:Name="billRadioButton" Content="Bills" GroupName="Views" Checked="RadioButton_Checked" Tag="billWindow" Margin="5,10,5,0"/>
-                    <RadioButton x:Name="paymentRadioButton" Content="Payments" GroupName="Views" Checked="RadioButton_Checked" Tag="paymentWindow" Margin="5,10,5,0"/>
-                </StackPanel>
-            </ScrollViewer>
-        </StackPanel>
-
-        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,556" RenderTransformOrigin="0.5,0.5">
-
-            <materialDesign:Badged Badge="{Binding UnreadNotificationCount}" Margin="0,20,20,0" Visibility="Collapsed" x:Name="BadgedNotiCount">
-                <Button x:Name="NotificationButton" Click="NotificationButton_Click" IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}">
-                    <materialDesign:PackIcon Kind="Bell" />
-                </Button>
-            </materialDesign:Badged>
-
-
-            <Popup x:Name="NotificationPopup" PlacementTarget="{Binding ElementName=NotificationButton}" Placement="Bottom">
-                <Border Background="White" BorderBrush="Black" BorderThickness="1">
-                    <StackPanel Margin="10">
-                        <TextBlock Text="Notifications" FontWeight="Bold" Margin="0,0,0,5" VerticalAlignment="Center" Width="400" TextWrapping="Wrap"/>
-                        <ListBox x:Name="messages">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding}" VerticalAlignment="Center" Width="380" TextWrapping="Wrap"/>
-                                        <Button Content="X" Width="20" Height="20" Margin="10,0,0,0" VerticalAlignment="Center" Click="DeleteNotification_Click"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
+            <Border Grid.RowSpan="3" CornerRadius="25">
+                <Border.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Color="#fb7153" Offset="0"/>
+                        <GradientStop Color="#fb6161" Offset="0.8"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 30 0 10">
+                        <Grid>
+                            <Border Background="#ffffff" Width="35" Height="35" CornerRadius="50"/>
+                            <Border Width="35" Height="35" BorderBrush="#ffffff" BorderThickness="3" CornerRadius="50">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="10" Opacity="0.3"/>
+                                </Border.Effect>
+                                <Icon:PackIconMaterial Kind="Abacus" Width="15" Height="15" Foreground="#fb7154"
+                                                       VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3 0 0 2">
+                                    <Icon:PackIconMaterial.LayoutTransform>
+                                        <RotateTransform Angle="-45"/>
+                                    </Icon:PackIconMaterial.LayoutTransform>
+                                </Icon:PackIconMaterial>
+                            </Border>
+                        </Grid>
+                        <TextBlock Text="RMS" Foreground="#ffffff" FontSize="30" Margin="10 0 0 3">
+                            <TextBlock.Effect>
+                                <DropShadowEffect BlurRadius="10" Opacity="0.3"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
                     </StackPanel>
-                </Border>
-            </Popup>
 
+                    <TextBlock Text="Main" Style="{StaticResource menuTitle}"/>
 
-
-
-
-            <Menu materialDesign:MenuAssist.TopLevelMenuItemHeight="80">
-                <MenuItem Height="71">
-                    <MenuItem.Header>
+                    <RadioButton Style="{StaticResource menuButton}" x:Name="dashboardRadioButton" GroupName="Views" Checked="RadioButton_Checked" Tag="dashboardWindow">
                         <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Account" />
-                            <TextBlock Text="{Binding FullName}" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                            <Icon:PackIconMaterial Kind="MonitorDashboard" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Dashboard" Style="{StaticResource menuButtonText}"/>
                         </StackPanel>
-                    </MenuItem.Header>
-                    <MenuItem Header="Update Profile"  Click="btnUpdateProfile_Click"/>
-                    <MenuItem Header="Change Password" Click="btnChangePassword_Click" />
-                    <MenuItem Header="Log Out" Click="btnLogout_Click"/>
-                </MenuItem>
-            </Menu>
-        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource menuButton}" x:Name="houseRadioButton" GroupName="Views" Checked="RadioButton_Checked" Tag="houseWindow">
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="Home" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="House" Style="{StaticResource menuButtonText}"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource menuButton}" x:Name="staffRadioButton" GroupName="Views" Checked="RadioButton_Checked" Tag="staffWindow">
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="AccountOutline" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Staff" Style="{StaticResource menuButtonText}"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource menuButton}" x:Name="customerRadioButton" GroupName="Views" Checked="RadioButton_Checked" Tag="customerWindow">
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="AccountMultipleOutline" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Customer" Style="{StaticResource menuButtonText}"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource menuButton}" x:Name="contractRadioButton" GroupName="Views" Checked="RadioButton_Checked" Tag="contractWindow">
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="TagTextOutline" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Contract" Style="{StaticResource menuButtonText}"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource menuButton}" x:Name="notificationRadioButton" GroupName="Views" Checked="RadioButton_Checked" Tag="notificationWindow">
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="Bell" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Notifications" Style="{StaticResource menuButtonText}"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource menuButton}" x:Name="billRadioButton" GroupName="Views" Checked="RadioButton_Checked" Tag="billWindow">
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="InvoiceText" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Bill" Style="{StaticResource menuButtonText}"/>
+                        </StackPanel>
+                    </RadioButton>     
+                    <RadioButton Style="{StaticResource menuButton}" x:Name="serviceRadioButton" GroupName="Views" Checked="RadioButton_Checked" Tag="serviceWindow">
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="RoomService" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Services" Style="{StaticResource menuButtonText}"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource menuButton}" x:Name="paymentRadioButton" GroupName="Views" Checked="RadioButton_Checked" Tag="paymentWindow">
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="CurrencyUsd" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Payment" Style="{StaticResource menuButtonText}"/>
+                        </StackPanel>
+                    </RadioButton>
+                </StackPanel>
+            </Border>
+            <Border Grid.Column="1" Margin="20 0 20 20" Style="{StaticResource whiteBorder}">
+                <Grid>
+                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal"  HorizontalAlignment="Right" Margin="0 0 300 0">
+                        <materialDesign:Badged Badge="{Binding UnreadNotificationCount}" Visibility="Collapsed" x:Name="BadgedNotiCount">
+                            <Button Style="{StaticResource commonButton}" Width="35" Height="35" x:Name="NotificationButton" Click="NotificationButton_Click" IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}">
+                                <materialDesign:PackIcon Kind="Bell" />
+                            </Button>
+                        </materialDesign:Badged>
 
-        <GridSplitter Grid.Column="1" Width="5" Background="Gray" HorizontalAlignment="Stretch"/>
+                        <Popup  x:Name="NotificationPopup" PlacementTarget="{Binding ElementName=NotificationButton}" Placement="Left" Grid.Column="2" Grid.Row="2" AllowsTransparency="True">
+                            <Border CornerRadius="25">
+                                <Border.Background>
+                                    <LinearGradientBrush>
+                                        <GradientStop Color="#fb7153" Offset="0"/>
+                                        <GradientStop Color="#ffffff" Offset="0.8"/>
+                                    </LinearGradientBrush>
 
-        <ContentControl Grid.Column="1" x:Name="MainContentControl" Margin="0,78,0,0" Grid.ColumnSpan="2"/>
-    </Grid>
+                                </Border.Background>
+                                <StackPanel Margin="10">
+                                    <TextBlock Text="Notifications" FontWeight="Bold" VerticalAlignment="Center" Width="400" TextWrapping="Wrap"/>
+                                    <ListBox x:Name="messages">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" Width="380" TextWrapping="Wrap"/>
+                                                    <Button Content="X" Width="20" Height="20" Margin="10,0,0,0" VerticalAlignment="Center" Click="DeleteNotification_Click"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </StackPanel>
+                            </Border>
+                        </Popup>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Border Width="50" Height="50" CornerRadius="10" Margin="5 0 20 0">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0.5 0" EndPoint="0.5 1">
+                                    <GradientStop Color="#fb7153" Offset="0"/>
+                                    <GradientStop Color="#fb6161" Offset="0.8"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Image Width="40" Height="40" Source="/Images/avatar.png"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <Menu >
+                                <MenuItem Height="80">
+                                    <MenuItem.Header>
+                                        <StackPanel>
+                                            <TextBlock FontSize="26" FontWeight="Bold" Style="{StaticResource titleText}" Text="{Binding FullName}"/>
+                                            <TextBlock Text="Have A Nice Day" Foreground="#6c879a" Margin="0 3 0 0" />
+                                        </StackPanel>
+                                    </MenuItem.Header>
+                                    <MenuItem Header="Update Profile" Click="btnUpdateProfile_Click"/>
+                                    <MenuItem Header="Change Password" Click="btnChangePassword_Click"/>
+                                    <MenuItem Header="Log Out" Click="btnLogout_Click"/>
+                                </MenuItem>
+                            </Menu>
+                        </StackPanel>
+                    </StackPanel>
+                    
+                </Grid>
+            </Border>
+
+            
+
+            <ContentControl Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" x:Name="MainContentControl"/>
+        </Grid>
+    </Border>
 </Window>

@@ -4,6 +4,8 @@ using Data.Enums;
 using DataAccess.Model.OperationResultModel;
 using DataAccess.Model.RoomModel;
 using DataAccess.Repository;
+using DataAccess.Repository.HouseRepository;
+using DataAccess.Repository.UserRepostory;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
@@ -37,10 +39,10 @@ namespace DataAccess.DAO
         public async Task<IEnumerable<Room>> GetRooms(Guid houseId)
         {
             using var context = new RmsContext();
-            List<Room> rooms = context.Rooms
+            List<Room> rooms = await context.Rooms
                                     .Where(r => r.HouseId == houseId)
                                     .OrderBy(r => r.CreatedAt)
-                                    .ToList();
+                                    .ToListAsync();
 
             return rooms;
         }

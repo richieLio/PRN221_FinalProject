@@ -11,6 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="TemplateEmail\Notification.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TemplateEmail\FirstInformation.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

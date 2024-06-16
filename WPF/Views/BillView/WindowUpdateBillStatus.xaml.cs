@@ -1,6 +1,6 @@
 ﻿using BusinessObject.Object;
 using DataAccess.Model.BillModel;
-using DataAccess.Repository;
+using DataAccess.Repository.CombineRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +34,7 @@ namespace WPF.Views.BillView
 
         private void InitializeBillData()
         {
-            if (_bill.IsPaid.Value)
+            if (_bill.IsPaid)
             {
                 StatusComboBox.SelectedIndex = 0; 
             }
@@ -49,10 +49,15 @@ namespace WPF.Views.BillView
 
         private async void UpdateStatusButton_Click(object sender, RoutedEventArgs e)
         {
-
             string statusText = (StatusComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
             bool isPaid = statusText == "Paid";
             DateTime? paymentDate = PaymentDatePicker.SelectedDate;
+
+            // If "Unpaid" is selected, set paymentDate to null
+            if (statusText == "Unpaid")
+            {
+                paymentDate = null;
+            }
 
             var billUpdateStatusReqModel = new BillUpdateStatusReqModel
             {

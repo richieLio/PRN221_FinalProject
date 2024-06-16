@@ -1,18 +1,12 @@
 ﻿using BusinessObject.Object;
-using DataAccess.DAO;
 using DataAccess.Enums;
-using DataAccess.Repository;
+using DataAccess.Repository.CombineRepository;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
-using WPF.BillView;
 using WPF.Views.BillView;
 using WPF.Views.CustomerView;
-using WPF.Views.HouseView;
 using WPF.Views.RoomView;
 
 namespace WPF
@@ -27,14 +21,13 @@ namespace WPF
            House house)
         {
             InitializeComponent();
-
             _serviceProvider = serviceProvider;
             _house = house;
+            _repository = repository;
             HouseNameTextBlock.Text = _house.Name;
             AddressTextBlock.Text = _house.Address;
             RoomQuantityTextBlock.Text = _house.RoomQuantity.ToString();
             AvailableRoomTextBlock.Text = _house.AvailableRoom.ToString();
-            _repository = repository;
             Initialize();
         }
 
@@ -58,7 +51,7 @@ namespace WPF
             var selectedRoom = (sender as Border)?.DataContext as Room;
             if (selectedRoom != null)
             {
-                WindowCustomersInRoom customersWindow = new WindowCustomersInRoom(_serviceProvider, _repository, _house.Id, selectedRoom.Id);
+                WindowCustomersInRoom customersWindow = new WindowCustomersInRoom(_serviceProvider, _repository);
                 customersWindow.LoadCustomers(selectedRoom.Id);
 
                 MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
@@ -147,6 +140,7 @@ namespace WPF
                 }
             }
         }
+
         private async void AddBill_Click(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = sender as MenuItem;
@@ -160,29 +154,6 @@ namespace WPF
                     {
                         WindowAddBill windowAddBill = new WindowAddBill(_repository, room, _house);
                         windowAddBill.ShowDialog();
-                    }
-                }
-            }
-        }
-        private async void ViewListBill_Click(object sender, RoutedEventArgs e)
-        {
-            MenuItem menuItem = sender as MenuItem;
-            if (menuItem != null)
-            {
-                Border border = ((ContextMenu)menuItem.Parent).PlacementTarget as Border;
-                if (border != null)
-                {
-                    var room = border.DataContext as Room;
-                    if (room != null)
-                    {
-                        WindowBill windowBill = new WindowBill(_serviceProvider, _repository);
-                        windowBill.LoadBillByRoomId(room.Id);
-
-                        MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
-                        if (mainWindow != null)
-                        {
-                            mainWindow.MainContentControl.Content = windowBill;
-                        }
                     }
                 }
             }
@@ -209,6 +180,7 @@ namespace WPF
                 MessageBox.Show("Please select a staff member to assign.", "Error");
             }
         }
+
         private async void UnAssignStaff_Click(object sender, RoutedEventArgs e)
         {
             var staffResult = await _repository.GetAssignedStaffByHouseId(_house.Id);
@@ -219,7 +191,7 @@ namespace WPF
 
                 if (staff != null)
                 {
-                    if (staff is User user) 
+                    if (staff is User user)
                     {
                         var result = await _repository.RemoveStaffFromHouse(user.Id, _house.Id);
 
@@ -249,9 +221,6 @@ namespace WPF
             }
         }
 
-
-
-
         private async void Initialize()
         {
             var user = await _repository.GetUserById(App.LoggedInUserId);
@@ -268,12 +237,15 @@ namespace WPF
             }
 
             var assignedStaffResult = await _repository.GetAssignedStaffByHouseId(_house.Id);
+           
             if (assignedStaffResult.IsSuccess && assignedStaffResult.Data != null)
             {
                 var assignedStaff = assignedStaffResult.Data as User;
+
                 if (assignedStaff != null && user.Role == UserEnum.OWNER)
                 {
-                    txtStaffName.Text = $"Managed by: {assignedStaff.FullName}";
+                    manageBy.Visibility = Visibility.Visible;
+                    txtStaffName.Text = $"{assignedStaff.FullName}";
                     txtStaffName.Visibility = Visibility.Visible;
                     cmbStaffList.Visibility = Visibility.Collapsed;
                     cmbStaffList.IsEnabled = false;
@@ -283,15 +255,13 @@ namespace WPF
                 
             }
             else
-            {
+            {   manageBy.Visibility = Visibility.Visible ;
                 txtStaffName.Visibility = Visibility.Collapsed;
                 cmbStaffList.Visibility = Visibility.Visible;
                 cmbStaffList.IsEnabled = true;
                 AssignStaffButton.Visibility = Visibility.Visible;
                 UnAssignStaffButton.Visibility = Visibility.Collapsed;
-
             }
         }
-
     }
 }
