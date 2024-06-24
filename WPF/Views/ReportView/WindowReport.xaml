@@ -40,8 +40,14 @@
                 </GroupBox>
             </Border>
             <Border Grid.Row="3" Grid.RowSpan="3" Grid.Column="1" Background="White" CornerRadius="25" Padding="10" Margin="10">
-                <lvc:PieChart x:Name="PieChart" LegendLocation="Bottom" Hoverable="True" DataTooltip="{x:Null}">
-                </lvc:PieChart>
+                <lvc:CartesianChart x:Name="ColumnChart" LegendLocation="Bottom" Hoverable="True" DataTooltip="{x:Null}">
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis Title="House" Labels="{Binding HouseNames}" />
+                    </lvc:CartesianChart.AxisX>
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis Title="Count" LabelFormatter="{Binding Formatter}" />
+                    </lvc:CartesianChart.AxisY>
+                </lvc:CartesianChart>
             </Border>
 
             <Border CornerRadius="25" Padding="10" Background="#ffffff" Grid.Row="2" Grid.RowSpan="3">

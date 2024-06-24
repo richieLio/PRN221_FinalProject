@@ -19,11 +19,12 @@ namespace WPF.Views.ReportView
 {
     public partial class WindowReport : UserControl
     {
-        private readonly SolidColorBrush[] seriesColors = { Brushes.Green, Brushes.OrangeRed, Brushes.Pink };
+        private readonly SolidColorBrush[] seriesColors = { Brushes.Blue, Brushes.OrangeRed, Brushes.Pink };
         private readonly ICombineRepository _repository;
         private IEnumerable<House> _houses;
 
         public Func<double, string> Formatter { get; set; }
+        public List<string> HouseNames { get; set; }
 
         public WindowReport(ICombineRepository repository)
         {
@@ -82,13 +83,13 @@ namespace WPF.Views.ReportView
 
             var topMonthlyData = monthlyData.Where(kvp => topHouses.Contains(kvp.Key))
                                             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            await UpdatePieChart(topMonthlyData);
+            await UpdateColumnChart(topMonthlyData);
             await UpdateChart(topMonthlyData);
         }
 
-        private async Task UpdatePieChart(Dictionary<House, List<(DateTime? PaymentDate, decimal Revenue, bool IsPaid)>> monthlyData)
+        private async Task UpdateColumnChart(Dictionary<House, List<(DateTime? PaymentDate, decimal Revenue, bool IsPaid)>> monthlyData)
         {
-            PieChart.Series.Clear();
+            ColumnChart.Series.Clear();
 
             var paidCounts = new ChartValues<int>();
             var unpaidCounts = new ChartValues<int>();
@@ -107,29 +108,20 @@ namespace WPF.Views.ReportView
                 houseNames.Add(house.Name);
             }
 
-            PieChart.Series.Add(CreatePieSeries("Paid", paidCounts, houseNames, Brushes.Green));
-            PieChart.Series.Add(CreatePieSeries("Unpaid", unpaidCounts, houseNames, Brushes.Red));
+            ColumnChart.Series.Add(CreateColumnSeries("Paid", paidCounts, Brushes.Blue));
+            ColumnChart.Series.Add(CreateColumnSeries("Unpaid", unpaidCounts, Brushes.OrangeRed));
 
-            PieChart.DataContext = this;
+            HouseNames = houseNames;
+            ColumnChart.DataContext = this;
         }
-
-        private PieSeries CreatePieSeries(string title, ChartValues<int> values, List<string> houseNames, SolidColorBrush color)
+        private ColumnSeries CreateColumnSeries(string title, ChartValues<int> values, SolidColorBrush color)
         {
-            return new PieSeries
+            return new ColumnSeries
             {
                 Title = title,
                 Values = values,
                 DataLabels = true,
-                Fill = color,
-                LabelPoint = chartPoint =>
-                {
-                    var index = (int)chartPoint.X;
-                    if (index >= 0 && index < houseNames.Count)
-                    {
-                        return $"{houseNames[index]}: {chartPoint.Y}";
-                    }
-                    return "";
-                }
+                Fill = color
             };
         }
 
@@ -190,7 +182,6 @@ namespace WPF.Views.ReportView
                 TitleColorHousePanel.Children.Add(new TextBlock { Text = house.Name, Margin = new Thickness(10, 12, 0, 0) });
             }
         }
-
 
         private Border CreateColorBorder(int index)
         {
