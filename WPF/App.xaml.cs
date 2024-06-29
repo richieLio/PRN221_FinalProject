@@ -51,7 +51,7 @@ namespace WPF
             serviceProvider = services.BuildServiceProvider();
             LoggedInUserId = Guid.Empty;
 
-          //  SetupSignalR();
+            SetupSignalR();
 
         }
         private void ConfigureServices(ServiceCollection services)

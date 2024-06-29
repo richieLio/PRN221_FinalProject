@@ -52,8 +52,8 @@ namespace WPF.Views.ReportView
         {
             if (_houses == null || !_houses.Any()) return;
 
-            DateTime startDate = DateTime.Now.AddYears(-1);
-            DateTime endDate = DateTime.Now.AddMinutes(30);
+            DateTime startDate = StartDatePicker.SelectedDate ?? DateTime.Now.AddYears(-1);
+            DateTime endDate = EndDatePicker.SelectedDate ?? DateTime.Now;
             var monthlyData = await _repository.GetMonthlyRevenueByHouseWithPaidStatus(App.LoggedInUserId, startDate, endDate);
 
             var totalRevenues = monthlyData.ToDictionary(
@@ -194,5 +194,15 @@ namespace WPF.Views.ReportView
                 Margin = new Thickness(5, 4, 0, 0)
             };
         }
+        private async void StartDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            await UpdateChartData();
+        }
+
+        private async void EndDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            await UpdateChartData();
+        }
+
     }
 }
