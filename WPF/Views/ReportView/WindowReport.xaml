@@ -18,6 +18,8 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="70"/>
                 <RowDefinition Height="10"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="10"/>
                 <RowDefinition Height="140"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="300"/>
@@ -33,18 +35,36 @@
                     </StackPanel>
                 </Grid>
             </Border>
-            <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Background="White" Padding="5 5 20 0" CornerRadius="25" Margin="10 0 0 0">
+            <Border Grid.Column="0" Grid.Row="2" Background="White" CornerRadius="25">
+                <StackPanel Orientation="Horizontal" Margin="25 0 0 0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5"  HorizontalAlignment="Left">
+                        <TextBlock Text="Start Date:" VerticalAlignment="Center" Margin="5"/>
+                        <DatePicker x:Name="StartDatePicker" SelectedDateChanged="StartDatePicker_SelectedDateChanged"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5" HorizontalAlignment="Left">
+                        <TextBlock Text="End Date:" VerticalAlignment="Center" Margin="100 5 5 5"/>
+                        <DatePicker x:Name="EndDatePicker" SelectedDateChanged="EndDatePicker_SelectedDateChanged" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="5" Background="White" Padding="5 5 20 0" CornerRadius="25" Margin="10 0 0 0">
                 <GroupBox x:Name="TopHousesGroupBox" Header="Top 5 revenue house" Margin="10" Style="{StaticResource CustomGroupBoxStyle}">
                     <Grid x:Name="TopHousesGrid">
                     </Grid>
                 </GroupBox>
             </Border>
-            <Border Grid.Row="3" Grid.RowSpan="3" Grid.Column="1" Background="White" CornerRadius="25" Padding="10" Margin="10">
-                <lvc:PieChart x:Name="PieChart" LegendLocation="Bottom" Hoverable="True" DataTooltip="{x:Null}">
-                </lvc:PieChart>
+            <Border Grid.Row="5" Grid.RowSpan="3" Grid.Column="1" Background="White" CornerRadius="25" Padding="10" Margin="10">
+                <lvc:CartesianChart x:Name="ColumnChart" LegendLocation="Bottom" Hoverable="True" DataTooltip="{x:Null}">
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis Title="House" Labels="{Binding HouseNames}" />
+                    </lvc:CartesianChart.AxisX>
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis Title="Count" LabelFormatter="{Binding Formatter}" />
+                    </lvc:CartesianChart.AxisY>
+                </lvc:CartesianChart>
             </Border>
 
-            <Border CornerRadius="25" Padding="10" Background="#ffffff" Grid.Row="2" Grid.RowSpan="3">
+            <Border CornerRadius="25" Padding="10" Background="#ffffff" Grid.Row="4" Grid.RowSpan="3">
                 <lvc:CartesianChart x:Name="ReportChart">
                     <lvc:CartesianChart.DataTooltip>
                         <lvc:DefaultTooltip Background="Orange" Foreground="#ffffff" BulletSize="10" Opacity="0.7"/>
@@ -65,7 +85,7 @@
                     </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
             </Border>
-            <Border CornerRadius="25" Padding="7" Background="#ffffff" Grid.Row="5" Margin="5 10 0 0">
+            <Border CornerRadius="25" Padding="7" Background="#ffffff" Grid.Row="7" Margin="5 10 0 0">
                 <StackPanel  VerticalAlignment="Center">
                     <Grid>
                         <Icon:PackIconMaterial Kind="Information" Foreground="#f96654" Margin="5 6 0 0"/>

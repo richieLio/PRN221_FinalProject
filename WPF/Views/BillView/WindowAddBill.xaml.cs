@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using BusinessObject.Object;
 using DataAccess.DAO;
 using DataAccess.Enums;
+using DataAccess.Helper;
 using DataAccess.Model.BillModel;
 using DataAccess.Model.ServiceFeeModel;
 using DataAccess.Repository.CombineRepository;
@@ -68,6 +70,17 @@ namespace WPF.Views.BillView
                     RoomId = _room.Id,
                     ServiceQuantities = serviceQuantities
                 };
+                var validationResults = ValidationHelper.ValidateModel(newBill);
+                if (validationResults.Count > 0)
+                {
+                    // Handle validation errors
+                    foreach (var validationResult in validationResults)
+                    {
+                        MessageBox.Show(validationResult.ErrorMessage, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        break;
+                    }
+                    return;
+                }
                 var user = await _repository.GetUserById(App.LoggedInUserId);
 
                 var result = await _repository.CreateBill(App.LoggedInUserId, newBill);

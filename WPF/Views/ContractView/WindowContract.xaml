@@ -33,34 +33,23 @@
             <materialDesign:Card Grid.Row="2">
                 <ScrollViewer VerticalScrollBarVisibility="Visible">
                     <ListView Name="lvContracts" 
-                          Style="{StaticResource MaterialDesignListView}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="140"/>
-                                        <ColumnDefinition Width="150"/>
-                                        <ColumnDefinition Width="120"/>
-                                        <ColumnDefinition Width="200"/>
-                                        <ColumnDefinition Width="160"/>
-                                        <ColumnDefinition Width="220"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="{Binding CustomerName}" Grid.Column="0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding RoomName}" Grid.Column="1" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding HouseName}" Grid.Column="2" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding StartDate}" Grid.Column="3" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding EndDate}" Grid.Column="4" VerticalAlignment="Center"/>
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
+          Style="{StaticResource MaterialDesignListView}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Customer Name" DisplayMemberBinding="{Binding CustomerName}" Width="170"/>
+                                <GridViewColumn Header="Room Name" DisplayMemberBinding="{Binding RoomName}" Width="150"/>
+                                <GridViewColumn Header="House Name" DisplayMemberBinding="{Binding HouseName}" Width="150"/>
+                                <GridViewColumn Header="Start Date" DisplayMemberBinding="{Binding StartDate}" Width="180"/>
+                                <GridViewColumn Header="End Date" DisplayMemberBinding="{Binding EndDate}" Width="180"/>
+                            </GridView>
+                        </ListView.View>
                         <ListView.ContextMenu>
                             <ContextMenu>
-\                                <MenuItem Header="Edit" Click="ViewContractDetails_Click"/>
-                                <MenuItem Header="Delete" Click="DeleteContract_Click"/>
+                                <MenuItem Header="Edit" Click="ViewContractDetails_Click"/>
                             </ContextMenu>
                         </ListView.ContextMenu>
                     </ListView>
+
                 </ScrollViewer>
             </materialDesign:Card>
         </Grid>

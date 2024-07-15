@@ -31,6 +31,11 @@ namespace WPF.Views.RoomView
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(RoomNameTextBox.Text))
+            {
+                MessageBox.Show("Room name is required.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             if (RoomNameTextBox.Text == RoomName)
             {
                 IsConfirmed = true;

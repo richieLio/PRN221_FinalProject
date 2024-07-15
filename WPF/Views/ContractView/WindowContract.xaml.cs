@@ -85,10 +85,6 @@ namespace WPF.ContractView
             }
         }   
      
-        private void DeleteContract_Click(object sender, RoutedEventArgs e)
-        {
-            // Implement delete bill logic here
-            MessageBox.Show("Delete contract.");
-        }
+       
     }
 }

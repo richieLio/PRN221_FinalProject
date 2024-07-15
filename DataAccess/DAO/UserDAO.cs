@@ -122,7 +122,7 @@ namespace DataAccess.DAO
                 var user = await GetUserByEmail(loginForm.Email);
                 if (user == null || user.Status == UserStatus.INACTIVE)
                 {
-                    return new ResultModel { IsSuccess = false, Message = "Please verify your account" };
+                    return new ResultModel { IsSuccess = false, Message = "Email not found" };
                 }
 
                 var config = new MapperConfiguration(cfg =>

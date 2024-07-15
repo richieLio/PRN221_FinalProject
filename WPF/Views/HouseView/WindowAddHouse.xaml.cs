@@ -1,4 +1,6 @@
-﻿using DataAccess.Model.HouseModel;
+﻿using DataAccess.Helper;
+using DataAccess.Model.HouseModel;
+using DataAccess.Model.UserModel;
 using DataAccess.Repository.CombineRepository;
 using System;
 using System.Collections.Generic;
@@ -37,6 +39,17 @@ namespace WPF.Views.HouseView
                 Name = HouseNameTextBox.Text,
                 Address = AddressTextBox.Text,
             };
+            var validationResults = ValidationHelper.ValidateModel(house);
+            if (validationResults.Count > 0)
+            {
+                // Handle validation errors
+                foreach (var validationResult in validationResults)
+                {
+                    MessageBox.Show(validationResult.ErrorMessage, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    break;
+                }
+                return;
+            }
 
             _repository.AddHouse(App.LoggedInUserId, house);
             MessageBox.Show("House created successfully");

@@ -51,14 +51,7 @@
         <TextBlock Text="Date of Birth" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
         <DatePicker x:Name="DobDatePicker" Grid.Row="5" Grid.Column="1" Margin="5" materialDesign:HintAssist.Hint="Date of Birth" SelectedDate="{Binding Dob, UpdateSourceTrigger=PropertyChanged}" />
 
-        <TextBlock Text="License Plates" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <TextBox x:Name="txtLicensePlates" Grid.Row="6" Grid.Column="1" Margin="5" materialDesign:HintAssist.Hint="License Plates" Text="{Binding LicensePlates, UpdateSourceTrigger=PropertyChanged}" />
-
-        <TextBlock Text="Status" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <TextBox x:Name="txtStatus" Grid.Row="7" Grid.Column="1" Margin="5" materialDesign:HintAssist.Hint="Status" Text="{Binding Status, UpdateSourceTrigger=PropertyChanged}" />
-
-        <TextBlock Text="Citizen ID Number" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <TextBox x:Name="txtCitizenID" Grid.Row="8" Grid.Column="1" Margin="5" materialDesign:HintAssist.Hint="Citizen ID Number" Text="{Binding CitizenIdNumber, UpdateSourceTrigger=PropertyChanged}" />
+        
 
         <StackPanel Grid.Row="9" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
             <Button Content="Save" Margin="5" Style="{StaticResource MaterialDesignRaisedButton}" Click="btnUpdateStaff_Click"/>
