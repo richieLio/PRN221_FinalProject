@@ -1,5 +1,7 @@
 ﻿using BusinessObject.Object;
+using DataAccess.Helper;
 using DataAccess.Model.CustomerModel;
+using DataAccess.Model.UserModel;
 using DataAccess.Repository.CombineRepository;
 using System;
 using System.Collections.Generic;
@@ -32,7 +34,7 @@ namespace WPF.Views.UserView
        
         private void btnUpdateProfile_Click(object sender, RoutedEventArgs e)
         {
-            var profile = new CustomerUpdateModel
+            var profile = new UserUpdateModel
             {
                 Id = App.LoggedInUserId,
                 Email = txtEmail.Text,
@@ -42,6 +44,17 @@ namespace WPF.Views.UserView
                 Dob = DobDatePicker.SelectedDate ?? DateTime.MinValue,
                 FullName = txtFullName.Text,
             };
+            var validationResults = ValidationHelper.ValidateModel(profile);
+            if (validationResults.Count > 0)
+            {
+                // Handle validation errors
+                foreach (var validationResult in validationResults)
+                {
+                    MessageBox.Show(validationResult.ErrorMessage, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    break;
+                }
+                return;
+            }
             _repository.UpdateUserProfile(profile);
             MessageBox.Show($"Profile updated successfully");
             Close();

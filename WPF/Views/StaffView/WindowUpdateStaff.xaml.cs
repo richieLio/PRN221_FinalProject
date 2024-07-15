@@ -1,5 +1,7 @@
 ﻿using BusinessObject.Object;
+using DataAccess.Helper;
 using DataAccess.Model.CustomerModel;
+using DataAccess.Model.UserModel;
 using DataAccess.Repository.CombineRepository;
 using System;
 using System.Collections.Generic;
@@ -37,7 +39,7 @@ namespace WPF.Views.StaffView
 
         private void btnUpdateStaff_Click(object sender, RoutedEventArgs e)
         {
-            var staffUpdate = new CustomerUpdateModel
+            var staffUpdate = new UserUpdateModel
             {
                 Id = _staff.Id,
                 Email = txtEmail.Text,
@@ -45,12 +47,19 @@ namespace WPF.Views.StaffView
                 Address = txtAddress.Text,
                 Gender = cmbGender.Text,
                 Dob = DobDatePicker.SelectedDate ?? DateTime.MinValue,
-                FullName = txtFullName.Text,
-                LicensePlates = txtLicensePlates.Text,
-                Status = "Acitve",
-                CitizenIdNumber = txtCitizenID.Text,
+                FullName = txtFullName.Text
 
-            };
+            }; var validationResults = ValidationHelper.ValidateModel(staffUpdate);
+            if (validationResults.Count > 0)
+            {
+                // Handle validation errors
+                foreach (var validationResult in validationResults)
+                {
+                    MessageBox.Show(validationResult.ErrorMessage, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    break;
+                }
+                return;
+            }
             _repository.UpdateUserProfile(staffUpdate);
             MessageBox.Show($"Staff {staffUpdate.FullName} updated successfully");
             staffUpdated?.Invoke(this, EventArgs.Empty);

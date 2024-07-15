@@ -1,8 +1,10 @@
 ﻿using BusinessObject.Object;
+using DataAccess.Helper;
 using DataAccess.Model.NotificationModel;
 using DataAccess.Repository.CombineRepository;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,6 +45,17 @@ namespace WPF.Views.NotificationView
                 Content = ContentTextBox.Text,
                 HouseName = house.Name
             };
+            var validationResults = ValidationHelper.ValidateModel(notifcation);
+            if (validationResults.Count > 0)
+            {
+                // Handle validation errors
+                foreach (var validationResult in validationResults)
+                {
+                    MessageBox.Show(validationResult.ErrorMessage, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    break;
+                }
+                return;
+            }
             var result =  await _repository.SendNotificationByEmail(_house.Id, notifcation);
             if ( result.IsSuccess)
             {

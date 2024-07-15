@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Object;
 using DataAccess.Enums;
+using DataAccess.Helper;
 using DataAccess.Model.CustomerModel;
 using DataAccess.Model.HouseModel;
 using DataAccess.Repository.CombineRepository;
@@ -51,13 +52,27 @@ namespace WPF.Views.CustomerView
                         Dob = DobDatePicker.SelectedDate ?? DateTime.MinValue,
                         LicensePlates = txtLicensePlates.Text.Trim(),
                         RoomId = _roomId,
+                        CitizenIdNumber = txtCitizenID.Text.Trim(),
                     },
                     houseUpdateAvaiableRoom = new HouseUpdateAvaiableRoomReqModel
                     {
                         HouseId = _houseId,
                         AvailableRoom = availableRoom,
                     }
+
                 };
+                var validationResults = ValidationHelper.ValidateModel(customer.customerCreateReqModel);
+                if (validationResults.Count > 0)
+                {
+                    // Handle validation errors
+                    foreach (var validationResult in validationResults)
+                    {
+                        MessageBox.Show(validationResult.ErrorMessage, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        break;
+                    }
+                    return;
+                }
+
 
                 var result = await _repository.AddCustomerToRoom(App.LoggedInUserId, customer);
 

@@ -38,6 +38,17 @@ namespace WPF.Views.RoomView
         }
         private void btnUpdateRoom_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(RoomNameTextBox.Text))
+            {
+                MessageBox.Show("Room name is required.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(PriceTextBox.Text) || !decimal.TryParse(PriceTextBox.Text, out var price))
+            {
+                MessageBox.Show("Invalid or missing price.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             var roomUpdate = new RoomUpdateReqModel
             {
                 Id = _room.Id,

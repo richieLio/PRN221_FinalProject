@@ -1,11 +1,14 @@
 ﻿using BusinessObject.Object;
+using DataAccess.Helper;
 using DataAccess.Model.ContractModel;
+using DataAccess.Model.CustomerModel;
 using DataAccess.Repository.CombineRepository;
 using DataAccess.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Win32;
 using System;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -42,6 +45,17 @@ namespace WPF.Views.ContractView
                 FileUrl = _contract.FileUrl,
                 EndDate = EndDatePicker.SelectedDate ?? DateTime.MinValue,
             };
+            var validationResults = ValidationHelper.ValidateModel(contract);
+            if (validationResults.Count > 0)
+            {
+                // Handle validation errors
+                foreach (var validationResult in validationResults)
+                {
+                    MessageBox.Show(validationResult.ErrorMessage, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    break;
+                }
+                return;
+            }
             await _repository.UpdateContract(contract);
             MessageBox.Show($"Contract updated successfully");
             ContractUpdated?.Invoke(this, EventArgs.Empty);
@@ -105,14 +119,27 @@ namespace WPF.Views.ContractView
                
                 if (result != null)
                 {
-                    MessageBox.Show($"File uploaded succesfully");
                     var contractupdate = new ContractUpdateModel
                     {
                         Id = _contract.Id,
                         FileUrl = form.ImagesUrl.FileName,
                         EndDate = _contract.EndDate
                     };
+                    var validationResults = ValidationHelper.ValidateModel(contractupdate);
+                    if (validationResults.Count > 0)
+                    {
+                        // Handle validation errors
+                        foreach (var validationResult in validationResults)
+                        {
+                            MessageBox.Show(validationResult.ErrorMessage, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            break;
+                        }
+                        return;
+                    }
+
                     await _repository.UpdateContract(contractupdate);
+                    MessageBox.Show($"File uploaded succesfully");
+
                     // Update UI
                     txtNoFile.Visibility = Visibility.Collapsed;
                     txtFileLink.Visibility = Visibility.Visible;

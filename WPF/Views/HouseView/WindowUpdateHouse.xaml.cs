@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Object;
+using DataAccess.Helper;
 using DataAccess.Model.HouseModel;
 using DataAccess.Repository.CombineRepository;
 using System;
@@ -44,6 +45,17 @@ namespace WPF.Views.HouseView
                 Name = HouseNameTextBox.Text,
                 Address = AddressTextBox.Text,
             };
+            var validationResults = ValidationHelper.ValidateModel(houseUpdate);
+            if (validationResults.Count > 0)
+            {
+                // Handle validation errors
+                foreach (var validationResult in validationResults)
+                {
+                    MessageBox.Show(validationResult.ErrorMessage, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    break;
+                }
+                return;
+            }
             _repository.UpdateHouse(App.LoggedInUserId, houseUpdate);
             MessageBox.Show("House updated successfully");
             HouseUpdated?.Invoke(this, EventArgs.Empty);

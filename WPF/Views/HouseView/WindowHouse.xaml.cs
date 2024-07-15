@@ -76,7 +76,6 @@ namespace WPF
             var addNewHouseWindow = new WindowAddHouse(_serviceProvider.GetService<ICombineRepository>());
             addNewHouseWindow.HouseAdded += (s, args) =>
             {
-                // HouseAdded event handler, you might want to refresh the list of houses or take other actions
                 LoadHouses();
             };
             addNewHouseWindow.Show();
@@ -84,15 +83,13 @@ namespace WPF
 
         private void UpdateHouse_Click(object sender, RoutedEventArgs e)
         {
-            // Code to update the selected house
             MenuItem menuItem = sender as MenuItem;
             if (menuItem != null)
             {
                 Border border = ((ContextMenu)menuItem.Parent).PlacementTarget as Border;
                 if (border != null)
                 {
-                    // Assuming DataContext of the Border is the house item
-                    var house = border.DataContext as House; // Replace House with your actual data type
+                    var house = border.DataContext as House; 
                     if (house != null)
                     {
                         var updateHouseWindow = new WindowUpdateHouse(_serviceProvider.GetService<ICombineRepository>(), house);

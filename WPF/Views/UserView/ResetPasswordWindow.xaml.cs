@@ -145,8 +145,7 @@ namespace WPF
                     Email = email
                 };
 
-                _repository.SendOTPEmailRequest(form);
-                MessageBox.Show("an OTP has been send to your email", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                
                 var validationResults = ValidationHelper.ValidateModel(form);
                 if (validationResults.Count > 0)
                 {
@@ -158,6 +157,8 @@ namespace WPF
                     }
                     return;
                 }
+                _repository.SendOTPEmailRequest(form);
+                MessageBox.Show("an OTP has been send to your email", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {

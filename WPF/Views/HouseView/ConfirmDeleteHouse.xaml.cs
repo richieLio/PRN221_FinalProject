@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BusinessObject.Object;
+using System;
 using System.Windows;
 
 namespace WPF.Views.HouseView
@@ -17,6 +18,12 @@ namespace WPF.Views.HouseView
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
+          
+            if (HouseNameTextBox.Text == "")
+            {
+                MessageBox.Show("House name cannot be null", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             if (HouseNameTextBox.Text == HouseName)
             {
                 IsConfirmed = true;

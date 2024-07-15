@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Object;
+using DataAccess.Helper;
 using DataAccess.Model.HouseModel;
 using DataAccess.Model.RoomModel;
 using DataAccess.Repository.CombineRepository;
@@ -35,8 +36,19 @@ namespace WPF.Views.RoomView
         }
 
         private void btnAddNewRoom_Click(object sender, RoutedEventArgs e)
-        { try
+        {try
             {
+                if (string.IsNullOrWhiteSpace(RoomNameTextBox.Text))
+                {
+                    MessageBox.Show("Room name is required.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(RoomPriceTextBox.Text) || !decimal.TryParse(RoomPriceTextBox.Text, out var price))
+                {
+                    MessageBox.Show("Invalid or missing price.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
                 var room = new RoomCreateReqModel
                 {
                     RoomId = Guid.NewGuid(),
@@ -44,14 +56,16 @@ namespace WPF.Views.RoomView
                     Name = RoomNameTextBox.Text,
                     Price = decimal.Parse(RoomPriceTextBox.Text),
                 };
+                
                 _repository.AddRoom(App.LoggedInUserId, room);
                 MessageBox.Show("Room created successfully");
                 RoomAdded?.Invoke(this, EventArgs.Empty);
                 Close();
-            } catch {
-                MessageBox.Show("Pls fill all fields");
+            } catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
-            
+
         }
     }
 }
