@@ -10,15 +10,16 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0" Content="Subject:" Margin="5"/>
-        <TextBox Grid.Row="1" x:Name="SubjectTextBox" Margin="5"/>
+        <TextBox Grid.Row="1" x:Name="SubjectTextBox" Margin="5" Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
 
         <Label Grid.Row="2" Content="Content:" Margin="5"/>
-        <TextBox Grid.Row="3" x:Name="ContentTextBox" Margin="5" VerticalScrollBarVisibility="Auto" AcceptsReturn="True"/>
+        <TextBox Grid.Row="3" x:Name="ContentTextBox" Margin="5" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
 
         <Button Grid.Row="4" Content="Send" HorizontalAlignment="Center" Margin="5" Click="SendButton_Click"/>
     </Grid>

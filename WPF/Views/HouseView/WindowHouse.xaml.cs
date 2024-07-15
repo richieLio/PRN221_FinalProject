@@ -25,6 +25,19 @@ namespace WPF
             InitializeComponent();
             _serviceProvider = serviceProvider;
             LoadHouses();
+            SetAddNewHouseButtonVisibility();
+        }
+        private async void SetAddNewHouseButtonVisibility()
+        {
+            var user = await _repository.GetUserById(App.LoggedInUserId);
+            if (user.Role == UserEnum.STAFF)
+            {
+                btnAddNewHouse.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                btnAddNewHouse.Visibility = Visibility.Visible;
+            }
         }
 
         private async void LoadHouses()
